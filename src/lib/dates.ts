@@ -1,0 +1,79 @@
+import type { Event } from "./types";
+
+/**
+ * Date-awareness for events. Events only store a start time (no end), so an
+ * event counts as "still on" for a few hours after it starts — long enough for
+ * a 10:00–16:00 stall to stay in "Coming up" all day, short enough that last
+ * night's meeting is gone by the morning.
+ */
+export const EVENT_GRACE_MS = 4 * 3600_000;
+
+export function startMs(e: Pick<Event, "start_time">) {
+  return new Date(e.start_time).getTime();
+}
+
+export function isUpcoming(e: Pick<Event, "start_time">, now: number) {
+  return startMs(e) + EVENT_GRACE_MS >= now;
+}
+
+/** True while the event has started but is inside its grace window. */
+export function isHappeningNow(e: Pick<Event, "start_time">, now: number) {
+  return startMs(e) <= now && isUpcoming(e, now);
+}
+
+/** Soonest first. */
+export function byStartAsc(a: Pick<Event, "start_time">, b: Pick<Event, "start_time">) {
+  return startMs(a) - startMs(b);
+}
+
+/** Most recent first. */
+export function byStartDesc(a: Pick<Event, "start_time">, b: Pick<Event, "start_time">) {
+  return startMs(b) - startMs(a);
+}
+
+function startOfDay(ms: number) {
+  const d = new Date(ms);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+/** Whole calendar days from `now` to `iso` in local time (negative = past). */
+export function dayDiff(iso: string, now: number) {
+  return Math.round((startOfDay(new Date(iso).getTime()) - startOfDay(now)) / 86400000);
+}
+
+/** "Today", "Tomorrow", "Yesterday", or a weekday + date ("Wed 7 Oct"). */
+export function dayLabel(iso: string, now: number) {
+  const diff = dayDiff(iso, now);
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Tomorrow";
+  if (diff === -1) return "Yesterday";
+  return new Date(iso).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
+/** Compact relative label that works for past and future: "today", "tomorrow", "in 3 days", "2 days ago". */
+export function relativeDay(iso: string, now: number) {
+  const diff = dayDiff(iso, now);
+  if (diff === 0) return "today";
+  if (diff === 1) return "tomorrow";
+  if (diff === -1) return "yesterday";
+  return diff > 0 ? `in ${diff} days` : `${-diff} days ago`;
+}
+
+export interface DayGroup<T> {
+  key: string;
+  label: string;
+  items: T[];
+}
+
+/** Groups already-sorted events under one header per local calendar day. */
+export function groupByDay<T extends Pick<Event, "start_time">>(events: T[], now: number): DayGroup<T>[] {
+  const groups: DayGroup<T>[] = [];
+  for (const e of events) {
+    const key = new Date(startOfDay(startMs(e))).toISOString();
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) last.items.push(e);
+    else groups.push({ key, label: dayLabel(e.start_time, now), items: [e] });
+  }
+  return groups;
+}

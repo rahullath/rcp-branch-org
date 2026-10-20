@@ -1,0 +1,73 @@
+{
+  "contacts": {
+    "name": "\"\"",
+    "phone": "\"+44…\"",
+    "notes": "\"what they're into, what was said\"",
+    "tier": "\"priority|potential|cold\"",
+    "stage": "\"met|talked|came|joined\"",
+    "met_at": "\"open_meeting|branch|reading_group|paper_sale|uni_stall|mobilization|social|online|referral|other\"",
+    "met_date": "\"YYYY-MM-DD\""
+  },
+  "events": {
+    "title": "\"for branch and open meetings, the topic\"",
+    "type": "\"open_meeting|paper_sale|uni_stall|social|branch|committee|mobilization|reading_group|phonebank|postering|one_on_one\"",
+    "date": "\"YYYY-MM-DD\"",
+    "time": "\"HH:MM\"",
+    "location": "\"\"",
+    "description": "\"\"",
+    "people_needed": "4",
+    "lead": "\"who runs it\"",
+    "chair": "\"name (meetings only)\"",
+    "minutes": "\"name (meetings only)\"",
+    "issue": "\"paper sales: which issue, e.g. #56\"",
+    "readings": "[{ \"title\": \"\", \"url\": \"https://…\" }]"
+  },
+  "actions": {
+    "who": "\"name or initials, or \\\"anyone\\\" if nobody was given it\"",
+    "task": "\"what they'll do\"",
+    "due": "\"YYYY-MM-DD\""
+  },
+  "follow_ups": {
+    "person": "\"who is being followed up\"",
+    "followed_up_by": "\"who does it\"",
+    "going_with": "\"someone more experienced going along, if mentioned\""
+  },
+  "materials": {
+    "name": "\"\"",
+    "category": "\"book|literature|gear\"",
+    "quantity": "1",
+    "held_by": "\"name\"",
+    "where": "\"if not with a person\"",
+    "to_order": "0",
+    "purpose": "\"Branch programme|Paper stall|Good to have\"",
+    "notes": "\"\""
+  },
+  "pledges": {
+    "person": "\"\"",
+    "amount": "3"
+  },
+  "reading_groups": {
+    "title": "\"\"",
+    "text": "\"the book, pamphlet or one IDOM issue\"",
+    "when": "\"e.g. Fridays 4pm (omit if it's only a suggested topic)\"",
+    "where": "\"\"",
+    "for": "\"members|new|contacts|mixed\"",
+    "plan": "\"\""
+  },
+  "topic_ideas": {
+    "title": "\"a suggested discussion topic\"",
+    "for": "\"branch|open_meeting\"",
+    "note": "\"\""
+  },
+  "locations": {
+    "name": "\"\"",
+    "area": "\"Campus|City centre|Selly Oak|Moseley|Digbeth|…\"",
+    "kind": "\"paper_sale|meeting|uni_stall|social\"",
+    "tags": "[\"indoor\",\"outdoor\",\"free seating\",\"good footfall\",\"needs booking\"]",
+    "notes": "\"\""
+  },
+  "people": {
+    "name": "\"Full Name\"",
+    "short_names": "[\"initials\", \"nickname\"]"
+  }
+}
