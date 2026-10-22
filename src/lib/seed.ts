@@ -72,7 +72,7 @@ export const DEMO_BRANCH_ID = "br-2";
 export const seedProfiles: Profile[] = [
   {
     id: "u-gen-sec",
-    name: "General Secretary",
+    name: "Secretary",
     role: ["general_secretary"],
     email: "comrade@example.org",
     monthly_subs: 20,
@@ -611,7 +611,7 @@ export const seedAgenda: AgendaItem[] = [
     title: "Finance appeal",
     duration: "15",
     icon: "diversity_3",
-    leadoff_name: "General Secretary",
+    leadoff_name: "Secretary",
     sort_order: 3,
     created_at: "2026-08-20T10:00:00.000Z",
   },
@@ -661,7 +661,7 @@ export const seedAgenda: AgendaItem[] = [
     title: "Branch Levy",
     duration: "5",
     icon: "diversity_3",
-    leadoff_name: "General Secretary",
+    leadoff_name: "Secretary",
     sort_order: 5,
     created_at: "2026-08-20T10:00:00.000Z",
   },
@@ -707,7 +707,7 @@ export const seedPledges: Pledge[] = [
   {
     id: "p-3",
     user_id: "u-gen-sec",
-    user_name: "General Secretary",
+    user_name: "Secretary",
     amount: 20,
     status: "paid",
     method: "cash",

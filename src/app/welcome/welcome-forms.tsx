@@ -51,7 +51,7 @@ export function WelcomeForms({ code: invited }: { code: string }) {
         }}
       >
         <span className="ask-k">Or start your branch on the app</span>
-        <p className="small" style={{ margin: 0 }}>You&apos;ll be its general secretary and get a code to invite the rest. It starts empty — you add your own events, people and plans.</p>
+        <p className="small" style={{ margin: 0 }}>You&apos;ll be its secretary and get a code to invite the rest. It starts empty — you add your own events, people and plans.</p>
         <input className="inp" value={name} onChange={(e) => setName(e.target.value)} placeholder="Branch name, e.g. Leeds Branch 1" aria-label="Branch name" maxLength={80} />
         <input className="inp" value={district} onChange={(e) => setDistrict(e.target.value)} placeholder="City or district, e.g. Leeds" aria-label="City or district" maxLength={60} />
         <button type="submit" className="btn btn-o" disabled={busy || !name.trim()}>

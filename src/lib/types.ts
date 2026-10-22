@@ -9,7 +9,7 @@ export type Role =
   | "member";
 
 export const ROLE_LABEL: Record<Role, string> = {
-  general_secretary: "General Secretary",
+  general_secretary: "Secretary",
   education_officer: "Education Officer",
   finance_officer: "Finance Officer",
   paper_sales_officer: "Paper Sales Officer",
@@ -84,7 +84,7 @@ export interface TopicIdea {
   created_at: string;
 }
 
-/** "I'm the education officer" — waits for the general secretary to confirm. */
+/** "I'm the education officer" — waits for the secretary to confirm. */
 export interface RoleRequest {
   id: string;
   user_id: string;

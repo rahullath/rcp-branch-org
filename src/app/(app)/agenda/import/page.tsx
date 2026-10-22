@@ -94,7 +94,7 @@ export default function ImportAgendaPage() {
   if (!allowed) {
     return (
       <div className="v2 pg">
-        <p className="nothing">Importing agendas is for organisers, the education officer and the GS.</p>
+        <p className="nothing">Importing agendas is for organisers, the education officer and the secretary.</p>
       </div>
     );
   }

@@ -6,9 +6,9 @@
 | --- | --- |
 | Events, agendas, readings, materials, reading groups | Everyone in the branch |
 | Committee meetings | Officers and whoever is invited |
-| Your contacts and their numbers | You. The general secretary can move a list if someone leaves. |
+| Your contacts and their numbers | You. The secretary can move a list if someone leaves. |
 | Members' phone numbers | Members of the branch |
-| Money (subs, pledges, finance) | The member themselves, the finance officer, the general secretary |
+| Money (subs, pledges, finance) | The member themselves, the finance officer, the secretary |
 | Availability | You see your own; the branch sees counts, never names |
 | An event's public link | Anyone with the link: the event, its topic and up to three readings. Never who's going. |
 | View-only accounts | Events, agendas, readings, materials. No contacts, numbers, money, availability, follow-ups or imports. |
@@ -25,4 +25,4 @@ Only to phones that said yes. One per thing, never a list of names, and not betw
 
 ## Leaving
 
-The general secretary removes a member from Members and roles. Their contacts can be moved to someone else first.
+The secretary removes a member from Members and roles. Their contacts can be moved to someone else first.

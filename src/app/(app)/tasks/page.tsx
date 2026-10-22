@@ -372,7 +372,7 @@ function AddTask({ officer, hint, onDone }: { officer: boolean; hint: (id: strin
         {who === "me"
           ? "It sits under Yours with a reminder if it has a date. Can't get to it later? Hand it on."
           : who === "branch"
-            ? `Anyone can take it. If nobody has in ${OPEN_STALE_DAYS} days, the general secretary sees it.`
+            ? `Anyone can take it. If nobody has in ${OPEN_STALE_DAYS} days, the secretary sees it.`
             : "It goes in their inbox. Check who's carrying what below before you pick."}
       </p>
     </form>

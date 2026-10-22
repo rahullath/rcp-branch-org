@@ -14,7 +14,7 @@ export async function GET() {
   return json(await listRoleRequests());
 }
 
-/** `{ role, note? }` — "I'm the education officer". The general secretary confirms it from their inbox. */
+/** `{ role, note? }` — "I'm the education officer". The secretary confirms it from their inbox. */
 export async function POST(request: Request) {
   const { actor, error } = await withActor();
   if (error) return error;

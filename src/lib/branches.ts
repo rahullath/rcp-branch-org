@@ -96,7 +96,7 @@ export async function approveBranch(id: string): Promise<Result> {
   return data as Result;
 }
 
-/** General secretary: a fresh viewer code, or null to switch the viewer link off. */
+/** Secretary: a fresh viewer code, or null to switch the viewer link off. */
 export async function setViewerCode(on: boolean): Promise<string | null> {
   if (!isSupabaseConfigured) {
     const code = on ? `V${Math.random().toString(36).slice(2, 9).toUpperCase()}` : null;

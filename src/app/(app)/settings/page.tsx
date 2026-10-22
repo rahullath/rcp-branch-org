@@ -301,7 +301,7 @@ function BranchCard() {
 }
 
 /**
- * General secretary: a link that lets someone outside the branch see how it
+ * Secretary: a link that lets someone outside the branch see how it
  * runs without being able to change anything or see contacts, money or
  * follow-ups.
  */
@@ -430,7 +430,7 @@ function AdminTools() {
           </div>
         </Link>
         <WaitingBranches />
-        <p className="small" style={{ margin: 0 }}>Switch branch from Branch below. You count as general secretary in whichever branch you&apos;re in.</p>
+        <p className="small" style={{ margin: 0 }}>Switch branch from Branch below. You count as secretary in whichever branch you&apos;re in.</p>
       </div>
     </section>
   );

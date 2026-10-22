@@ -7,7 +7,7 @@ import { createClient } from "./supabase/server";
 import { updateProfile } from "./data";
 
 /*
- * Onboarding's server side: role requests the general secretary confirms,
+ * Onboarding's server side: role requests the secretary confirms,
  * the "done" stamp, and each person's private calendar-feed link.
  */
 
@@ -15,7 +15,7 @@ const now = () => new Date().toISOString();
 
 /* ----------------------------- role requests ----------------------------- */
 
-/** Yours, or (general secretary) everyone's in the branch — RLS decides. */
+/** Yours, or (secretary) everyone's in the branch — RLS decides. */
 export async function listRoleRequests(): Promise<RoleRequest[]> {
   if (isSupabaseConfigured) {
     const supabase = await createClient();

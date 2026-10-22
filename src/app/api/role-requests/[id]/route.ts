@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ id: string }> };
 
-/** `{ approve: boolean }` — the general secretary confirms (the role is added) or says no. */
+/** `{ approve: boolean }` — the secretary confirms (the role is added) or says no. */
 export async function PATCH(request: Request, { params }: Params) {
   const { actor, error } = await requireRole("general_secretary");
   if (error) return error;

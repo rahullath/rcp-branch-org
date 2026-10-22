@@ -8,7 +8,7 @@ import type { AgendaAction, AgendaItem, Availability, AwayRange, Comrade, Event,
  * what got done since the last branch. Client-safe, no I/O.
  */
 
-/** Days an open ask waits before it's flagged to the general secretary. */
+/** Days an open ask waits before it's flagged to the secretary. */
 export const OPEN_STALE_DAYS = 3;
 
 export const isOpenTask = (a: AgendaAction) => !a.done && !a.owner_id && !a.owner_comrade_id;

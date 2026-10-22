@@ -45,11 +45,11 @@ export async function POST(request: Request) {
       return res.ok ? json(res) : badRequest(res.error ?? "Couldn't join");
     }
     if (body?.action === "new-code") {
-      if (!actor.role.includes("general_secretary")) return json({ error: "Only the general secretary can do that" }, { status: 403 });
+      if (!actor.role.includes("general_secretary")) return json({ error: "Only the secretary can do that" }, { status: 403 });
       return json({ join_code: await newJoinCode() });
     }
     if (body?.action === "viewer-link") {
-      if (!actor.role.includes("general_secretary")) return json({ error: "Only the general secretary can do that" }, { status: 403 });
+      if (!actor.role.includes("general_secretary")) return json({ error: "Only the secretary can do that" }, { status: 403 });
       return json({ viewer_code: await setViewerCode(body.on === true) });
     }
     if (body?.action === "approve") {
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   const { actor, error } = await withActor();
   if (error) return error;
-  if (!actor.role.includes("general_secretary") || !actor.branch) return json({ error: "Only the general secretary can rename the branch" }, { status: 403 });
+  if (!actor.role.includes("general_secretary") || !actor.branch) return json({ error: "Only the secretary can rename the branch" }, { status: 403 });
   const body = await readJson(request);
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   if (!name) return badRequest("Name the branch");

@@ -143,7 +143,7 @@ async function insertTolerant(table: string, base: Record<string, unknown>, extr
 
 /**
  * Contacts are personal: each comrade works their own list. Pass `actor` to scope to theirs; `scope: "all"` is honoured only
- * for the general secretary (re-assigning a departed comrade's list).
+ * for the secretary (re-assigning a departed comrade's list).
  * Omit `actor` for internal, server-side use (import dedupe matching).
  */
 export async function listContacts(filters: ContactFilters = {}, actor?: Actor | null): Promise<Contact[]> {

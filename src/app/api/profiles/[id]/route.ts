@@ -42,12 +42,12 @@ export async function PATCH(request: Request, { params }: Params) {
     if (body.role !== undefined) {
       const me = await getProfile(id);
       if (!me) return notFound("Profile not found");
-      if (!actor.isAdmin && !me.role.includes("general_secretary")) return json({ error: "Ask the general secretary to change your roles" }, { status: 403 });
+      if (!actor.isAdmin && !me.role.includes("general_secretary")) return json({ error: "Ask the secretary to change your roles" }, { status: 403 });
       if (!Array.isArray(body.role) || body.role.length === 0 || !body.role.every((r) => typeof r === "string" && ROLES.includes(r as Role))) {
         return badRequest("Role must be a non-empty array of valid roles");
       }
       if (me.role.includes("general_secretary") && !body.role.includes("general_secretary") && (await countGeneralSecretaries()) <= 1) {
-        return badRequest("You're the only general secretary. Make someone else GS first.");
+        return badRequest("You're the only secretary. Make someone else secretary first.");
       }
       patch.role = body.role;
     }
@@ -101,13 +101,13 @@ export async function DELETE(_request: Request, { params }: Params) {
   const { id } = await params;
 
   if (id === actor.id) {
-    return badRequest("You can't delete your own account — ask another general secretary to do it");
+    return badRequest("You can't delete your own account — ask another secretary to do it");
   }
 
   const target = await getProfile(id);
   if (!target) return notFound("Profile not found");
   if (target.role.includes("general_secretary") && (await countGeneralSecretaries()) <= 1) {
-    return badRequest("Can't delete the only general secretary — promote someone else first");
+    return badRequest("Can't delete the only secretary — promote someone else first");
   }
 
   const ok = await deleteProfile(id);

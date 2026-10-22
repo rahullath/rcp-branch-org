@@ -5,7 +5,7 @@ These steps are for a copy of the app that someone already runs. To run your own
 ## Three steps
 
 1. **Sign in** with your email. You get a link; open it on your phone.
-2. **Start a branch.** Give its name ("Leeds Branch 1") and your city or district. You become its general secretary.
+2. **Start a branch.** Give its name ("Leeds Branch 1") and your city or district. You become its secretary.
 3. **Share the join code.** Settings → Branch → Copy invite. Post it in the branch chat. Anyone who opens it signs in and lands in your branch.
 
 On a copy shared by several branches, an admin approves each new branch first. They get a notification; you'll see "Waiting for approval" until then.

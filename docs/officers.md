@@ -8,7 +8,7 @@ Everyone gets the same five screens. Officers get a few more things in their inb
 - **Call it** if the event needed a number of people by a deadline and hasn't got them.
 - **Report** after a sale, stall or reading group session, unless you gave the report to someone else under Roles.
 
-## General secretary
+## Secretary
 
 - Members and roles, the join code, and the viewer link (Settings).
 - **Candidate review** card a week before each candidate's three months are up, with their record: branch meetings, sales and events, jobs given and done.

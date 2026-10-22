@@ -11,7 +11,7 @@ import { Badge, Card, CardHeader, EmptyState, Icon } from "@/components/ui";
 import { PortalCard } from "@/components/portal-card";
 
 const ROLE_META: Record<Role, string> = {
-  general_secretary: "General Secretary",
+  general_secretary: "Secretary",
   education_officer: "Education Officer",
   finance_officer: "Finance Officer",
   paper_sales_officer: "Paper Sales Officer",
@@ -68,7 +68,7 @@ export default function MembersPage() {
         <p className="text-sm text-on-surface-variant">
           {canManage
             ? "Everyone in the branch, and the roles they hold. Tap a role to add or remove it."
-            : "Everyone in the branch, and the roles they hold. Only the General Secretary can change roles."}
+            : "Everyone in the branch, and the roles they hold. Only the Secretary can change roles."}
         </p>
       </div>
 

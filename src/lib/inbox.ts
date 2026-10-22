@@ -273,7 +273,7 @@ export function deriveAsks(userId: string, src: InboxSources, now: number, dismi
   }
 
   // Open asks: anyone can take one. Not shown to whoever posted or handed it on.
-  // After a few days untaken, the general secretary sees it flagged.
+  // After a few days untaken, the secretary sees it flagged.
   const isGs = !!src.gsIds?.includes(userId);
   for (const a of src.actions) {
     if (!isOpenTask(a) || a.handed_from === userId) continue;
