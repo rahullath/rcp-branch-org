@@ -28,6 +28,7 @@ import type {
   Branch,
   BranchLinks,
   GraphicTemplate,
+  Festival,
   Comrade,
   EventGuest,
   EventShare,
@@ -829,6 +830,7 @@ export interface DevDb {
   shared_reads: SharedRead[];
   branch_links: (BranchLinks & { id: string })[];
   graphic_templates: GraphicTemplate[];
+  festivals: Festival[];
   calendar_tokens: { id: string; user_id: string; token: string; created_at: string }[];
   reading_group_guests: ReadingGroupGuest[];
   reading_group_invites: ReadingGroupInvite[];
@@ -929,6 +931,7 @@ export function createSeedDb(): DevDb {
     shared_reads: [],
     branch_links: [],
     graphic_templates: [],
+    festivals: [{ id: "fest-1", name: "Revolution Festival", start_date: "2026-11-13", end_date: "2026-11-15", location: "London", url: "https://revolutionfestival.co.uk/", active: true }],
     feedback: [],
     topic_ideas: [
       { id: "ti-1", title: "Women's oppression", kind: "branch", interested: [], created_by: "u-gen-sec", created_at: "2026-10-11T17:00:00.000Z" },

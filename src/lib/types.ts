@@ -291,6 +291,17 @@ export interface BranchLinks {
   updated_at?: string;
 }
 
+/** The national weekend itself: set once by an admin, so dates and links are data, not code. */
+export interface Festival {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  location?: string | null;
+  url?: string | null;
+  active: boolean;
+}
+
 /** A saved graphic design: style, size and (optionally) wording, to start the next one from. */
 export interface GraphicTemplate {
   id: string;

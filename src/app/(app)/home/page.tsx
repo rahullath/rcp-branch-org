@@ -1,6 +1,7 @@
 "use client";
 
-import { FESTIVAL, festivalCountdown } from "@/lib/festival";
+import { festivalCountdown, festivalDates } from "@/lib/festival";
+import { useFestival } from "@/lib/festival-config";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -23,7 +24,8 @@ import { Chev, firstPart, fmtLongDay, fmtTime, fmtWeekday, SectionHead, StateTag
  */
 export default function HomePage() {
   const [now] = useState(() => Date.now());
-  const festivalDays = festivalCountdown(now);
+  const { festival } = useFestival();
+  const festivalDays = festivalCountdown(now, festival);
   const actor = useActor();
   const { data: followUps } = useData<FollowUp[]>("/api/follow-ups");
   const { data: comrades } = useData<Comrade[]>("/api/comrades");
@@ -176,12 +178,12 @@ export default function HomePage() {
         )}
       </section>
 
-      {festivalDays !== null && (
+      {festival && festivalDays !== null && (
         <>
-          <a className="linkcard" href={FESTIVAL.url} target="_blank" rel="noopener noreferrer">
-            <span className="lc-k">{FESTIVAL.name} · 13–15 Nov</span>
+          <a className="linkcard" href={festival.url ?? "/festival"} target="_blank" rel="noopener noreferrer">
+            <span className="lc-k">{festival.name} · {festivalDates(festival)}</span>
             <span className="t">{festivalDays > 0 ? `${festivalDays} day${festivalDays === 1 ? "" : "s"} to go` : "It's on now"}</span>
-            <span className="small">{FESTIVAL.where} · tickets and the programme. Bring your contacts.</span>
+            <span className="small">{festival.location ? `${festival.location} · ` : ""}tickets and the programme. Bring your contacts.</span>
             <Chev />
           </a>
           <Link className="link small" href="/graphic?festival=1" style={{ display: "block", margin: "-4px 0 12px" }}>

@@ -203,10 +203,15 @@ function Social() {
             Week of {week[0].num} {week[0].month} · {ready} of {list.length} ready
           </p>
         </div>
-        <Link className="btn btn-p btn-sm" href="/graphic">
-          <ImageIcon size={16} strokeWidth={2.25} />
-          Graphic
-        </Link>
+        <div className="row gap8">
+          <Link className="btn btn-o btn-sm" href="/termcard">
+            Term card
+          </Link>
+          <Link className="btn btn-p btn-sm" href="/graphic">
+            <ImageIcon size={16} strokeWidth={2.25} />
+            Graphic
+          </Link>
+        </div>
       </div>
 
       <div className="cover" aria-label="Posts planned this week">

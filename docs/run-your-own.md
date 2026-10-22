@@ -50,6 +50,8 @@ Pull changes from the main repository into your fork; Vercel redeploys on its ow
 
 ## Optional
 
+- **A festival or national event on the Home page**: an admin opens `/festival` and fills in its name, days, place and link. The Home card, the festival graphic and the term card all read from that; nothing is fixed in the code. (Run `supabase/migrations/006_festivals.sql` on a copy set up before this.)
+
 - **Landing page and codes**: the front page offers "Try the demo", a box for the code someone sent you (a branch's join code or its view-only code; the secretary makes these in Settings), and sign-in. A demo-only copy (no Supabase variables) sets `NEXT_PUBLIC_LIVE_URL` to the real copy's address so the code box sends people there; a real copy can set `NEXT_PUBLIC_DEMO_URL` to show a demo button.
 
 - **Party portal** (read only): `PORTAL_API_URL`, `PORTAL_API_KEY`, `PORTAL_BRANCH_ID`, `PORTAL_APP_BRANCH`. Shows members on the portal who aren't on the app yet. The app never writes to the portal.

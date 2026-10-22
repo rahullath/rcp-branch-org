@@ -11,7 +11,8 @@ import type { Event, EventShare, SocialPost } from "@/lib/types";
 import type { GraphicOptions } from "@/components/rcs-graphic";
 import { Spinner } from "@/components/ui";
 import { GraphicMaker, type GraphicSeed } from "@/components/graphic-maker";
-import { FESTIVAL } from "@/lib/festival";
+import { festivalDates } from "@/lib/festival";
+import { useFestival } from "@/lib/festival-config";
 import { firstPart, fmtDay, fmtTime } from "@/components/v2/primitives";
 import { useToast } from "@/components/v2/toast";
 
@@ -40,7 +41,8 @@ function GraphicInner() {
   const router = useRouter();
   const toast = useToast();
   const actor = useActor();
-  const festival = params.get("festival") === "1";
+  const wantsFestival = params.get("festival") === "1";
+  const { festival, loading: festivalLoading } = useFestival();
   const eventId = params.get("event");
   const postId = params.get("post");
   // Opened from an event's share sheet: the result becomes the link's picture.
@@ -54,7 +56,7 @@ function GraphicInner() {
   const event = events?.find((e) => e.id === forEvent);
   const canEditPosts = hasAnyRole(actor, "social_media_officer", "general_secretary");
 
-  if ((forEvent && !events) || (postId && !posts) || (!!shareId && shareLoading)) {
+  if ((forEvent && !events) || (postId && !posts) || (!!shareId && shareLoading) || (wantsFestival && festivalLoading)) {
     return (
       <div className="flex justify-center py-24">
         <Spinner className="h-8 w-8" />
@@ -62,13 +64,26 @@ function GraphicInner() {
     );
   }
 
-  const festivalSeed: GraphicSeed = {
-    tpl: "event",
-    fields: { event: { kicker: "Revolutionary Communist Party", title: FESTIVAL.name, sub: "Three days of Marxist discussion", date: "13–15 Nov", time: "", where: FESTIVAL.where, cta: "Get your ticket", link: FESTIVAL.url.replace(/^https?:\/\//, "").replace(/\/$/, "") } },
-    options: { qr: FESTIVAL.url, qrCaption: "tickets" },
-  };
+  const festivalSeed: GraphicSeed | undefined = festival
+    ? {
+        tpl: "event",
+        fields: {
+          event: {
+            kicker: "Revolutionary Communist Party",
+            title: festival.name,
+            sub: "",
+            date: festivalDates(festival),
+            time: "",
+            where: festival.location ?? "",
+            cta: "Get your ticket",
+            link: (festival.url ?? "").replace(/^https?:\/\//, "").replace(/\/$/, ""),
+          },
+        },
+        options: festival.url ? { qr: festival.url, qrCaption: "tickets" } : {},
+      }
+    : undefined;
 
-  const seed: GraphicSeed | undefined = festival && !event && !post
+  const seed: GraphicSeed | undefined = wantsFestival && !event && !post
     ? festivalSeed
     : event
     ? {
@@ -105,7 +120,7 @@ function GraphicInner() {
         </p>
       )}
       <GraphicMaker
-        key={`${festival ? "festival" : (postId ?? eventId ?? "new")}-${share?.id ?? ""}`}
+        key={`${wantsFestival ? "festival" : (postId ?? eventId ?? "new")}-${share?.id ?? ""}`}
         seed={seed}
         eventType={event?.event_type ?? null}
         onUse={
