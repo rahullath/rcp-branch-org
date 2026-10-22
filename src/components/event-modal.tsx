@@ -16,7 +16,7 @@ const TYPES: { value: EventType; label: string; title: string }[] = [
   { value: "reading_group", label: "Reading group", title: "e.g. Wage Labour and Capital, part 2" },
   { value: "social", label: "Social", title: "e.g. Pub after branch" },
   { value: "mobilization", label: "Demo / mobilisation", title: "e.g. National Palestine demo" },
-  { value: "postering", label: "Postering", title: "e.g. Postering, Selly Oak" },
+  { value: "postering", label: "Postering", title: "e.g. Postering, the high street" },
   { value: "phonebank", label: "Phone banking", title: "e.g. Calling this week's contacts" },
   { value: "committee", label: "Branch committee", title: "e.g. BC" },
   { value: "one_on_one", label: "1-on-1", title: "e.g. Coffee with Ana" },

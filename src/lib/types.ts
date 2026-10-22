@@ -833,7 +833,7 @@ export interface Location {
   lat?: number | null;
   lng?: number | null;
   description?: string | null;
-  /** "Campus", "City centre", "Selly Oak", "Moseley", "Digbeth"… */
+  /** "Campus", "City centre", a neighbourhood… */
   area?: string | null;
   /** What it's like: indoor, outdoor, free seating, good footfall, needs booking… */
   tags?: string[] | null;

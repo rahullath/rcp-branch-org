@@ -350,7 +350,7 @@ function AddTask({ officer, hint, onDone }: { officer: boolean; hint: (id: strin
       }}
     >
       <span className="ask-k">Add a task</span>
-      <input className="inp" value={text} onChange={(e) => setText(e.target.value)} placeholder="e.g. Pick up the banner from Selly Oak" aria-label="What needs doing" autoFocus />
+      <input className="inp" value={text} onChange={(e) => setText(e.target.value)} placeholder="e.g. Pick up the banner from the print shop" aria-label="What needs doing" autoFocus />
       <div className={officer ? "tabs3" : "tabs2"} role="tablist" aria-label="Who's doing it">
         {(["me", "branch", ...(officer ? (["someone"] as const) : [])] as const).map((w) => (
           <button key={w} type="button" role="tab" aria-selected={who === w} className={who === w ? "on" : ""} onClick={() => setWho(w)}>

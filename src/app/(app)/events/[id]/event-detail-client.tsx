@@ -88,7 +88,7 @@ export function EventDetailClient({
   const { data: actions, setData: setActions } = useData<AgendaAction[]>("/api/agenda-actions");
   const { data: locations } = useData<Location[]>("/api/locations");
   const { data: report, loading: reportLoading } = useData<EventReport | null>(REPORT_EVENT_TYPES.includes(initialEvent.event_type) ? `/api/events/${initialEvent.id}/report` : null);
-  // A spot that needs booking (Harding room, library…): its booking page, right here.
+  // A spot that needs booking (a university room, the library…): its booking page, right here.
   const bookable = (locations ?? []).find((l) => !!l.book_url && !!event.location && event.location.toLowerCase().startsWith(l.name.toLowerCase()));
 
   const e = event;
