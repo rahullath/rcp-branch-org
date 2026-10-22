@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { put } from "@/lib/client";
+import { del, post, put } from "@/lib/client";
+import { composePicture, openPicture, shapeGap, UploadError, type FitMode } from "@/lib/graphic-upload";
 import { revalidate, useData } from "@/lib/hooks";
 import { useActor } from "@/lib/actor-context";
 import { hasAnyRole } from "@/lib/permissions";
-import type { BranchLinks } from "@/lib/types";
+import type { BranchLinks, GraphicTemplate } from "@/lib/types";
 import { createPortal } from "react-dom";
 import { Download, ExternalLink, Share2 } from "lucide-react";
 import { toJpeg, toPng } from "html-to-image";
@@ -66,6 +67,8 @@ export interface GraphicResult {
   tpl: GraphicTpl;
   fields: Record<string, string>;
   options: GraphicOptions;
+  /** The picture was uploaded from elsewhere, not made here (fields and options are then just the last design). */
+  custom?: boolean;
 }
 
 function seedFields(seed?: GraphicSeed): GraphicFields {
@@ -110,8 +113,11 @@ export function GraphicMaker({
   primaryLabel = "Share",
   onPrimary,
   onUse,
+  eventType,
 }: {
   seed?: GraphicSeed;
+  /** The kind of event this is for, so designs saved for that kind come first. */
+  eventType?: string | null;
   /** e.g. "Attach to post". Default shares the PNG (or downloads it). */
   primaryLabel?: string;
   onPrimary?: () => Promise<void> | void;
@@ -128,6 +134,16 @@ export function GraphicMaker({
   const { data: saved } = useData<BranchLinks | null>("/api/branch-links");
   const canSaveLinks = hasAnyRole(actor, "social_media_officer", "organizer", "general_secretary");
   const exportRef = useRef<HTMLDivElement>(null);
+  const { data: templates } = useData<GraphicTemplate[]>("/api/graphic-templates");
+  const canSaveDesigns = canSaveLinks;
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [designName, setDesignName] = useState("");
+  const [keepText, setKeepText] = useState(true);
+  const [manage, setManage] = useState(false);
+  // A picture made elsewhere, standing in for the design. The decoded original is kept so Fit/Fill and Size can redo it.
+  const [custom, setCustom] = useState<{ image: string; name: string; mode: FitMode; gap: number } | null>(null);
+  const bitmapRef = useRef<ImageBitmap | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const f = fields[tpl];
   const set = (k: string, v: string) => setFields((p) => ({ ...p, [tpl]: { ...p[tpl], [k]: v } }));
@@ -137,7 +153,81 @@ export function GraphicMaker({
   const label = tpl === "event" ? fields.event.title : tpl === "reading" ? fields.reading.topic : tpl === "paper" ? fields.paper.headline : "quote";
   const name = `${slug(label)}-${o.size}.png`;
 
+  const sortedTemplates = [...(templates ?? [])].sort((a, b) => Number(!!eventType && b.event_type === eventType) - Number(!!eventType && a.event_type === eventType));
+
+  /** Start from a saved design. Wording the event already supplied (title, date, place) is never overwritten. */
+  function applyTemplate(t: GraphicTemplate) {
+    const fromEvent = new Set(Object.keys(seed?.fields?.[t.tpl] ?? {}));
+    setCustom(null);
+    setTpl(t.tpl);
+    setO({ ...DEFAULT_GRAPHIC_OPTIONS, ...(t.options as Partial<GraphicOptions>) });
+    setFields((p) => ({ ...p, [t.tpl]: { ...p[t.tpl], ...Object.fromEntries(Object.entries(t.fields).filter(([k]) => !fromEvent.has(k))) } }));
+    toast(`Started from “${t.name}”`);
+  }
+
+  async function saveDesign() {
+    const name = designName.trim();
+    if (!name) return;
+    try {
+      await post("/api/graphic-templates", { name, tpl, options: o, fields: keepText ? f : {}, event_type: eventType ?? null });
+      revalidate("/api/graphic-templates");
+      setSaveOpen(false);
+      setDesignName("");
+      toast(`Saved “${name}”${keepText ? "" : " (style only)"}`);
+    } catch (e) {
+      toast(e instanceof Error ? e.message : "Couldn't save the design");
+    }
+  }
+
+  async function removeDesign(t: GraphicTemplate) {
+    if (!window.confirm(`Remove “${t.name}”?`)) return;
+    try {
+      await del(`/api/graphic-templates/${t.id}`);
+      revalidate("/api/graphic-templates");
+    } catch (e) {
+      toast(e instanceof Error ? e.message : "Couldn't remove it");
+    }
+  }
+
+  /** Fit the kept picture to a size and mode (all of it with bars, or filling the frame and cropping). */
+  function composeCustom(size: GraphicOptions["size"], mode: FitMode, name: string) {
+    const bitmap = bitmapRef.current;
+    if (!bitmap) return;
+    const d = GRAPHIC_SIZE[size];
+    try {
+      setCustom({ image: composePicture(bitmap, d.w, d.h, mode, COLOURWAYS[o.cw].bg), name, mode, gap: shapeGap(bitmap, d.w, d.h) });
+    } catch (e) {
+      toast(e instanceof UploadError ? e.message : "Couldn't use that picture");
+    }
+  }
+
+  async function pickFile(file: File | undefined) {
+    if (!file) return;
+    try {
+      const bitmap = await openPicture(file);
+      bitmapRef.current?.close();
+      bitmapRef.current = bitmap;
+      composeCustom(o.size, "fit", file.name);
+    } catch (e) {
+      toast(e instanceof UploadError ? e.message : "Couldn't use that picture");
+    } finally {
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  function removeCustom() {
+    bitmapRef.current?.close();
+    bitmapRef.current = null;
+    setCustom(null);
+  }
+
+  function chooseSize(k: GraphicOptions["size"]) {
+    opt("size", k);
+    if (custom) composeCustom(k, custom.mode, custom.name);
+  }
+
   async function render(kind: "png" | "jpeg" = "png"): Promise<string> {
+    if (custom) return custom.image;
     setExporting(true);
     // Let the full-size copy mount, fonts settle, and images load.
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -156,11 +246,8 @@ export function GraphicMaker({
   async function save() {
     try {
       const url = await render();
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = name;
-      a.click();
-      toast(`PNG saved · ${dims.w}px`);
+      download(url, custom ? name.replace(/\.png$/, ".jpg") : name);
+      toast(custom ? "Picture saved" : `PNG saved · ${dims.w}px`);
     } catch (e) {
       toast(e instanceof Error ? e.message : "Couldn't save the PNG");
     }
@@ -205,11 +292,12 @@ export function GraphicMaker({
   async function sendToApp() {
     try {
       const url = await render();
-      const file = new File([await (await fetch(url)).blob()], name, { type: "image/png" });
+      const fileName = custom ? name.replace(/\.png$/, ".jpg") : name;
+      const file = new File([await (await fetch(url)).blob()], fileName, { type: custom ? "image/jpeg" : "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: label });
       } else {
-        download(url, name);
+        download(url, fileName);
         toast("This browser has no share sheet. Saved the PNG: upload it in your editor.");
       }
     } catch (e) {
@@ -227,7 +315,7 @@ export function GraphicMaker({
     if (onUse) {
       try {
         const image = await render("jpeg");
-        await onUse({ image, tpl, fields: { ...(f as Record<string, string>) }, options: o });
+        await onUse({ image, tpl, fields: { ...(f as Record<string, string>) }, options: o, custom: !!custom });
       } catch (e) {
         toast(e instanceof Error ? e.message : "Couldn't use that graphic");
       }
@@ -241,14 +329,12 @@ export function GraphicMaker({
     try {
       const url = await render();
       const blob = await (await fetch(url)).blob();
-      const file = new File([blob], name, { type: "image/png" });
+      const fileName = custom ? name.replace(/\.png$/, ".jpg") : name;
+      const file = new File([blob], fileName, { type: blob.type || "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
       } else {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = name;
-        a.click();
+        download(url, fileName);
         toast("This browser can't share images — saved instead");
       }
     } catch (e) {
@@ -258,20 +344,124 @@ export function GraphicMaker({
 
   return (
     <>
-      <div className="tabs4">
-        {GRAPHIC_TEMPLATES.map(([id, label]) => (
-          <button key={id} type="button" className={tpl === id ? "on" : ""} onClick={() => setTpl(id)}>
-            {label}
-          </button>
-        ))}
-      </div>
+      {!custom && (
+        <div className="tabs4">
+          {GRAPHIC_TEMPLATES.map(([id, label]) => (
+            <button key={id} type="button" className={tpl === id ? "on" : ""} onClick={() => setTpl(id)}>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {!custom && (sortedTemplates.length > 0 || canSaveDesigns) && (
+        <div className="fld">
+          <span>Saved designs</span>
+          {sortedTemplates.length > 0 ? (
+            <div className="mini" style={{ flexWrap: "wrap" }}>
+              {sortedTemplates.map((t) => (
+                <span key={t.id} style={{ display: "inline-flex" }}>
+                  <button type="button" onClick={() => applyTemplate(t)}>
+                    {t.name}
+                    {eventType && t.event_type === eventType ? " ★" : ""}
+                  </button>
+                  {manage && canSaveDesigns && (
+                    <button type="button" aria-label={`Remove ${t.name}`} onClick={() => removeDesign(t)}>
+                      ×
+                    </button>
+                  )}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="small" style={{ margin: 0 }}>
+              Nothing saved yet. Make one the way you like it, then save it to start the next from here.
+            </p>
+          )}
+          {eventType && sortedTemplates.some((t) => t.event_type === eventType) && (
+            <p className="small" style={{ margin: "4px 0 0" }}>★ = made for this kind of event.</p>
+          )}
+          {canSaveDesigns && (
+            <p className="small" style={{ margin: "6px 0 0", display: "flex", gap: 14, flexWrap: "wrap" }}>
+              <button type="button" className="link" onClick={() => setSaveOpen((v) => !v)}>
+                {saveOpen ? "Cancel" : "Save this design…"}
+              </button>
+              {sortedTemplates.length > 0 && (
+                <button type="button" className="link" onClick={() => setManage((v) => !v)}>
+                  {manage ? "Done" : "Remove one"}
+                </button>
+              )}
+            </p>
+          )}
+          {saveOpen && canSaveDesigns && (
+            <div className="stack6" style={{ marginTop: 8 }}>
+              <input value={designName} onChange={(e) => setDesignName(e.target.value)} placeholder="Name it, e.g. Open meeting · story" maxLength={60} aria-label="Name for this design" />
+              <label className="small" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <input type="checkbox" checked={keepText} onChange={(e) => setKeepText(e.target.checked)} />
+                Keep the wording too (not the date or time)
+              </label>
+              <button type="button" className="btn btn-p" disabled={!designName.trim()} onClick={saveDesign}>
+                Save design
+              </button>
+              <p className="small" style={{ margin: 0 }}>Saves the layout, colours, size{o.qr ? ", QR" : ""}{eventType ? " and the kind of event" : ""}.</p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="preview">
         <div className="pv-in">
-          <RcsGraphic tpl={tpl} f={f} o={o} />
+          {custom ? (
+            // eslint-disable-next-line @next/next/no-img-element -- the picture the person brought in, shown as it will be used
+            <img src={custom.image} alt="Your picture" style={{ display: "block", width: "100%", height: "auto", maxHeight: 320, objectFit: "contain", margin: "0 auto" }} />
+          ) : (
+            <RcsGraphic tpl={tpl} f={f} o={o} />
+          )}
         </div>
       </div>
 
+      {custom && (
+        <div className="fld">
+          <span>Your picture · {custom.name}</span>
+          {custom.gap > 0.12 && (
+            <p className="small" style={{ margin: "0 0 6px" }}>
+              It&apos;s a different shape from {GRAPHIC_SIZE[o.size].label.toLowerCase()} ({dims.w}×{dims.h}).{" "}
+              {custom.mode === "fit" ? "All of it is shown, with bars at the sides. Fill crops the edges instead." : "It's cropped to fill the frame. Fit shows all of it with bars."}
+            </p>
+          )}
+          <div className="opts">
+            <div className="opt">
+              <span>Shape</span>
+              <div className="mini">
+                <button type="button" className={custom.mode === "fit" ? "on" : ""} onClick={() => composeCustom(o.size, "fit", custom.name)}>
+                  Fit
+                </button>
+                <button type="button" className={custom.mode === "fill" ? "on" : ""} onClick={() => composeCustom(o.size, "fill", custom.name)}>
+                  Fill
+                </button>
+              </div>
+            </div>
+            <div className="opt">
+              <span>Size</span>
+              <div className="mini">
+                {(Object.keys(GRAPHIC_SIZE) as GraphicOptions["size"][]).map((k) => (
+                  <button key={k} type="button" className={o.size === k ? "on" : ""} onClick={() => chooseSize(k)}>
+                    {GRAPHIC_SIZE[k].label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <p className="small" style={{ margin: "6px 0 0" }}>
+            <button type="button" className="link" onClick={removeCustom}>
+              Go back to the designer
+            </button>
+          </p>
+        </div>
+      )}
+
+      {!custom && (
+        <>
       <div className="tabs2">
         <button type="button" className={panel === "design" ? "on" : ""} onClick={() => setPanel("design")}>
           Design
@@ -315,7 +505,7 @@ export function GraphicMaker({
             <span>Size</span>
             <div className="tabs3">
               {(Object.keys(GRAPHIC_SIZE) as GraphicOptions["size"][]).map((k) => (
-                <button key={k} type="button" className={o.size === k ? "on" : ""} onClick={() => opt("size", k)}>
+                <button key={k} type="button" className={o.size === k ? "on" : ""} onClick={() => chooseSize(k)}>
                   {GRAPHIC_SIZE[k].label}
                 </button>
               ))}
@@ -485,12 +675,19 @@ export function GraphicMaker({
         </div>
       )}
 
+        </>
+      )}
+
       <div className="fld">
         <span>Edit it somewhere else</span>
         <p className="small" style={{ margin: "0 0 8px" }}>
-          Want to move things around, swap the background or add your own pictures? Take it into Canva (or any editor): save the picture, upload it there{qrLink ? ", and add the QR on its own so you can place it exactly" : ""}.
+          Want to move things around, swap the background or add your own pictures? Take it into Canva (or any editor): save the picture, upload it there{qrLink ? ", and add the QR on its own so you can place it exactly" : ""}. Made something there already? Bring it back with Use my own picture.
         </p>
+        <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/*" hidden onChange={(e) => void pickFile(e.target.files?.[0])} aria-label="Choose a picture made elsewhere" />
         <div className="actbar" style={{ position: "static", padding: 0, border: 0, flexWrap: "wrap" }}>
+          <button type="button" className="btn btn-o grow" onClick={() => fileRef.current?.click()}>
+            {custom ? "Choose a different picture" : "Use my own picture"}
+          </button>
           <button type="button" className="btn btn-o grow" onClick={openCanva} disabled={exporting}>
             <ExternalLink size={16} strokeWidth={2.25} />
             Open in Canva
@@ -499,7 +696,7 @@ export function GraphicMaker({
             <Share2 size={16} strokeWidth={2.25} />
             Send to an app
           </button>
-          {qrLink && (
+          {qrLink && !custom && (
             <button type="button" className="btn btn-o grow" onClick={saveQr}>
               <Download size={16} strokeWidth={2.25} />
               QR only

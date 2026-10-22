@@ -99,9 +99,15 @@ function GraphicInner() {
           {(post || event) && <p className="sub trunc">For: {post?.title ?? event?.title}</p>}
         </div>
       </div>
+      {shareId && share?.graphic?.custom && (
+        <p className="small" style={{ margin: "0 0 8px" }}>
+          This link currently shows a picture made elsewhere. Using a design from here will replace it.
+        </p>
+      )}
       <GraphicMaker
         key={`${festival ? "festival" : (postId ?? eventId ?? "new")}-${share?.id ?? ""}`}
         seed={seed}
+        eventType={event?.event_type ?? null}
         onUse={
           post && canEditPosts && !shareId
             ? async (out) => {
@@ -113,9 +119,9 @@ function GraphicInner() {
               }
             : shareId
             ? async (out) => {
-                await patch(`/api/shares/${shareId}`, { graphic: { tpl: "event", f: out.fields, o: out.options }, image: out.image });
+                await patch(`/api/shares/${shareId}`, { graphic: { tpl: "event", f: out.fields, o: out.options, ...(out.custom ? { custom: true } : {}) }, image: out.image });
                 revalidate(`/api/events/${eventId}/share`);
-                toast("The link now shows this graphic");
+                toast(out.custom ? "The link now shows your picture" : "The link now shows this graphic");
                 router.back();
               }
             : undefined

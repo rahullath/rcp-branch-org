@@ -291,6 +291,21 @@ export interface BranchLinks {
   updated_at?: string;
 }
 
+/** A saved graphic design: style, size and (optionally) wording, to start the next one from. */
+export interface GraphicTemplate {
+  id: string;
+  name: string;
+  tpl: "event" | "quote" | "reading" | "paper";
+  /** Layout, colourway, size, QR style and so on: GraphicOptions as saved. */
+  options: Record<string, unknown>;
+  /** Wording to keep (top line, call to action, link...). Never the date or time. */
+  fields: Record<string, string>;
+  /** The kind of event it was made for, so the next one of that kind finds it first. */
+  event_type?: string | null;
+  created_by?: string | null;
+  created_at: string;
+}
+
 export interface Branch {
   id: string;
   name: string;
@@ -677,7 +692,7 @@ export interface EventShare {
   id: string;
   event_id: string;
   token: string;
-  graphic?: { tpl: "event"; f: Record<string, string>; o: Record<string, unknown> } | null;
+  graphic?: { tpl: "event"; f: Record<string, string>; o: Record<string, unknown>; /** The picture is one uploaded from elsewhere, not made here. */ custom?: boolean } | null;
   /** The rendered graphic (JPEG data URL) — the page's picture and the link preview. */
   image?: string | null;
   created_by?: string | null;
