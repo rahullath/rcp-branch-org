@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getActor } from "@/lib/auth";
-import { listEventChecklists, listProfiles } from "@/lib/data";
+import { listEventChecklists, listEventVisitors, listProfiles } from "@/lib/data";
 import { listImportRequests } from "@/lib/data-v2";
 import { sanitizeProfilesFor } from "@/lib/profile-visibility";
 import { APP_PRODUCT } from "@/lib/config";
@@ -18,7 +18,7 @@ import { FeedbackButton } from "./v2/feedback-button";
 import { NotifyPrompt } from "./v2/notify-prompt";
 
 export default async function Shell({ children }: { children: React.ReactNode }) {
-  const [actor, rawProfiles] = await Promise.all([getActor(), listProfiles()]);
+  const [actor, rawProfiles, visitors] = await Promise.all([getActor(), listProfiles(), listEventVisitors()]);
   const profiles = sanitizeProfilesFor(rawProfiles, actor);
 
   const canSeeChecklistBadge =
@@ -37,7 +37,7 @@ export default async function Shell({ children }: { children: React.ReactNode })
 
   return (
     <ActorProvider actor={actor}>
-    <ProfilesProvider initialProfiles={profiles}>
+    <ProfilesProvider initialProfiles={profiles} visitors={visitors}>
     <ToastProvider>
     <SheetProvider>
     <NavBadgesProvider badges={navBadges}>

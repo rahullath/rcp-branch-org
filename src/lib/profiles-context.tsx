@@ -5,6 +5,8 @@ import type { Profile } from "@/lib/types";
 
 interface ProfilesContextValue {
   profiles: Profile[];
+  /** Other branches' people on district/national events: for showing names only, never for pickers. */
+  visitors: Profile[];
   setProfiles: (profiles: Profile[]) => void;
 }
 
@@ -15,9 +17,9 @@ const ProfilesContext = createContext<ProfilesContextValue | null>(null);
  * branch directory reads/writes one shared list instead of each page (and
  * every `PersonPicker` instance) independently re-fetching `/api/profiles`.
  */
-export function ProfilesProvider({ initialProfiles, children }: { initialProfiles: Profile[]; children: React.ReactNode }) {
+export function ProfilesProvider({ initialProfiles, visitors = [], children }: { initialProfiles: Profile[]; visitors?: Profile[]; children: React.ReactNode }) {
   const [profiles, setProfiles] = useState(initialProfiles);
-  return <ProfilesContext.Provider value={{ profiles, setProfiles }}>{children}</ProfilesContext.Provider>;
+  return <ProfilesContext.Provider value={{ profiles, visitors, setProfiles }}>{children}</ProfilesContext.Provider>;
 }
 
 export function useProfiles(): ProfilesContextValue {

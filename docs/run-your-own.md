@@ -50,6 +50,8 @@ Pull changes from the main repository into your fork; Vercel redeploys on its ow
 
 ## Optional
 
+- **Landing page and codes**: the front page offers "Try the demo", a box for the code someone sent you (a branch's join code or its view-only code; the general secretary makes these in Settings), and sign-in. A demo-only copy (no Supabase variables) sets `NEXT_PUBLIC_LIVE_URL` to the real copy's address so the code box sends people there; a real copy can set `NEXT_PUBLIC_DEMO_URL` to show a demo button.
+
 - **Party portal** (read only): `PORTAL_API_URL`, `PORTAL_API_KEY`, `PORTAL_BRANCH_ID`, `PORTAL_APP_BRANCH`. Shows members on the portal who aren't on the app yet. The app never writes to the portal.
 - **Reminders twice a day**: Vercel's free plan runs the reminder job once a day. Any outside scheduler (a GitHub Action, for example) can call `GET /api/cron/reminders` with the header `Authorization: Bearer <CRON_SECRET>` as often as you like; each reminder still goes out only once.
 

@@ -625,7 +625,7 @@ export async function listEventGuests(): Promise<EventGuest[]> {
   const [guests, viaLink] = await Promise.all([list<EventGuest>("event_guests", { column: "created_at" }), list<ShareRsvp>("share_rsvps", { column: "created_at" })]);
   return [
     ...guests,
-    ...viaLink.map((r): EventGuest => ({ id: `link-${r.id}`, event_id: r.event_id, comrade_id: "", status: "going", created_at: r.created_at, via_link: true, name: r.name })),
+    ...viaLink.map((r): EventGuest => ({ id: `link-${r.id}`, event_id: r.event_id, comrade_id: "", status: "going", created_at: r.created_at, via_link: true, name: r.name, who_sent: r.who_sent ?? null, extra: r.extra ?? 0, note: r.note ?? null })),
   ];
 }
 export const getEventGuest = (id: string) => find<EventGuest>("event_guests", id);

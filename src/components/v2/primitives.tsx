@@ -62,20 +62,22 @@ export function Chev() {
 /** Name helpers: "You" for the signed-in comrade, first names otherwise. */
 export function usePeople() {
   const actor = useActor();
-  const { profiles } = useProfiles();
-  const full = useCallback((id?: string | null) => profiles.find((p) => p.id === id)?.name ?? null, [profiles]);
+  const { profiles, visitors } = useProfiles();
+  const full = useCallback((id?: string | null) => (profiles.find((p) => p.id === id) ?? visitors.find((p) => p.id === id))?.name ?? null, [profiles, visitors]);
   const name = useCallback(
     (id?: string | null) => {
       if (!id) return "—";
       if (id === actor?.id) return "You";
       const n = full(id);
-      return n ? n.replace(/^Comrade\s+/i, "").split(/\s+/)[0] : "A comrade";
+      // A * marks someone from another branch (only known to us through a district/national event).
+      if (n) return n.replace(/^Comrade\s+/i, "").split(/\s+/)[0] + (profiles.some((p) => p.id === id) ? "" : "*");
+      return "A comrade";
     },
-    [actor?.id, full],
+    [actor?.id, full, profiles],
   );
   /** Same as `name`, but "you" for mid-sentence use ("With you"). */
   const nameIn = useCallback((id?: string | null) => (id && id === actor?.id ? "you" : name(id)), [actor?.id, name]);
-  const ini = useCallback((id?: string | null) => profiles.find((p) => p.id === id)?.initials || initials(full(id) ?? "?"), [profiles, full]);
+  const ini = useCallback((id?: string | null) => (profiles.find((p) => p.id === id) ?? visitors.find((p) => p.id === id))?.initials || initials(full(id) ?? "?"), [profiles, visitors, full]);
   return { me: actor?.id ?? null, name, nameIn, full, ini, profiles };
 }
 

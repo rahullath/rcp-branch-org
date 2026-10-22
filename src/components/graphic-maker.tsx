@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Download } from "lucide-react";
+import { Download, ExternalLink, Share2 } from "lucide-react";
+import QRCode from "qrcode";
 import { toJpeg, toPng } from "html-to-image";
 import {
   COLOURWAYS,
@@ -18,6 +19,7 @@ import {
   type GraphicOptions,
   type GraphicTpl,
 } from "./rcs-graphic";
+import { QR_KINDS, normaliseLink, type QrCorner } from "./qr-tile";
 import { useToast } from "./v2/toast";
 
 type FieldDef = [key: string, label: string, multiline?: boolean, half?: boolean];
@@ -66,6 +68,27 @@ function seedFields(seed?: GraphicSeed): GraphicFields {
   const base: GraphicFields = JSON.parse(JSON.stringify(DEFAULT_GRAPHIC_FIELDS));
   for (const [k, v] of Object.entries(seed?.fields ?? {})) Object.assign(base[k as GraphicTpl], v);
   return base;
+}
+
+/** Canva has no "open this picture" link for websites, so we open its page for the matching size; the picture goes in by upload or share. */
+const CANVA_URL: Record<GraphicOptions["size"], string> = {
+  post: "https://www.canva.com/create/instagram-posts/",
+  story: "https://www.canva.com/create/instagram-stories/",
+  banner: "https://www.canva.com/create/banners/",
+};
+
+const CORNERS: [QrCorner, string][] = [
+  ["tl", "Top left"],
+  ["tr", "Top right"],
+  ["bl", "Bottom left"],
+  ["br", "Bottom right"],
+];
+
+function download(href: string, filename: string) {
+  const a = document.createElement("a");
+  a.href = href;
+  a.download = filename;
+  a.click();
 }
 
 function slug(s: string) {
@@ -134,6 +157,43 @@ export function GraphicMaker({
     } catch (e) {
       toast(e instanceof Error ? e.message : "Couldn't save the PNG");
     }
+  }
+
+  const qrLink = normaliseLink(o.qr);
+
+  /** The QR on its own (transparent PNG and SVG), for dropping into Canva or any editor and placing by hand. */
+  async function saveQr() {
+    if (!qrLink) return;
+    try {
+      download(await QRCode.toDataURL(qrLink, { width: 1024, margin: 2, errorCorrectionLevel: "M", color: { dark: "#000000", light: "#ffffff00" } }), `${slug(label)}-qr.png`);
+      const svg = await QRCode.toString(qrLink, { type: "svg", margin: 2, errorCorrectionLevel: "M" });
+      download(URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" })), `${slug(label)}-qr.svg`);
+      toast("QR saved as PNG (transparent) and SVG");
+    } catch {
+      toast("Couldn't make a QR from that link");
+    }
+  }
+
+  /** Hand the finished picture to another app: the phone's share sheet lists Canva, Instagram and so on. */
+  async function sendToApp() {
+    try {
+      const url = await render();
+      const file = new File([await (await fetch(url)).blob()], name, { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: label });
+      } else {
+        download(url, name);
+        toast("This browser has no share sheet. Saved the PNG: upload it in your editor.");
+      }
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") toast(e instanceof Error ? e.message : "Couldn't share");
+    }
+  }
+
+  async function openCanva() {
+    // Save first so the PNG is ready to upload; the tab opens in the same tap so it isn't blocked.
+    window.open(CANVA_URL[o.size], "_blank", "noopener");
+    await save();
   }
 
   async function primary() {
@@ -289,6 +349,54 @@ export function GraphicMaker({
               </div>
             </div>
           </div>
+          <div className="fld">
+            <span>QR code</span>
+            <div className="opts">
+              <div className="mini" style={{ flexWrap: "wrap" }}>
+                {QR_KINDS.map((k) => (
+                  <button key={k.id} type="button" className={o.qrCaption === k.caption ? "on" : ""} onClick={() => setO((p) => ({ ...p, qrCaption: k.caption }))}>
+                    {k.label}
+                  </button>
+                ))}
+              </div>
+              <div className="fgrid">
+              <div className="fld">
+              <input
+                value={o.qr}
+                onChange={(e) => opt("qr", e.target.value)}
+                placeholder={QR_KINDS.find((k) => k.caption === o.qrCaption)?.hint ?? "Paste a link: WhatsApp group, Instagram, a form…"}
+                inputMode="url"
+                autoCapitalize="none"
+                spellCheck={false}
+                aria-label="Link for the QR code"
+              />
+              </div>
+              {o.qr && (
+                <div className="fld">
+                  <input value={o.qrCaption} onChange={(e) => opt("qrCaption", e.target.value)} placeholder="Caption under the QR (optional)" aria-label="QR caption" />
+                </div>
+              )}
+              </div>
+              {o.qr && (
+                <>
+                  <div className="opt">
+                    <span>Corner</span>
+                    <div className="mini">
+                      {CORNERS.map(([id, l]) => (
+                        <button key={id} type="button" className={o.qrCorner === id ? "on" : ""} onClick={() => opt("qrCorner", id)}>
+                          {l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <label className="opt">
+                    <span>QR size</span>
+                    <input type="range" min="14" max="40" step="1" value={o.qrSize} onChange={(e) => opt("qrSize", +e.target.value)} />
+                  </label>
+                </>
+              )}
+            </div>
+          </div>
         </>
       )}
 
@@ -314,6 +422,29 @@ export function GraphicMaker({
           </datalist>
         </div>
       )}
+
+      <div className="fld">
+        <span>Edit it somewhere else</span>
+        <p className="small" style={{ margin: "0 0 8px" }}>
+          Want to move things around, swap the background or add your own pictures? Take it into Canva (or any editor): save the picture, upload it there{qrLink ? ", and add the QR on its own so you can place it exactly" : ""}.
+        </p>
+        <div className="actbar" style={{ position: "static", padding: 0, border: 0, flexWrap: "wrap" }}>
+          <button type="button" className="btn btn-o grow" onClick={openCanva} disabled={exporting}>
+            <ExternalLink size={16} strokeWidth={2.25} />
+            Open in Canva
+          </button>
+          <button type="button" className="btn btn-o grow" onClick={sendToApp} disabled={exporting}>
+            <Share2 size={16} strokeWidth={2.25} />
+            Send to an app
+          </button>
+          {qrLink && (
+            <button type="button" className="btn btn-o grow" onClick={saveQr}>
+              <Download size={16} strokeWidth={2.25} />
+              QR only
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className="actbar">
         <button type="button" className="btn btn-o grow" onClick={save} disabled={exporting}>

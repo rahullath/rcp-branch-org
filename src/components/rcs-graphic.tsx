@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- brand marks render inside an exported PNG; next/image can't be captured */
 import type { CSSProperties, ReactNode } from "react";
+import { QrTile, type QrCorner } from "./qr-tile";
 
 /*
  * RCS social graphics (Revolutionary Communist Students design system):
@@ -62,9 +63,15 @@ export interface GraphicOptions {
   emblem: boolean;
   grain: boolean;
   scale: number;
+  /** A link to turn into a QR on the graphic; empty = no QR. */
+  qr: string;
+  qrCaption: string;
+  qrCorner: QrCorner;
+  /** Width of the QR tile, in design units (% of the shorter side). */
+  qrSize: number;
 }
 
-export const DEFAULT_GRAPHIC_OPTIONS: GraphicOptions = { layout: "stack", cw: "black", size: "post", rough: false, align: "left", emblem: true, grain: true, scale: 1 };
+export const DEFAULT_GRAPHIC_OPTIONS: GraphicOptions = { layout: "stack", cw: "black", size: "post", rough: false, align: "left", emblem: true, grain: true, scale: 1, qr: "", qrCaption: "", qrCorner: "br", qrSize: 22 };
 
 /** Suggested calls to action — the RCS tagline first. */
 export const CTA_SUGGESTIONS = ["Demand the future", "Demand the impossible", "Demand the impossible. Demand the future.", "Free · all welcome", "Join the communists"];
@@ -295,6 +302,7 @@ export function RcsGraphic<T extends GraphicTpl>({
   return (
     <div style={wrap}>
       {art}
+      {o.qr && <QrTile link={o.qr} caption={o.qrCaption} corner={o.qrCorner} size={o.qrSize} u={u} />}
       {o.grain && (
         <div style={{ position: "absolute", inset: 0, backgroundImage: `url('${R}/grain.png')`, backgroundSize: "cover", mixBlendMode: "multiply", opacity: 0.16, pointerEvents: "none" }} />
       )}

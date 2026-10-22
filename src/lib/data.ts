@@ -54,6 +54,20 @@ export async function listProfiles(): Promise<Profile[]> {
   return listRows<Profile>("profiles");
 }
 
+/**
+ * People from other branches going to (or helping at) a district/national event: just name, initials
+ * and branch, so the event can show who's coming instead of "A comrade". Not in `listProfiles`, so
+ * they never turn up in pickers.
+ */
+export async function listEventVisitors(): Promise<Profile[]> {
+  if (!isSupabaseConfigured) return [];
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("event_visitors");
+  return ((data ?? []) as { id: string; name: string; initials: string | null; branch_name: string | null }[]).map(
+    (v) => tidyName({ id: v.id, name: v.name, initials: v.initials, role: [], branch_tag: v.branch_name ?? undefined } as Profile),
+  );
+}
+
 export async function getProfile(id: string): Promise<Profile | null> {
   if (isSupabaseConfigured) {
     const supabase = await createClient();

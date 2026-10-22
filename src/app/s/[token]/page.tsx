@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { getActor } from "@/lib/auth";
 import { getEvent, listRsvps } from "@/lib/data";
-import { getPublicShare } from "@/lib/shares";
+import { getPublicShare, getPublicShareImageVersion } from "@/lib/shares";
 import { inviteBrief } from "@/lib/invite-brief";
 import { linkKind } from "@/lib/preread";
 import { DEFAULT_GRAPHIC_FIELDS, DEFAULT_GRAPHIC_OPTIONS, RcsGraphic, type GraphicFields, type GraphicOptions } from "@/components/rcs-graphic";
@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host");
   const origin = host ? `${h.get("x-forwarded-proto") ?? "https"}://${host}` : "";
+  const v = share.has_image ? await getPublicShareImageVersion(token) : "0";
   return {
     title: e.title,
     description,
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     openGraph: {
       title: e.title,
       description,
-      ...(share.has_image ? { images: [{ url: `${origin}/api/share/${token}/image` }] } : {}),
+      ...(share.has_image ? { images: [{ url: `${origin}/api/share/${token}/image?v=${v}` }] } : {}),
     },
     twitter: { card: share.has_image ? "summary_large_image" : "summary", title: e.title, description },
   };
@@ -77,6 +78,7 @@ export default async function SharePage({ params, searchParams }: PageProps) {
   }
 
   const e = share.event;
+  const imgV = share.has_image ? await getPublicShareImageVersion(token) : "0";
   const off = e.status === "off";
   const past = hasPassed(e.start_time);
   const fields: GraphicFields["event"] = {
@@ -102,6 +104,11 @@ export default async function SharePage({ params, searchParams }: PageProps) {
   const isAudio = (l: { url: string }) => linkKind(l.url) !== "article";
   const read = b?.reading.find((l) => !isAudio(l));
   const listen = b?.reading.find(isAudio);
+  // Meetings are built on the reading; a stall or sale is the opposite, so there it's a nudge.
+  const meeting = ["branch", "reading_group", "open_meeting"].includes(e.event_type);
+  const prereadNote = meeting
+    ? read && listen ? "Do one of these before the meeting. It makes the discussion much better." : "Do this before the meeting. It makes the discussion much better."
+    : "Optional, but worth ten minutes before you come: it's what we'll be talking to people about.";
   const same = (x?: string | null) => !x || x.trim().toLowerCase() === e.title.trim().toLowerCase();
   // An auto-written "Read before: …" repeats the section; the organiser's own words don't.
   const note = e.description && !(b?.section && e.description.startsWith("Read before")) ? e.description : null;
@@ -194,7 +201,7 @@ export default async function SharePage({ params, searchParams }: PageProps) {
               <span aria-hidden>↗</span>
             </a>
           )}
-          <p className="small" style={{ margin: 0 }}>{read && listen ? "Do one of these before the meeting. It makes the discussion much better." : "Do this before the meeting. It makes the discussion much better."}</p>
+          <p className="small" style={{ margin: 0 }}>{prereadNote}</p>
         </section>
       )}
 
@@ -213,7 +220,7 @@ export default async function SharePage({ params, searchParams }: PageProps) {
 
       {share.has_image ? (
         // eslint-disable-next-line @next/next/no-img-element -- stored data image served by our own route
-        <img src={`/api/share/${token}/image`} alt={e.title} style={{ width: "100%", height: "auto", display: "block" }} />
+        <img src={`/api/share/${token}/image?v=${imgV}`} alt={e.title} style={{ width: "100%", height: "auto", display: "block" }} />
       ) : (
         <RcsGraphic tpl="event" f={fields} o={options} />
       )}

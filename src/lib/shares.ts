@@ -1,4 +1,4 @@
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import type { Actor } from "./auth";
 import type { AgendaItem, Event, EventShare, ReadingGroup, SharedRead, ShareRsvp } from "./types";
 import { mainDiscussion } from "./types";
@@ -132,7 +132,7 @@ export async function getPublicShare(token: string): Promise<PublicShare | null>
   const going =
     listRows<{ event_id: string; status: string; id: string }>("rsvps").filter((r) => r.event_id === e.id && r.status === "going").length +
     listRows<{ event_id: string; status: string; id: string }>("event_guests").filter((g) => g.event_id === e.id && g.status === "going").length +
-    listRows<ShareRsvp>("share_rsvps").filter((r) => r.event_id === e.id).length;
+    listRows<ShareRsvp>("share_rsvps").filter((r) => r.event_id === e.id).reduce((n, r) => n + 1 + (r.extra ?? 0), 0);
   const { id, title, event_type, start_time, meetup_time, location, description, status, target } = e;
   // Same as get_share: the discussion item only (never organisational items or who leads off).
   const item = mainDiscussion(listRows<AgendaItem>("agenda"), e.id);
@@ -143,6 +143,11 @@ export async function getPublicShare(token: string): Promise<PublicShare | null>
     reading: (() => {
       const main = listRows<SharedRead>("shared_reads").find((r) => r.event_id === e.id && r.main)?.url;
       const links = (item?.prep_links ?? []).filter((l) => /^https?:/.test(l.url)).slice(0, 8);
+      // No discussion item (paper sales, stalls): the readings set for the event itself.
+      if (links.length === 0) {
+        const own = listRows<SharedRead>("shared_reads").filter((r) => r.event_id === e.id && /^https?:/.test(r.url));
+        return [...own.filter((r) => r.main), ...own.filter((r) => !r.main)].slice(0, 8).map((r) => ({ label: r.title, url: r.url, kind: null }));
+      }
       return [...links.filter((l) => l.url === main), ...links.filter((l) => l.url !== main)].map((l) => ({ label: l.label, url: l.url, kind: l.kind ?? null }));
     })(),
     book: rg?.book ?? null,
@@ -161,12 +166,23 @@ export async function getPublicShareImage(token: string): Promise<string | null>
   return liveShare(token)?.image ?? null;
 }
 
-export async function addPublicRsvp(token: string, name: string, note: string | null): Promise<{ ok: boolean; error?: string }> {
+/**
+ * Short fingerprint of the picture. The preview URL carries it, so editing the graphic gives
+ * WhatsApp and friends a new URL to fetch instead of the old one they've cached.
+ */
+export async function getPublicShareImageVersion(token: string): Promise<string> {
+  const data = await getPublicShareImage(token);
+  return data ? createHash("sha1").update(data).digest("base64url").slice(0, 10) : "0";
+}
+
+export async function addPublicRsvp(token: string, name: string, note: string | null, whoSent: string | null = null, extra = 0): Promise<{ ok: boolean; error?: string }> {
   const n = name.trim().slice(0, 60);
+  const who = whoSent?.trim().slice(0, 60) || null;
+  const more = Number.isFinite(extra) ? Math.max(0, Math.min(5, Math.trunc(extra))) : 0;
   if (!n) return { ok: false, error: "Your name, so they know who's coming" };
   if (isSupabaseConfigured) {
     const supabase = await createClient();
-    const { data, error } = await supabase.rpc("add_share_rsvp", { p_token: token, p_name: n, p_note: note });
+    const { data, error } = await supabase.rpc("add_share_rsvp", { p_token: token, p_name: n, p_note: note, p_who_sent: who, p_extra: more });
     if (error) return { ok: false, error: "Couldn't save that — try again" };
     return data as { ok: boolean; error?: string };
   }
@@ -177,12 +193,12 @@ export async function addPublicRsvp(token: string, name: string, note: string | 
   const mine = listRows<ShareRsvp>("share_rsvps").filter((r) => r.share_id === s.id);
   if (mine.length >= 200) return { ok: false, error: "Full up — message whoever sent you the link" };
   if (!mine.some((r) => r.name.toLowerCase() === n.toLowerCase())) {
-    insertRow<ShareRsvp>("share_rsvps", { share_id: s.id, event_id: e.id, name: n, note: note?.trim().slice(0, 300) || null, created_at: now() });
+    insertRow<ShareRsvp>("share_rsvps", { share_id: s.id, event_id: e.id, name: n, note: note?.trim().slice(0, 300) || null, who_sent: who, extra: more, created_at: now() });
   }
   const going =
     listRows<{ id: string; event_id: string; status: string }>("rsvps").filter((r) => r.event_id === e.id && r.status === "going").length +
     listRows<{ id: string; event_id: string; status: string }>("event_guests").filter((g) => g.event_id === e.id && g.status === "going").length +
-    listRows<ShareRsvp>("share_rsvps").filter((r) => r.event_id === e.id).length;
+    listRows<ShareRsvp>("share_rsvps").filter((r) => r.event_id === e.id).reduce((n, r) => n + 1 + (r.extra ?? 0), 0);
   if (e.status === "tentative" && e.target && going >= e.target) updateRow<Event>("events", e.id, { status: "on" });
   return { ok: true };
 }

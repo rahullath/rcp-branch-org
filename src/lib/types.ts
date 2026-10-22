@@ -306,6 +306,9 @@ export interface EventGuest {
   /** Said "I'm coming" on the share link — no People entry, just the name they gave. */
   via_link?: boolean;
   name?: string;
+  who_sent?: string | null;
+  extra?: number;
+  note?: string | null;
 }
 
 export function eventLead(e: Pick<Event, "lead_id" | "posted_by">): string | null {
@@ -681,6 +684,10 @@ export interface ShareRsvp {
   event_id: string;
   name: string;
   note?: string | null;
+  /** Free text: who sent them the link. Lets the branch place a stranger without asking for contact details. */
+  who_sent?: string | null;
+  /** How many more they're bringing. */
+  extra?: number;
   created_at: string;
 }
 

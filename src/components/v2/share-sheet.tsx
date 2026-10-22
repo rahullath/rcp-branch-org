@@ -117,6 +117,8 @@ export function ShareSheet({ event, summary, onClose }: { event: Event; summary:
                 {viaLink.map((g) => (
                   <span key={g.id} className="whop">
                     {g.name}
+                    {g.extra ? ` +${g.extra}` : ""}
+                    {g.who_sent ? <span className="small"> · via {g.who_sent}</span> : null}
                     <button
                       type="button"
                       aria-label={`Remove ${g.name}`}
