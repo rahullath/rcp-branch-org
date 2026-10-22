@@ -22,6 +22,13 @@ const TYPES: { value: EventType; label: string; title: string }[] = [
   { value: "one_on_one", label: "1-on-1", title: "e.g. Coffee with Ana" },
 ];
 
+/** The same types in three groups, so eleven chips read as three small choices. */
+const TYPE_GROUPS: { title: string; types: EventType[] }[] = [
+  { title: "Meetings", types: ["branch", "open_meeting", "reading_group", "committee", "one_on_one"] },
+  { title: "Out and about", types: ["paper_sale", "uni_stall", "mobilization", "postering", "phonebank"] },
+  { title: "Social", types: ["social"] },
+];
+
 /** Sales, stalls and demos have a meet-up before the start. */
 const MEETUP_TYPES: EventType[] = ["paper_sale", "uni_stall", "mobilization", "postering"];
 
@@ -110,19 +117,31 @@ export function EventModal({
       <form onSubmit={submit} className="v2 stack8">
         <div className="fld">
           <span>What kind</span>
-          <div className="row gap6 wrap" role="radiogroup" aria-label="Event type">
-            {TYPES.map((t) => (
-              <button
-                key={t.value}
-                type="button"
-                role="radio"
-                aria-checked={eventType === t.value}
-                className="lchip big"
-                style={eventType === t.value ? { background: "var(--ink)", color: "#fff", borderColor: "var(--ink)" } : undefined}
-                onClick={() => setEventType(t.value)}
-              >
-                {t.label}
-              </button>
+          <div role="radiogroup" aria-label="Event type" className="stack6">
+            {TYPE_GROUPS.map((g) => (
+              <div key={g.title}>
+                <p className="small" style={{ margin: "0 0 4px" }}>
+                  {g.title}
+                </p>
+                <div className="row gap6 wrap">
+                  {g.types.map((v) => {
+                    const t = TYPES.find((x) => x.value === v)!;
+                    return (
+                      <button
+                        key={t.value}
+                        type="button"
+                        role="radio"
+                        aria-checked={eventType === t.value}
+                        className="lchip big"
+                        style={eventType === t.value ? { background: "var(--ink)", color: "#fff", borderColor: "var(--ink)" } : undefined}
+                        onClick={() => setEventType(t.value)}
+                      >
+                        {t.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             ))}
           </div>
           {eventType === "social" && !event && (
