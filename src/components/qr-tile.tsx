@@ -18,7 +18,7 @@ export const QR_KINDS = [
 
 export type QrCorner = "br" | "bl" | "tr" | "tl";
 
-const QR_EMBLEM = "/brand/rcs/marks/hammer-sickle-red.png";
+export const QR_EMBLEM = "/brand/rcs/marks/hammer-sickle-red.png";
 const INK = "#0a0a08";
 const EYE = "#c8102e";
 /** Hammer and sickle are 259×382: height ÷ width. */
@@ -100,6 +100,7 @@ export function QrTile({
   lower,
   frame,
   frameText,
+  flow = false,
   u,
 }: {
   link: string;
@@ -111,16 +112,16 @@ export function QrTile({
   lower: boolean;
   frame: string;
   frameText: string;
+  /** Sit in the normal layout (so neighbours make room) instead of pinned to a corner. */
+  flow?: boolean;
   u: (n: number) => string;
 }) {
   const text = normaliseLink(link);
   const m = text ? build(text, brand) : null;
   if (!m) return null;
-  const pos: CSSProperties = {
-    position: "absolute",
-    [corner[0] === "t" ? "top" : "bottom"]: u(4),
-    [corner[1] === "l" ? "left" : "right"]: u(4),
-  };
+  const pos: CSSProperties = flow
+    ? { position: "relative", flex: "none" }
+    : { position: "absolute", [corner[0] === "t" ? "top" : "bottom"]: u(4), [corner[1] === "l" ? "left" : "right"]: u(4) };
   const e = emblemBox(m);
   const span = m.size + MARGIN * 2;
   const pad = brand ? 1.2 : 1.8;

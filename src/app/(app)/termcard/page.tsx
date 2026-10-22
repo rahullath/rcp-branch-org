@@ -13,8 +13,8 @@ import { EVENT_TYPE_META, type BranchLinks, type Event, type EventType } from "@
 import { COLOURWAYS, type ColourwayId } from "@/components/rcs-graphic";
 import { QR_KINDS } from "@/components/qr-tile";
 import { DEFAULT_TERM_OPTIONS, rowCapacity, TERM_SIZES, TermCard, type TermOptions, type TermRow, type TermSizeId } from "@/components/termcard";
-import { fmtDayNum, fmtMonth, fmtTime, fmtWeekday, firstPart } from "@/components/features/primitives";
-import { useToast } from "@/components/features/toast";
+import { fmtDayNum, fmtMonth, fmtTime, fmtWeekday, firstPart } from "@/components/v2/primitives";
+import { useToast } from "@/components/v2/toast";
 import { Spinner } from "@/components/ui";
 
 /** Types a society hands out by default: the ones contacts can come to. Branch and committee meetings are the member-only ones. */
@@ -101,7 +101,7 @@ export default function TermCardPage() {
     return out.sort((a, b) => a.at.localeCompare(b.at)).map((r) => ({ key: r.key, weekday: r.weekday, day: r.day, month: r.month, time: r.time, title: r.title, where: r.where }));
   }, [candidates, off, edits, extras, festival, withFestival, from, to]);
 
-  const capacity = rowCapacity(o.size);
+  const capacity = rowCapacity(opts, !!opts.kicker);
   // Whole lines only: anything past what fits is left off rather than cut in half.
   const shown = rows.slice(0, capacity);
   const toggleType = (t: EventType) => setTypes((p) => (p.has(t) ? new Set([...p].filter((x) => x !== t)) : new Set([...p, t])));
@@ -174,7 +174,7 @@ export default function TermCardPage() {
   }
 
   return (
-    <div className="screen pg pg-g">
+    <div className="v2 pg pg-g">
       <div className="ph">
         <Link className="btn-ic" href="/social-media" aria-label="Back to Social">
           <ArrowLeft size={18} strokeWidth={2.25} />
@@ -187,7 +187,7 @@ export default function TermCardPage() {
 
       <div className="preview">
         <div className="pv-in" style={{ display: "flex", justifyContent: "center" }}>
-          <div style={{ width: o.size === "square" ? "100%" : "auto", height: o.size === "square" ? "auto" : 400, aspectRatio: `${size.mmW} / ${size.mmH}`, maxWidth: "100%" }}>
+          <div style={{ width: o.size === "square" ? "100%" : "auto", height: o.size === "square" ? "auto" : "min(400px, 52vh)", aspectRatio: `${size.mmW} / ${size.mmH}`, maxWidth: "100%" }}>
             <TermCard rows={shown} o={opts} u={(n) => `${n}cqmin`} frame={{ ...previewFrame, width: "100%", height: "100%", maxHeight: "none" }} />
           </div>
         </div>
@@ -309,6 +309,7 @@ export default function TermCardPage() {
           <input className="inp" value={o.title} onChange={(e) => set("title", e.target.value)} placeholder="Heading, e.g. Autumn term" aria-label="Heading" />
           <input className="inp" value={o.period} onChange={(e) => set("period", e.target.value)} placeholder={`Dates line (${periodText(from, to)})`} aria-label="Dates line" />
           <input className="inp" value={o.footer} onChange={(e) => set("footer", e.target.value)} placeholder="Bottom line, e.g. communist.red/join" aria-label="Bottom line" />
+          {o.qr.trim() && o.footer.length > 20 && <p className="small" style={{ margin: 0 }}>With a QR code the bottom line is cut short to fit beside it.</p>}
         </div>
       </div>
 

@@ -65,12 +65,47 @@ export const DEFAULT_TERM_OPTIONS: TermOptions = {
   bleed: false,
 };
 
-/** How many rows a card can show before it gets cramped. */
-export function rowCapacity(size: TermSizeId) {
-  return size === "a6" ? 8 : size === "square" ? 8 : 13;
+/** The type size for a list of `n` lines on this size of card (1u = 1% of the card's shorter side). */
+function baseSize(size: TermSizeId, n: number) {
+  if (size === "square") return n <= 4 ? 4.2 : n <= 6 ? 3.6 : 3.1;
+  if (size === "a6") return n <= 4 ? 4.6 : n <= 6 ? 4 : 3.5;
+  return n <= 5 ? 4.2 : n <= 8 ? 3.5 : n <= 10 ? 3.1 : 2.75;
+}
+
+const PAD = 7;
+/** A line's height as a multiple of the type size (measured from the rendered card). */
+const ROW_K = 2.6;
+/** Height of the QR tile with its caption band, in u (measured from the rendered tile). */
+const QR_SIZE = 19;
+const QR_BLOCK = QR_SIZE + 9.5;
+
+/** Heading size: shrinks so the heading stays on one line however long it is. */
+export function headingSize(title: string, square: boolean) {
+  const start = title.length > 16 ? (square ? 8 : 9) : square ? 10 : 12;
+  return Math.max(6, Math.min(start, (100 - 2 * PAD) / Math.max(1, title.length * 0.55)));
+}
+
+/** How many lines fit on the card with what's around them. Whole lines only: a longer list is cut here, not mid-line. */
+export function rowCapacity(o: Pick<TermOptions, "size" | "kicker" | "title" | "period" | "footer" | "emblem" | "qr">, kickerShown: boolean): number {
+  const square = o.size === "square";
+  const cardH = (100 * TERM_SIZES[o.size].mmH) / TERM_SIZES[o.size].mmW;
+  const header = (kickerShown ? 2.8 * 1.15 : 0) + 2.4 + headingSize(o.title, square) * 0.9 + (o.period ? 3.4 * 1.2 + 1.6 : 0) + 4;
+  const footer = o.qr.trim() ? QR_BLOCK : o.footer || o.emblem ? 10 : 0;
+  const avail = cardH - 2 * PAD - header - footer - (footer ? 3 : 0);
+  let best = 1;
+  for (let n = 1; n <= 30; n++) {
+    const base = baseSize(o.size, n);
+    const row = base * ROW_K;
+    const gap = base * 0.55;
+    const cols = square && n > 4 ? 2 : 1;
+    const perCol = Math.ceil(n / cols);
+    if (perCol * row + (perCol - 1) * gap <= avail) best = n;
+  }
+  return best;
 }
 
 const ARCHIVO = "var(--font-archivo), Archivo, sans-serif";
+const ONE_LINE: CSSProperties = { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" };
 const R = "/brand/rcs";
 
 export function TermCard({ rows, o, u, frame, bleedU = 0 }: { rows: TermRow[]; o: TermOptions; u: (n: number) => string; frame: CSSProperties; bleedU?: number }) {
@@ -79,16 +114,16 @@ export function TermCard({ rows, o, u, frame, bleedU = 0 }: { rows: TermRow[]; o
   const hasQr = !!o.qr.trim();
   const n = rows.length;
   // Type steps down as the list grows, so a longer term still fits the card.
-  const base = square ? (n <= 4 ? 4.2 : n <= 6 ? 3.6 : 3.1) : o.size === "a6" ? (n <= 4 ? 4.6 : n <= 6 ? 4 : 3.5) : n <= 5 ? 4.2 : n <= 8 ? 3.5 : n <= 10 ? 3.1 : 2.75;
-  const pad = 7;
-  const footerH = hasQr ? 30 : o.footer || o.emblem ? 12 : 4;
+  const base = baseSize(o.size, n);
+  const pad = PAD;
   const heading: CSSProperties = {
     fontFamily: `'Brunson', ${ARCHIVO}`,
     fontWeight: 700,
     textTransform: "uppercase",
     lineHeight: 0.9,
     margin: 0,
-    fontSize: u(o.title.length > 16 ? (square ? 9 : 11) : square ? 11 : 14),
+    fontSize: u(headingSize(o.title, square)),
+    whiteSpace: "nowrap",
   };
   return (
     <div style={{ ...frame, position: "relative", overflow: "hidden", background: c.bg, color: c.fg }}>
@@ -102,7 +137,7 @@ export function TermCard({ rows, o, u, frame, bleedU = 0 }: { rows: TermRow[]; o
             flex: 1,
             minHeight: 0,
             display: "grid",
-            gridTemplateColumns: square && n > 4 ? "1fr 1fr" : "1fr",
+            gridTemplateColumns: square && n > 4 ? "minmax(0, 1fr) minmax(0, 1fr)" : "minmax(0, 1fr)",
             gridAutoRows: "min-content",
             alignContent: "start",
             columnGap: u(4),
@@ -112,28 +147,27 @@ export function TermCard({ rows, o, u, frame, bleedU = 0 }: { rows: TermRow[]; o
         >
           {rows.map((r) => (
             <div key={r.key} style={{ display: "flex", gap: u(base * 0.7), alignItems: "stretch" }}>
-              <div style={{ background: c.blockBg, color: c.blockFg, minWidth: u(base * 3.9), padding: `${u(base * 0.3)} ${u(base * 0.4)}`, textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                <span style={{ font: `700 ${u(base * 0.62)}/1 ${ARCHIVO}`, letterSpacing: "0.1em", textTransform: "uppercase" }}>{r.weekday}</span>
-                <span style={{ fontFamily: `'Brunson', ${ARCHIVO}`, fontWeight: 700, fontSize: u(base * 1.55), lineHeight: 1 }}>{r.day}</span>
-                <span style={{ font: `700 ${u(base * 0.62)}/1 ${ARCHIVO}`, letterSpacing: "0.1em", textTransform: "uppercase" }}>{r.month}</span>
+              <div style={{ background: c.blockBg, color: c.blockFg, minWidth: u(base * 3.6), padding: `${u(base * 0.25)} ${u(base * 0.4)}`, textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <span style={{ fontFamily: `'Brunson', ${ARCHIVO}`, fontWeight: 700, fontSize: u(base * 1.4), lineHeight: 1 }}>{r.day}</span>
+                <span style={{ font: `700 ${u(base * 0.6)}/1.1 ${ARCHIVO}`, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                  {r.weekday} {r.month}
+                </span>
               </div>
-              <div style={{ minWidth: 0, alignSelf: "center" }}>
-                <p style={{ font: `800 ${u(base)}/1.1 ${ARCHIVO}`, textTransform: "uppercase", margin: 0, letterSpacing: "0.01em" }}>{r.title}</p>
-                {(r.time || r.where) && <p style={{ font: `600 ${u(base * 0.72)}/1.25 ${ARCHIVO}`, margin: `${u(base * 0.18)} 0 0` }}>{[r.time, r.where].filter(Boolean).join(" · ")}</p>}
+              <div style={{ flex: 1, minWidth: 0, alignSelf: "center" }}>
+                <p style={{ font: `800 ${u(base)}/1.1 ${ARCHIVO}`, textTransform: "uppercase", margin: 0, letterSpacing: "0.01em", ...ONE_LINE }}>{r.title}</p>
+                {(r.time || r.where) && <p style={{ font: `600 ${u(base * 0.72)}/1.25 ${ARCHIVO}`, margin: `${u(base * 0.18)} 0 0`, ...ONE_LINE }}>{[r.time, r.where].filter(Boolean).join(" · ")}</p>}
               </div>
             </div>
           ))}
         </div>
-        <div style={{ height: u(footerH), flex: "none", display: "flex", alignItems: "flex-end", gap: u(4), marginRight: hasQr ? u(28) : 0 }}>
-          {o.emblem && <img src={c.mark} alt="" style={{ height: u(c.wide ? 5.4 : 9), width: "auto", display: "block" }} />}
-          {o.footer && <p style={{ font: `800 ${u(3)}/1.2 ${ARCHIVO}`, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0 }}>{o.footer}</p>}
+        <div style={{ flex: "none", marginTop: u(3), display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: u(4) }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: u(4), flex: "1 1 0", minWidth: 0, overflow: "hidden" }}>
+            {o.emblem && <img src={c.mark} alt="" style={{ height: u(c.wide ? 5.4 : 9), width: "auto", display: "block" }} />}
+            {o.footer && <p style={{ font: `800 ${u(3)}/1.2 ${ARCHIVO}`, letterSpacing: "0.04em", textTransform: "uppercase", margin: 0, flex: "1 1 0", minWidth: 0, ...ONE_LINE }}>{o.footer}</p>}
+          </div>
+          {hasQr && <QrTile link={o.qr} caption={o.qrCaption} corner="br" size={QR_SIZE} brand={o.qrBrand} lower={o.qrLower} frame={c.blockBg} frameText={c.blockFg} flow u={u} />}
         </div>
       </div>
-      {hasQr && (
-        <div style={{ position: "absolute", inset: u(bleedU) }}>
-          <QrTile link={o.qr} caption={o.qrCaption} corner="br" size={21} brand={o.qrBrand} lower={o.qrLower} frame={c.blockBg} frameText={c.blockFg} u={u} />
-        </div>
-      )}
       {o.grain && <div style={{ position: "absolute", inset: 0, backgroundImage: `url('${R}/grain.png')`, backgroundSize: "cover", mixBlendMode: "multiply", opacity: 0.16, pointerEvents: "none" }} />}
     </div>
   );
