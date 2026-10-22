@@ -1,9 +1,9 @@
-/* Client-safe half of the JSON import: the modules and the prompt for any AI chat. */
+/* Client-safe half of the JSON import: the modules and the prompt for a chat assistant. */
 
 import FIELDS from "./import-fields.json";
 
 /**
- * Every field the AI is asked for, per section, with the example shown in the
+ * Every field the assistant is asked for, per section, with the example shown in the
  * prompt. The single source of truth: the prompt is written from it, the
  * importer's rows are typed from it (reading anything else won't compile),
  * and `npm run build` checks the importer reads every one of them.
@@ -37,7 +37,7 @@ export interface JsonImportLine {
   similar?: string[];
 }
 
-/** The prompt to paste into any AI chat with your notes. Today's date makes "next Tuesday" resolvable. */
+/** The prompt to paste into a chat assistant with your notes. Today's date makes "next Tuesday" resolvable. */
 export function importPrompt(today: string, branch: string) {
   return `You are helping a branch of the Revolutionary Communist Party (${branch}, UK) move its notes into its organising app. Below my message I'll paste a dump of notes — chat messages, meeting notes, lists. Turn it into ONE JSON object and reply with ONLY that JSON (no commentary, no code fences).
 

@@ -18,7 +18,7 @@ type Sent = Omit<ImportRequest, "data"> & { rows: number; modules: string[] };
 
 /**
  * One place to bring things in. Messy notes → copy the prompt, paste it and
- * the notes into any AI chat, paste its JSON back here, check, import. The
+ * the notes into a chat assistant, paste its JSON back here, check, import. The
  * app matches names to people and skips what it already has. Your contacts
  * go straight in; an officer's other rows go to the admin to check first.
  */
@@ -37,7 +37,7 @@ export default function ImportPage() {
 
   async function copyPrompt() {
     await navigator.clipboard.writeText(importPrompt(londonDay(Date.now()), branch?.name ?? "the branch"));
-    toast("Prompt copied — paste it into any AI chat, then your notes under it");
+    toast("Prompt copied — paste it into your chat assistant, then your notes under it");
   }
 
   async function check() {
@@ -118,12 +118,12 @@ export default function ImportPage() {
 
       <details className="aiimport" open={!!text.trim() || !!preview}>
         <summary className="small" style={{ cursor: "pointer", margin: "4px 0 8px" }}>
-          Got a pile of notes, minutes or lists? Tidy them with an AI chat first
+          Got a pile of notes, minutes or lists? Use the tidy-up helper first
         </summary>
       <section>
-        <SectionHead title="Messy notes? Tidy them with AI" />
+        <SectionHead title="Messy notes? Use the tidy-up helper" />
         <ol className="small stack6" style={{ paddingLeft: 18, margin: "0 0 10px" }}>
-          <li>Copy the prompt and paste it into any AI chat (ChatGPT, Claude, Gemini…).</li>
+          <li>Copy the prompt and paste it into a chat assistant (ChatGPT, Claude, Gemini…).</li>
           <li>Under it, paste your notes: minutes, lists, stock counts, names and numbers.</li>
           <li>Paste the JSON it replies with below, check it, import.</li>
         </ol>
@@ -134,7 +134,7 @@ export default function ImportPage() {
       </section>
 
       <section>
-        <SectionHead title="Paste the AI's reply" />
+        <SectionHead title="Paste the helper's reply" />
         {!preview ? (
           <>
             <textarea
@@ -143,7 +143,7 @@ export default function ImportPage() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={'{ "contacts": [ … ], "events": [ … ] }'}
-              aria-label="JSON from the AI"
+              aria-label="Reply from the tidy-up helper"
             />
             <button type="button" className="btn btn-p mt8" style={{ width: "100%" }} disabled={busy || !text.trim()} onClick={check}>
               Check

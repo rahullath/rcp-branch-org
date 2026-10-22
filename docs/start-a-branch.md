@@ -18,7 +18,7 @@ Doing these once makes everything else work.
 - **Add your spots** (More → Paper sales → Where we sell). Any "where" field also saves a new spot as you type it. Birmingham branches can add a ready-made list of spots in one tap.
 - **Give out roles** (Settings → Members and roles): organiser, education officer, finance officer, paper sales officer, social media officer.
 - **Put the next branch meeting in** with its discussion topic, lead-off and a reading.
-- **Bring in what you already have.** More → Import gives you a prompt to paste into any AI chat together with your notes, minutes or spreadsheets. It turns them into contacts, events, tasks, materials and reading groups that you check before they go in.
+- **Bring in what you already have.** More → Import gives you a prompt to paste into any chat assistant together with your notes, minutes or spreadsheets. It turns them into contacts, events, tasks, materials and reading groups that you check before they go in.
 
 ## Showing someone how your branch runs
 

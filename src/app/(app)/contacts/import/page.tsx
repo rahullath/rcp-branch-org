@@ -19,7 +19,7 @@ type Row = { key: number; on: boolean; name: string; phone: string; notes: strin
  * Bring in contacts from a notes app or a chat: one per line, name and
  * number, anything else becomes the note. Check the list, set how keen each
  * one is, import. They become your contacts. Too messy to read? The Import
- * page has a prompt that tidies notes with any AI chat first.
+ * page has a prompt that tidies notes with a chat assistant first.
  */
 export default function ImportContactsPage() {
   const toast = useToast();
@@ -68,7 +68,7 @@ export default function ImportContactsPage() {
             Check
           </button>
           <p className="small">
-            Notes too messy for this? <Link className="link" href="/import">Import → tidy with AI</Link> turns any dump into something the app reads.
+            Notes too messy for this? <Link className="link" href="/import">Import → tidy-up helper</Link> turns any dump into something the app reads.
           </p>
         </>
       ) : (

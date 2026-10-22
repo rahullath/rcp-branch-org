@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 const TIERS: ContactTier[] = ["priority", "potential", "cold"];
 
 /**
- * Several contacts at once — a pasted list, or the AI-tidied import. Each
+ * Several contacts at once — a pasted list, or the tidy-up helper import. Each
  * becomes your contact. Skips anyone you already have with the same number
  * (or same name and no number). `consent: true` confirms they were OK with it.
  */

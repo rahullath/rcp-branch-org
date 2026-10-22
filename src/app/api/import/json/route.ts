@@ -5,7 +5,7 @@ import { createImportRequest } from "@/lib/data-v2";
 export const dynamic = "force-dynamic";
 
 /**
- * `{ data, apply?, only? }` — the AI-tidied JSON. Without `apply` it's a
+ * `{ data, apply?, only? }` — the tidied JSON. Without `apply` it's a
  * preview; `only` lists, per module, which rows to import (the ones left ticked).
  *
  * Your own contacts go straight in. Anything else from an officer is sent
@@ -22,10 +22,10 @@ export async function POST(request: Request) {
     try {
       data = JSON.parse(data.replace(/^```(?:json)?\s*|\s*```$/g, ""));
     } catch {
-      return badRequest("That isn't valid JSON — paste exactly what the AI replied.");
+      return badRequest("That isn't valid JSON — paste exactly what the assistant replied.");
     }
   }
-  if (!data || typeof data !== "object" || Array.isArray(data)) return badRequest("Paste the JSON object the AI gave you.");
+  if (!data || typeof data !== "object" || Array.isArray(data)) return badRequest("Paste the JSON object the assistant gave you.");
   const isOfficer = actor.role.some((r) => r !== "member");
   const record = data as Record<string, unknown>;
   if (!isOfficer) {

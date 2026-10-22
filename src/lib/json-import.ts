@@ -32,7 +32,7 @@ function lookalikes(name: string, existing: string[]) {
 }
 
 /*
- * The "tidy it with AI" import. Any notes dump goes through an AI chat with
+ * The "tidy-up helper" import. Any notes dump goes through a chat assistant with
  * IMPORT_PROMPT and comes back as one JSON object, split by module. This
  * reads that object, matches names to people (accounts, People, initials),
  * shows what it will do, and does it. Same dry-run/apply pattern as the

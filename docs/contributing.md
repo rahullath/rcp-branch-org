@@ -23,7 +23,7 @@ npm run build      # also fails if the import prompt lists a field the importer 
 
 - Every data function in `src/lib/data.ts` and `src/lib/data-v2.ts` works in both modes: Supabase when configured, the JSON file otherwise. Routes don't need to know which.
 - Inbox cards are worked out in `src/lib/inbox.ts` from rows already loaded. To add one: a new `kind` in the `Ask` type (`src/lib/types.ts`), the rule in `deriveAsks`, and its card in `src/components/v2/ask-card.tsx`.
-- Anything the AI import understands is listed once, in `src/lib/import-fields.json`. The prompt is written from it and `scripts/check-import.mjs` checks the importer reads every field.
+- Anything the tidy-up helper understands is listed once, in `src/lib/import-fields.json`. The prompt is written from it and `scripts/check-import.mjs` checks the importer reads every field.
 - Database changes go in a new file under `supabase/migrations/`, and in `supabase/setup.sql` so new copies get them too.
 
 ## Writing for the app
