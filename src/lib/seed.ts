@@ -26,6 +26,7 @@ import type {
   ReadingGroupMember,
   ReadingGroupContact,
   Branch,
+  BranchLinks,
   Comrade,
   EventGuest,
   EventShare,
@@ -825,6 +826,7 @@ export interface DevDb {
   import_requests: ImportRequest[];
   event_invites: EventInvite[];
   shared_reads: SharedRead[];
+  branch_links: (BranchLinks & { id: string })[];
   calendar_tokens: { id: string; user_id: string; token: string; created_at: string }[];
   reading_group_guests: ReadingGroupGuest[];
   reading_group_invites: ReadingGroupInvite[];
@@ -923,6 +925,7 @@ export function createSeedDb(): DevDb {
     import_requests: [],
     event_invites: [],
     shared_reads: [],
+    branch_links: [],
     feedback: [],
     topic_ideas: [
       { id: "ti-1", title: "Women's oppression", kind: "branch", interested: [], created_by: "u-gen-sec", created_at: "2026-10-11T17:00:00.000Z" },

@@ -283,6 +283,14 @@ export const EVENT_SCOPE_LABEL: Record<EventScope, string> = {
 };
 
 /** A branch. Everything branch-owned belongs to one; people join with its code. */
+/** The branch's saved links for QR codes on graphics: the WhatsApp group and Instagram page. */
+export interface BranchLinks {
+  branch_id: string;
+  whatsapp?: string | null;
+  instagram?: string | null;
+  updated_at?: string;
+}
+
 export interface Branch {
   id: string;
   name: string;

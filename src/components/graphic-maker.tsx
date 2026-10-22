@@ -1,6 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { put } from "@/lib/client";
+import { revalidate, useData } from "@/lib/hooks";
+import { useActor } from "@/lib/actor-context";
+import { hasAnyRole } from "@/lib/permissions";
+import type { BranchLinks } from "@/lib/types";
 import { createPortal } from "react-dom";
 import { Download, ExternalLink, Share2 } from "lucide-react";
 import { toJpeg, toPng } from "html-to-image";
@@ -119,6 +124,9 @@ export function GraphicMaker({
   const [panel, setPanel] = useState<"design" | "text">("design");
   const [fields, setFields] = useState<GraphicFields>(() => seedFields(seed));
   const [exporting, setExporting] = useState(false);
+  const actor = useActor();
+  const { data: saved } = useData<BranchLinks | null>("/api/branch-links");
+  const canSaveLinks = hasAnyRole(actor, "social_media_officer", "organizer", "general_secretary");
   const exportRef = useRef<HTMLDivElement>(null);
 
   const f = fields[tpl];
@@ -159,6 +167,25 @@ export function GraphicMaker({
   }
 
   const qrLink = normaliseLink(o.qr);
+  const kind = QR_KINDS.find((k) => k.caption === o.qrCaption);
+  const savedLink = kind?.saved ? (saved?.[kind.saved] ?? null) : null;
+
+  /** A kind's chip sets its short caption and, when the branch has saved that link, fills it in. */
+  function pickKind(k: (typeof QR_KINDS)[number]) {
+    const link = k.saved ? saved?.[k.saved] : null;
+    setO((p) => ({ ...p, qrCaption: k.caption, ...(link ? { qr: link } : {}) }));
+  }
+
+  async function saveLink() {
+    if (!kind?.saved) return;
+    try {
+      await put("/api/branch-links", { [kind.saved]: qrLink });
+      revalidate("/api/branch-links");
+      toast(`Saved as your branch's ${kind.label} link`);
+    } catch (e) {
+      toast(e instanceof Error ? e.message : "Couldn't save the link");
+    }
+  }
 
   /** The QR on its own (PNG and SVG), for dropping into Canva or any editor and placing by hand. */
   async function saveQr() {
@@ -354,7 +381,7 @@ export function GraphicMaker({
             <div className="opts">
               <div className="mini" style={{ flexWrap: "wrap" }}>
                 {QR_KINDS.map((k) => (
-                  <button key={k.id} type="button" className={o.qrCaption === k.caption ? "on" : ""} onClick={() => setO((p) => ({ ...p, qrCaption: k.caption }))}>
+                  <button key={k.id} type="button" className={o.qrCaption === k.caption ? "on" : ""} onClick={() => pickKind(k)}>
                     {k.label}
                   </button>
                 ))}
@@ -364,7 +391,7 @@ export function GraphicMaker({
               <input
                 value={o.qr}
                 onChange={(e) => opt("qr", e.target.value)}
-                placeholder={QR_KINDS.find((k) => k.caption === o.qrCaption)?.hint ?? "Paste a link: WhatsApp group, Instagram, a form…"}
+                placeholder={kind?.hint ?? "Paste a link: WhatsApp group, Instagram, a form…"}
                 inputMode="url"
                 autoCapitalize="none"
                 spellCheck={false}
@@ -373,10 +400,23 @@ export function GraphicMaker({
               </div>
               {o.qr && (
                 <div className="fld">
-                  <input value={o.qrCaption} onChange={(e) => opt("qrCaption", e.target.value)} placeholder="Caption under the QR (optional)" aria-label="QR caption" />
+                  <input value={o.qrCaption} onChange={(e) => opt("qrCaption", e.target.value)} placeholder="Caption under the QR (optional), e.g. whatsapp" aria-label="QR caption" />
                 </div>
               )}
               </div>
+              {kind?.saved && (
+                <p className="small" style={{ margin: 0 }}>
+                  {savedLink && normaliseLink(o.qr) === savedLink ? (
+                    "This is your branch's saved link."
+                  ) : o.qr && canSaveLinks ? (
+                    <button type="button" className="link" onClick={saveLink}>
+                      Save as our {kind.label} link
+                    </button>
+                  ) : !savedLink ? (
+                    `No ${kind.label} link saved for your branch yet.${canSaveLinks ? " Paste it once and save it." : " Ask the social media officer to save it."}`
+                  ) : null}
+                </p>
+              )}
               {o.qr && (
                 <>
                   <div className="opt">
@@ -387,6 +427,17 @@ export function GraphicMaker({
                       </button>
                       <button type="button" className={!o.qrBrand ? "on" : ""} onClick={() => opt("qrBrand", false)}>
                         Plain
+                      </button>
+                    </div>
+                  </div>
+                  <div className="opt">
+                    <span>Caption</span>
+                    <div className="mini">
+                      <button type="button" className={o.qrLower ? "on" : ""} onClick={() => opt("qrLower", true)}>
+                        lowercase
+                      </button>
+                      <button type="button" className={!o.qrLower ? "on" : ""} onClick={() => opt("qrLower", false)}>
+                        UPPERCASE
                       </button>
                     </div>
                   </div>

@@ -8,26 +8,12 @@ export function normaliseLink(raw: string): string {
   return /^[a-z][a-z0-9+.-]*:/i.test(s) ? s : `https://${s}`;
 }
 
-/** Quick starts for the QR box: what the label says and what to paste. */
+/** Quick starts for the QR box: a short caption, and whether the branch can save a link for it. */
 export const QR_KINDS = [
-  {
-    id: "whatsapp",
-    label: "WhatsApp group",
-    caption: "Scan to join the WhatsApp",
-    hint: "https://chat.whatsapp.com/…",
-  },
-  {
-    id: "instagram",
-    label: "Instagram",
-    caption: "Follow us on Instagram",
-    hint: "https://instagram.com/…",
-  },
-  {
-    id: "link",
-    label: "Any link",
-    caption: "Scan to find out more",
-    hint: "https://…",
-  },
+  { id: "whatsapp", label: "WhatsApp", caption: "whatsapp", hint: "https://chat.whatsapp.com/…", saved: "whatsapp" },
+  { id: "instagram", label: "Instagram", caption: "instagram", hint: "https://instagram.com/…", saved: "instagram" },
+  { id: "rsvp", label: "RSVP", caption: "rsvp", hint: "The event's share link", saved: null },
+  { id: "link", label: "Other link", caption: "scan me", hint: "https://…", saved: null },
 ] as const;
 
 export type QrCorner = "br" | "bl" | "tr" | "tl";
@@ -111,6 +97,7 @@ export function QrTile({
   corner,
   size,
   brand,
+  lower,
   frame,
   frameText,
   u,
@@ -120,6 +107,8 @@ export function QrTile({
   corner: QrCorner;
   size: number;
   brand: boolean;
+  /** Caption in lowercase instead of capitals. */
+  lower: boolean;
   frame: string;
   frameText: string;
   u: (n: number) => string;
@@ -179,9 +168,9 @@ export function QrTile({
             padding: brand ? `${u(1.2)} ${u(1)}` : 0,
             background: brand ? frame : undefined,
             color: brand ? frameText : INK,
-            font: `800 ${u(2.4)}/1.15 var(--font-archivo), Archivo, sans-serif`,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
+            font: `800 ${u(lower ? 3 : 2.4)}/1.15 var(--font-archivo), Archivo, sans-serif`,
+            letterSpacing: lower ? "0.01em" : "0.06em",
+            textTransform: lower ? "none" : "uppercase",
           }}
         >
           {caption}

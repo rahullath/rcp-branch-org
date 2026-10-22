@@ -65,7 +65,7 @@ function GraphicInner() {
   const festivalSeed: GraphicSeed = {
     tpl: "event",
     fields: { event: { kicker: "Revolutionary Communist Party", title: FESTIVAL.name, sub: "Three days of Marxist discussion", date: "13–15 Nov", time: "", where: FESTIVAL.where, cta: "Get your ticket", link: FESTIVAL.url.replace(/^https?:\/\//, "").replace(/\/$/, "") } },
-    options: { qr: FESTIVAL.url, qrCaption: "Get your ticket" },
+    options: { qr: FESTIVAL.url, qrCaption: "tickets" },
   };
 
   const seed: GraphicSeed | undefined = festival && !event && !post
