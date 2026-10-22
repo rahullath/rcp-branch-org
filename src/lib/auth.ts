@@ -42,11 +42,19 @@ export const getActor = cache(async (): Promise<Actor | null> => {
     const userId = claims?.claims?.sub;
     if (!userId) return null;
     const email = typeof claims.claims.email === "string" ? claims.claims.email : "";
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*, branch:branches!profiles_branch_id_fkey(id,name,district,approved)")
-      .eq("id", userId)
-      .single();
+    const load = () =>
+      supabase
+        .from("profiles")
+        .select("*, branch:branches!profiles_branch_id_fkey(id,name,district,approved)")
+        .eq("id", userId)
+        .single();
+    let { data: profile } = await load();
+    // Signed in but no profile row (an account older than the sign-up trigger, or the row was removed):
+    // make it once, so the person isn't stuck on a screen where nothing saves.
+    if (!profile) {
+      await supabase.rpc("ensure_profile");
+      ({ data: profile } = await load());
+    }
     // The branch is readable only once you're in it (RLS: own branch).
     const branch = (profile as { branch?: Actor["branch"] } | null)?.branch ?? null;
     return {
