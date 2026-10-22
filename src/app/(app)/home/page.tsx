@@ -1,6 +1,7 @@
 "use client";
 
 import { festivalCountdown, festivalDates } from "@/lib/festival";
+import { HomeAnnouncements } from "@/components/features/announcements";
 import { useFestival } from "@/lib/festival-config";
 import { useMemo, useState } from "react";
 import Link from "next/link";
@@ -101,6 +102,8 @@ export default function HomePage() {
           </span>
         </Link>
       )}
+
+      <HomeAnnouncements />
 
       {asks.length > 0 && (
         <section className="askbox">

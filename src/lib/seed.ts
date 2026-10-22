@@ -29,6 +29,7 @@ import type {
   BranchLinks,
   GraphicTemplate,
   Festival,
+  Announcement,
   Comrade,
   EventGuest,
   EventShare,
@@ -831,6 +832,8 @@ export interface DevDb {
   branch_links: (BranchLinks & { id: string })[];
   graphic_templates: GraphicTemplate[];
   festivals: Festival[];
+  announcements: Announcement[];
+  announcement_dismissals: { id: string; user_id: string; announcement_id: string }[];
   calendar_tokens: { id: string; user_id: string; token: string; created_at: string }[];
   reading_group_guests: ReadingGroupGuest[];
   reading_group_invites: ReadingGroupInvite[];
@@ -931,6 +934,8 @@ export function createSeedDb(): DevDb {
     shared_reads: [],
     branch_links: [],
     graphic_templates: [],
+    announcements: [{ id: "an-1", branch_id: DEMO_BRANCH_ID, title: "Open meeting this Wednesday: bring a friend", body: "Doors 6pm for a 6:30 start. We'll finish at the pub.", link: "https://example.org/open-meeting", link_label: "Details", deadline: null, ends_on: null, tag: null, urgent: false, signed_by: "The secretary", archived: false, created_by: "u-gen-sec", created_at: "2026-10-20T10:00:00.000Z" }],
+    announcement_dismissals: [],
     festivals: [{ id: "fest-1", name: "Revolution Festival", start_date: "2026-11-13", end_date: "2026-11-15", location: "London", url: "https://revolutionfestival.co.uk/", active: true }],
     feedback: [],
     topic_ideas: [

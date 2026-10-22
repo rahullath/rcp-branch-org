@@ -14,7 +14,7 @@ import { useNavBadges } from "@/components/features/nav-badges";
  */
 const TILES = ["/agenda", "/education", "/tasks", "/follow-ups", "/materials", "/paper-sales", "/finance", "/resources"];
 /** Officers' tools, as a plain list under the tiles. */
-const OFFICER = ["/social-media", "/people", "/admin/members", "/import", "/imports", "/locations"];
+const OFFICER = ["/announcements", "/social-media", "/people", "/admin/members", "/import", "/imports", "/locations"];
 
 /** Everything outside the weekly loop, grouped by job. Officer tools only show to officers. */
 export default function MorePage() {

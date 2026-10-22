@@ -16,6 +16,7 @@ const navItems = [
   { href: "/programme", label: "Branch Programme", icon: "menu_book" },
   { href: "/resources", label: "Resources", icon: "auto_stories" },
   { href: "/social-media", label: "Social", icon: "campaign" },
+  { href: "/announcements", label: "Announcements", icon: "campaign" },
   { href: "/materials", label: "Materials", icon: "inventory_2" },
   { href: "/locations", label: "Locations", icon: "location_on" },
   { href: "/finance", label: "Finance", icon: "account_balance", private: true },

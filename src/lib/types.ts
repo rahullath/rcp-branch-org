@@ -302,6 +302,30 @@ export interface Festival {
   active: boolean;
 }
 
+/** A card an officer pins for the branch: words, an optional button and link, an optional deadline. */
+export interface Announcement {
+  id: string;
+  branch_id?: string;
+  title: string;
+  body: string;
+  link?: string | null;
+  link_label?: string | null;
+  /** YYYY-MM-DD: the last day to act. Shown as a countdown. */
+  deadline?: string | null;
+  /** YYYY-MM-DD: hide it after this day. Without one it hides 3 days after the deadline, or stays until removed. */
+  ends_on?: string | null;
+  /** Groups announcements for a page of their own, e.g. "festival". */
+  tag?: string | null;
+  urgent: boolean;
+  signed_by?: string | null;
+  archived: boolean;
+  created_by?: string | null;
+  created_at: string;
+}
+
+/** An announcement with whether this person has dismissed it. */
+export type AnnouncementView = Announcement & { dismissed: boolean };
+
 /** A saved graphic design: style, size and (optionally) wording, to start the next one from. */
 export interface GraphicTemplate {
   id: string;
