@@ -41,6 +41,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# local agent notes (written by tooling)
+# local tooling notes
 AGENTS.md
-CLAUDE.md
