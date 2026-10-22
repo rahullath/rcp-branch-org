@@ -13,7 +13,7 @@ import { formatPhone, looksLikePhone, normalizePhone, parseContactLines } from "
 import { CONTACT_SOURCES } from "@/components/v2/sheets";
 import { useToast } from "@/components/v2/toast";
 
-type Row = { key: number; on: boolean; name: string; phone: string; notes: string; tier: ContactTier };
+type Row = { key: number; on: boolean; name: string; phone: string; notes: string };
 
 /**
  * Bring in contacts from a notes app or a chat: one per line, name and
@@ -27,6 +27,8 @@ export default function ImportContactsPage() {
   const [text, setText] = useState("");
   const [rows, setRows] = useState<Row[] | null>(null);
   const [source, setSource] = useState("other");
+  const [tier, setTier] = useState<ContactTier>("potential");
+  const [editing, setEditing] = useState<number | null>(null);
   const [ok, setOk] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -61,7 +63,7 @@ export default function ImportContactsPage() {
             type="button"
             className="btn btn-p"
             disabled={!text.trim()}
-            onClick={() => setRows(parseContactLines(text).map((c, i) => ({ key: i, on: true, name: c.name, phone: c.phone ? formatPhone(c.phone) : "", notes: c.notes ?? "", tier: "potential" })))}
+            onClick={() => setRows(parseContactLines(text).map((c, i) => ({ key: i, on: true, name: c.name, phone: c.phone ? formatPhone(c.phone) : "", notes: c.notes ?? "" })))}
           >
             Check
           </button>
@@ -71,40 +73,68 @@ export default function ImportContactsPage() {
         </>
       ) : (
         <>
-          <select className="inp" value={source} onChange={(e) => setSource(e.target.value)} aria-label="Where you met them">
-            {CONTACT_SOURCES.map((s) => (
-              <option key={s.value} value={s.value}>
-                Met at: {s.label}
-              </option>
-            ))}
-          </select>
+          <div className="row gap8" style={{ flexWrap: "wrap" }}>
+            <select className="inp grow" value={source} onChange={(e) => setSource(e.target.value)} aria-label="Where you met them">
+              {CONTACT_SOURCES.map((s) => (
+                <option key={s.value} value={s.value}>
+                  Met at: {s.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <p className="small" style={{ margin: "0 0 4px" }}>
+              How keen are they? <span className="muted">(applies to all; change one later from its page)</span>
+            </p>
+            <span className="tabs3">
+              {CONTACT_TIERS.map((t) => (
+                <button key={t.value} type="button" className={tier === t.value ? "on" : ""} onClick={() => setTier(t.value)}>
+                  {t.label}
+                </button>
+              ))}
+            </span>
+          </div>
+          <p className="small" style={{ margin: 0 }}>
+            {ready.length} of {rows.length} will be added. Untick any you don&apos;t want; tap Edit to fix a name or number.
+          </p>
           <div className="matlist">
             {rows.map((r) => {
               const n = normalizePhone(r.phone);
+              const open = editing === r.key;
               return (
-                <div key={r.key} className="mat-r" style={{ alignItems: "flex-start", flexWrap: "wrap", gap: 8, opacity: r.on ? 1 : 0.5 }}>
-                  <input type="checkbox" checked={r.on} onChange={(e) => set(r.key, { on: e.target.checked })} aria-label="Include" style={{ marginTop: 10 }} />
+                <div key={r.key} className="mat-r" style={{ alignItems: "flex-start", gap: 8, opacity: r.on ? 1 : 0.5 }}>
+                  <input type="checkbox" checked={r.on} onChange={(e) => set(r.key, { on: e.target.checked })} aria-label={`Include ${r.name}`} style={{ marginTop: 4 }} />
                   <span className="grow min0 stack6">
-                    <input className="inp" value={r.name} onChange={(e) => set(r.key, { name: e.target.value })} aria-label="Name" />
-                    <input
-                      className="inp"
-                      type="tel"
-                      value={r.phone}
-                      onChange={(e) => set(r.key, { phone: e.target.value })}
-                      onBlur={() => n && set(r.key, { phone: formatPhone(n) })}
-                      placeholder="+44 number (optional)"
-                      aria-label="Number"
-                    />
+                    {open ? (
+                      <>
+                        <input className="inp" value={r.name} onChange={(e) => set(r.key, { name: e.target.value })} aria-label="Name" />
+                        <input
+                          className="inp"
+                          type="tel"
+                          value={r.phone}
+                          onChange={(e) => set(r.key, { phone: e.target.value })}
+                          onBlur={() => n && set(r.key, { phone: formatPhone(n) })}
+                          placeholder="+44 number (optional)"
+                          aria-label="Number"
+                        />
+                        <input className="inp" value={r.notes} onChange={(e) => set(r.key, { notes: e.target.value })} placeholder="Note" aria-label="Note" />
+                      </>
+                    ) : (
+                      <span>
+                        <span className="t" style={{ display: "block" }}>
+                          {r.name || "No name"}
+                        </span>
+                        <span className="small trunc" style={{ display: "block" }}>
+                          {[r.phone, r.notes].filter(Boolean).join(" · ") || "No number"}
+                        </span>
+                      </span>
+                    )}
                     {n && !looksLikePhone(n) && <span className="small red">Check this number</span>}
-                    <input className="inp" value={r.notes} onChange={(e) => set(r.key, { notes: e.target.value })} placeholder="Note" aria-label="Note" />
-                    <span className="tabs3">
-                      {CONTACT_TIERS.map((t) => (
-                        <button key={t.value} type="button" className={r.tier === t.value ? "on" : ""} onClick={() => set(r.key, { tier: t.value })}>
-                          {t.label}
-                        </button>
-                      ))}
-                    </span>
+                    {!r.name.trim() && <span className="small red">Needs a name</span>}
                   </span>
+                  <button type="button" className="link small" onClick={() => setEditing(open ? null : r.key)}>
+                    {open ? "Done" : "Edit"}
+                  </button>
                 </div>
               );
             })}
@@ -126,7 +156,7 @@ export default function ImportContactsPage() {
                 try {
                   const res = await post<{ created: number; skipped: number }>("/api/contacts/bulk", {
                     consent: true,
-                    rows: ready.map((r) => ({ name: r.name.trim(), phone: normalizePhone(r.phone), notes: r.notes.trim(), tier: r.tier, source })),
+                    rows: ready.map((r) => ({ name: r.name.trim(), phone: normalizePhone(r.phone), notes: r.notes.trim(), tier, source })),
                   });
                   revalidate("/api/contacts", "/api/inbox");
                   toast(`${res.created} imported${res.skipped ? ` · ${res.skipped} already in your contacts` : ""}`);

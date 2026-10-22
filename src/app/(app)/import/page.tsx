@@ -89,7 +89,39 @@ export default function ImportPage() {
       </div>
 
       <section>
-        <SectionHead title="Everything at once" />
+        <SectionHead title="What are you bringing in?" />
+        <div className="stack6">
+          <Link className="li li-link" href="/contacts/import">
+            <div className="grow min0">
+              <p className="t">Contacts</p>
+              <p className="small">Paste names and numbers, one per line.</p>
+            </div>
+          </Link>
+          {isOfficer && (
+            <>
+              <Link className="li li-link" href="/agenda/import">
+                <div className="grow min0">
+                  <p className="t">Agenda doc</p>
+                  <p className="small">A branch or BC agenda, with its owners and actions.</p>
+                </div>
+              </Link>
+              <Link className="li li-link" href="/agenda/actions">
+                <div className="grow min0">
+                  <p className="t">A list of actions</p>
+                  <p className="small">“RM to send article by Thursday” lines from minutes or chat.</p>
+                </div>
+              </Link>
+            </>
+          )}
+        </div>
+      </section>
+
+      <details className="aiimport" open={!!text.trim() || !!preview}>
+        <summary className="small" style={{ cursor: "pointer", margin: "4px 0 8px" }}>
+          Got a pile of notes, minutes or lists? Tidy them with an AI chat first
+        </summary>
+      <section>
+        <SectionHead title="Messy notes? Tidy them with AI" />
         <ol className="small stack6" style={{ paddingLeft: 18, margin: "0 0 10px" }}>
           <li>Copy the prompt and paste it into any AI chat (ChatGPT, Claude, Gemini…).</li>
           <li>Under it, paste your notes: minutes, lists, stock counts, names and numbers.</li>
@@ -143,6 +175,8 @@ export default function ImportPage() {
           </>
         )}
       </section>
+      </details>
+
       {!!sent?.length && (
         <section>
           <SectionHead title="Sent for review" />
@@ -163,35 +197,6 @@ export default function ImportPage() {
           </div>
         </section>
       )}
-
-      <section>
-        <SectionHead title="Or one kind at a time" />
-        <div className="stack6">
-          <Link className="li li-link" href="/contacts/import">
-            <div className="grow min0">
-              <p className="t">Contacts</p>
-              <p className="small">Names and numbers, one per line. Set how keen each one is.</p>
-            </div>
-          </Link>
-          {isOfficer && (
-            <>
-              <Link className="li li-link" href="/agenda/import">
-                <div className="grow min0">
-                  <p className="t">Agenda doc</p>
-                  <p className="small">A branch or BC agenda, with its owners and actions.</p>
-                </div>
-              </Link>
-              <Link className="li li-link" href="/agenda/actions">
-                <div className="grow min0">
-                  <p className="t">A list of actions</p>
-                  <p className="small">“DP to send article by Thursday” lines from minutes or chat.</p>
-                </div>
-              </Link>
-            </>
-          )}
-        </div>
-      </section>
-
 
     </div>
   );
