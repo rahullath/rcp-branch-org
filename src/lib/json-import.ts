@@ -7,7 +7,7 @@ import { londonDay } from "./follow-through";
 
 const londonDayOf = (iso: string) => londonDay(Date.parse(iso));
 import { resolvePerson } from "./agenda-import-apply";
-import { normalizePhone } from "./phone";
+import { formatPhone, normalizePhone } from "./phone";
 import { contactOwner } from "./types";
 import { titleKey, titleWords } from "./wellred";
 
@@ -124,7 +124,7 @@ export async function runJsonImport(actor: Actor, data: Record<string, unknown>,
     const dupe = mine.some((c) => (phone && c.phone === phone) || (!phone && c.name.toLowerCase() === name.toLowerCase()));
     const tier = TIERS.includes(r.tier as ContactTier) ? (r.tier as ContactTier) : "potential";
     const stage = STAGES.includes(r.stage as ContactStage) ? (r.stage as ContactStage) : "met";
-    lines.push({ module: "contacts", index: i, label: name, detail: dupe ? "already one of your contacts" : [phone, tier, stage !== "met" ? stage : null, str(r.notes, 60)].filter(Boolean).join(" · "), change: dupe ? "skip" : "create" });
+    lines.push({ module: "contacts", index: i, label: name, detail: dupe ? "already one of your contacts" : [formatPhone(phone), tier !== "potential" ? tier : null, stage !== "met" ? stage : null, str(r.notes, 60)].filter(Boolean).join(" · "), change: dupe ? "skip" : "create" });
     if (!dupe && apply && wanted("contacts", i)) {
       const now = new Date().toISOString();
       await createContact(actor, {
@@ -197,7 +197,7 @@ export async function runJsonImport(actor: Actor, data: Record<string, unknown>,
       // Nobody given it: an open ask anyone can take.
       const due = date(r.due);
       const dupe = actions.some((a) => !a.done && same(a.text, task));
-      lines.push({ module: "actions", index: i, label: task, detail: dupe ? "already on the list" : `up for grabs${due ? ` · by ${due}` : ""}`, change: dupe ? "skip" : "create" });
+      lines.push({ module: "actions", index: i, label: task, detail: dupe ? "already on the list" : `no one yet${due ? ` · by ${due}` : ""}`, change: dupe ? "skip" : "create" });
       if (!dupe && apply && wanted("actions", i)) await createAgendaAction(actor, { text: task, owner_id: null, due_date: due, source: "Import" });
       continue;
     }
@@ -250,7 +250,7 @@ export async function runJsonImport(actor: Actor, data: Record<string, unknown>,
       module: "materials",
       index: i,
       label: name,
-      detail: dupe ? "already in Materials" : [`×${qty}`, holder ? `with ${holder.label}` : null, wantedQty ? `order ${wantedQty}` : null].filter(Boolean).join(" · "),
+      detail: dupe ? "already in Materials" : [`${qty} in stock`, holder ? `with ${holder.label}` : null, wantedQty ? `order ${wantedQty}` : null].filter(Boolean).join(" · "),
       change: dupe ? "skip" : "create",
       similar: dupe ? [] : lookalikes(name, materials.map((m) => m.name)),
     });

@@ -13,6 +13,7 @@ import { isUpcoming, byStartAsc } from "@/lib/dates";
 import type { Comrade, Event } from "@/lib/types";
 import { fmtDay, usePeople } from "@/components/v2/primitives";
 import { useToast } from "@/components/v2/toast";
+import { clearImportDraft, useImportDraft } from "@/lib/import-draft";
 import { useWorkload } from "@/components/v2/workload";
 
 type Who = { raw: string; name: string; status: "member" | "known" | "new" | "all"; profile_id: string | null; comrade_id: string | null };
@@ -31,12 +32,15 @@ export default function CaptureActionsPage() {
   const { data: comrades } = useData<Comrade[]>("/api/comrades");
   const { data: events } = useData<Event[]>("/api/events");
   const [now] = useState(() => Date.now());
-  const [text, setText] = useState("");
+  const draft = useImportDraft("actions");
+  const [typed, setText] = useState<string | null>(null);
+  const text = typed ?? draft;
   const [source, setSource] = useState(() => `BC ${fmtDay(new Date().toISOString()).split(" ").slice(1).join(" ")}`);
   const [eventId, setEventId] = useState("");
   const [rows, setRows] = useState<Row[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [editing, setEditing] = useState<number | null>(null);
   const isOfficer = !!actor?.role.some((r) => r !== "member");
   const upcoming = useMemo(() => (events ?? []).filter((e) => isUpcoming(e, now) && e.status !== "off").sort(byStartAsc).slice(0, 15), [events, now]);
   const noApp = (comrades ?? []).filter((c) => !c.profile_id);
@@ -45,6 +49,7 @@ export default function CaptureActionsPage() {
   async function check() {
     setBusy(true);
     setError("");
+    clearImportDraft("actions");
     try {
       const res = await post<{ rows: Omit<Row, "on">[] }>("/api/agenda-actions/capture", { text });
       setRows(res.rows.map((r) => ({ ...r, who: r.who.filter((w) => w.status !== "all"), on: r.who.length > 0 })));
@@ -120,23 +125,36 @@ export default function CaptureActionsPage() {
 
       {rows && (
         <>
-          <div className="row gap8">
-            <input className="inp grow" value={source} onChange={(e) => setSource(e.target.value)} placeholder="Where from — BC 7 Oct" aria-label="Where these came from" />
-          </div>
-          <select className="inp" value={eventId} onChange={(e) => setEventId(e.target.value)} aria-label="Prep for an event">
-            <option value="">Not for one event</option>
-            {upcoming.map((e) => (
-              <option key={e.id} value={e.id}>
-                Prep for: {e.title} · {fmtDay(e.start_time)}
-              </option>
-            ))}
-          </select>
+          <details>
+            <summary className="small" style={{ cursor: "pointer" }}>
+              Labelled “{source || "no label"}” · {eventId ? "for an upcoming event" : "not for one event"}. Change
+            </summary>
+            <div className="stack6" style={{ marginTop: 8 }}>
+              <input className="inp" value={source} onChange={(e) => setSource(e.target.value)} placeholder="Where from — BC 7 Oct" aria-label="Where these came from" />
+              <select className="inp" value={eventId} onChange={(e) => setEventId(e.target.value)} aria-label="Prep for an event">
+                <option value="">Not for one event</option>
+                {upcoming.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    Prep for: {e.title} · {fmtDay(e.start_time)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </details>
+          <p className="small" style={{ margin: 0 }}>
+            {ready} of {rows.length} will be saved. Untick any you don&apos;t want; tap Edit to change the words, who or the date.
+          </p>
           <div className="matlist">
-            {rows.map((r) => (
-              <div key={r.key} className="mat-r" style={{ alignItems: "flex-start", flexWrap: "wrap", gap: 8, opacity: r.on ? 1 : 0.55 }}>
-                <input type="checkbox" checked={r.on} onChange={(e) => setRow(r.key, { on: e.target.checked })} aria-label="Include" style={{ marginTop: 10 }} />
-                <span className="grow min0 stack6">
-                  <input className="inp" value={r.text} onChange={(e) => setRow(r.key, { text: e.target.value })} aria-label="Action" />
+            {rows.map((r) => {
+              const open = editing === r.key;
+              const owners = r.who.map((w) => (w.status === "member" ? w.name.replace(/^Comrade\s+/i, "") : w.status === "known" ? `${w.name} (no app)` : `${w.raw} (new)`)).join(", ");
+              return (
+                <div key={r.key} className="mat-r" style={{ alignItems: "flex-start", gap: 8, opacity: r.on ? 1 : 0.55 }}>
+                  <input type="checkbox" checked={r.on} onChange={(e) => setRow(r.key, { on: e.target.checked })} aria-label={`Include: ${r.text}`} style={{ marginTop: 4 }} />
+                  <span className="grow min0 stack6">
+                    {open ? (
+                      <>
+                        <input className="inp" value={r.text} onChange={(e) => setRow(r.key, { text: e.target.value })} aria-label="Action" />
                   <span className="row gap8 wrap">
                     {r.who.map((w, i) => (
                       <span key={i} className={"whop" + (w.status === "member" ? "" : " maybe")}>
@@ -183,10 +201,25 @@ export default function CaptureActionsPage() {
                       aria-label="By when"
                     />
                   </span>
-                  {!r.due && r.on && <span className="small">No date yet — tasks without one get buried.</span>}
-                </span>
-              </div>
-            ))}
+                      </>
+                    ) : (
+                      <span>
+                        <span className="t" style={{ display: "block" }}>
+                          {r.text}
+                        </span>
+                        <span className={"small" + (r.who.length ? "" : " red")} style={{ display: "block" }}>
+                          {owners || "Needs someone to do it"}
+                          {r.due ? ` · by ${fmtDay(`${r.due}T12:00:00Z`)}` : " · no date"}
+                        </span>
+                      </span>
+                    )}
+                  </span>
+                  <button type="button" className="link small" onClick={() => setEditing(open ? null : r.key)}>
+                    {open ? "Done" : "Edit"}
+                  </button>
+                </div>
+              );
+            })}
           </div>
           {error && <p className="small red" style={{ margin: 0 }}>{error}</p>}
           <div className="row gap8">

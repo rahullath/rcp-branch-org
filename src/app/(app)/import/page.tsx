@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { stashImportDraft } from "@/lib/import-draft";
 import { Copy } from "lucide-react";
 import { post } from "@/lib/client";
 import { revalidate, useData } from "@/lib/hooks";
@@ -25,6 +27,7 @@ type Sent = Omit<ImportRequest, "data"> & { rows: number; modules: string[] };
 export default function ImportPage() {
   const actor = useActor();
   const toast = useToast();
+  const router = useRouter();
   const { data: branch } = useData<Branch | null>("/api/branches");
   const [text, setText] = useState("");
   const [preview, setPreview] = useState<Preview | null>(null);
@@ -38,6 +41,13 @@ export default function ImportPage() {
   async function copyPrompt() {
     await navigator.clipboard.writeText(importPrompt(londonDay(Date.now()), branch?.name ?? "the branch"));
     toast("Prompt copied — paste it into your chat assistant, then your notes under it");
+  }
+
+  /** Notes pasted as they are, not the helper's JSON: send them to the page that reads that kind of notes. */
+  const plain = !!text.trim() && !text.trim().startsWith("{");
+  function sendTo(kind: "contacts" | "actions") {
+    stashImportDraft(kind, text.trim());
+    router.push(kind === "contacts" ? "/contacts/import" : "/agenda/actions");
   }
 
   async function check() {
@@ -142,12 +152,31 @@ export default function ImportPage() {
               style={{ width: "100%", height: 200, padding: 10, fontSize: 12.5, fontFamily: "ui-monospace, monospace", resize: "vertical" }}
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder={'{ "contacts": [ … ], "events": [ … ] }'}
+              placeholder={"Paste the helper's reply here, or just your notes (names and numbers, one per line)"}
               aria-label="Reply from the tidy-up helper"
             />
-            <button type="button" className="btn btn-p mt8" style={{ width: "100%" }} disabled={busy || !text.trim()} onClick={check}>
-              Check
-            </button>
+            {plain ? (
+              <div className="mt8 stack6">
+                <p className="small" style={{ margin: 0 }}>
+                  This looks like your own notes, not the helper&apos;s reply. Where should they go?
+                </p>
+                <button type="button" className="btn btn-p" onClick={() => sendTo("contacts")}>
+                  Add them as contacts
+                </button>
+                {isOfficer && (
+                  <button type="button" className="btn btn-o" onClick={() => sendTo("actions")}>
+                    Add them as actions
+                  </button>
+                )}
+                <p className="small" style={{ margin: 0 }}>
+                  Mixed notes (events, stock, people)? Copy the prompt above, paste it with your notes into a chat assistant, and paste its reply here.
+                </p>
+              </div>
+            ) : (
+              <button type="button" className="btn btn-p mt8" style={{ width: "100%" }} disabled={busy || !text.trim()} onClick={check}>
+                Check
+              </button>
+            )}
           </>
         ) : (
           <>
@@ -157,11 +186,14 @@ export default function ImportPage() {
               </p>
             ))}
             {preview.lines.length === 0 && <p className="small">Nothing in there the app can use.</p>}
+            <p className="small" style={{ margin: "0 0 4px" }}>
+              {count} to add{preview.lines.length - count > 0 ? ` · ${preview.lines.length - count} left out (already there, or they look like something that is)` : ""}.
+            </p>
             <ImportLines lines={preview.lines} off={off} setOff={setOff} />
             {forReview && (
               <>
                 <p className="small mt8">Your contacts go in now. The rest goes to the admin, who checks it against what&apos;s already there (the same thing can be written two ways).</p>
-                <input className="inp" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Anything the admin should know (optional)" aria-label="Note for the admin" />
+                <input className="inp" style={{ width: "100%" }} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Anything the admin should know (optional)" aria-label="Note for the admin" />
               </>
             )}
             <div className="row gap8 mt8">

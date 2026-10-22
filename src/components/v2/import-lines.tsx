@@ -55,7 +55,7 @@ export function ImportLines({ lines, off, setOff }: { lines: JsonImportLine[]; o
                       <span className="small">{l.detail}</span>
                       {!!l.similar?.length && (
                         <span className="small red" style={{ display: "block" }}>
-                          Same as {l.similar.map((s) => `“${s}”`).join(" or ")}? Tick it if it&apos;s new.
+                          Looks like {l.similar.map((s) => `“${s}”`).join(" or ")}, so it&apos;s left out. Tick it if it&apos;s new.
                         </span>
                       )}
                     </span>

@@ -12,6 +12,7 @@ import { CONTACT_TIERS, type ContactTier } from "@/lib/types";
 import { formatPhone, looksLikePhone, normalizePhone, parseContactLines } from "@/lib/phone";
 import { CONTACT_SOURCES } from "@/components/v2/sheets";
 import { useToast } from "@/components/v2/toast";
+import { clearImportDraft, useImportDraft } from "@/lib/import-draft";
 
 type Row = { key: number; on: boolean; name: string; phone: string; notes: string };
 
@@ -24,7 +25,9 @@ type Row = { key: number; on: boolean; name: string; phone: string; notes: strin
 export default function ImportContactsPage() {
   const toast = useToast();
   const router = useRouter();
-  const [text, setText] = useState("");
+  const draft = useImportDraft("contacts");
+  const [typed, setText] = useState<string | null>(null);
+  const text = typed ?? draft;
   const [rows, setRows] = useState<Row[] | null>(null);
   const [source, setSource] = useState("other");
   const [tier, setTier] = useState<ContactTier>("potential");
@@ -63,7 +66,7 @@ export default function ImportContactsPage() {
             type="button"
             className="btn btn-p"
             disabled={!text.trim()}
-            onClick={() => setRows(parseContactLines(text).map((c, i) => ({ key: i, on: true, name: c.name, phone: c.phone ? formatPhone(c.phone) : "", notes: c.notes ?? "" })))}
+            onClick={() => (clearImportDraft("contacts"), setRows(parseContactLines(text).map((c, i) => ({ key: i, on: true, name: c.name, phone: c.phone ? formatPhone(c.phone) : "", notes: c.notes ?? "" }))))}
           >
             Check
           </button>
