@@ -69,9 +69,11 @@ export interface GraphicOptions {
   qrCorner: QrCorner;
   /** Width of the QR tile, in design units (% of the shorter side). */
   qrSize: number;
+  /** Hammer-and-sickle styling (true) or a plain black QR (false). */
+  qrBrand: boolean;
 }
 
-export const DEFAULT_GRAPHIC_OPTIONS: GraphicOptions = { layout: "stack", cw: "black", size: "post", rough: false, align: "left", emblem: true, grain: true, scale: 1, qr: "", qrCaption: "", qrCorner: "br", qrSize: 22 };
+export const DEFAULT_GRAPHIC_OPTIONS: GraphicOptions = { layout: "stack", cw: "black", size: "post", rough: false, align: "left", emblem: true, grain: true, scale: 1, qr: "", qrCaption: "", qrCorner: "br", qrSize: 24, qrBrand: true };
 
 /** Suggested calls to action — the RCS tagline first. */
 export const CTA_SUGGESTIONS = ["Demand the future", "Demand the impossible", "Demand the impossible. Demand the future.", "Free · all welcome", "Join the communists"];
@@ -302,7 +304,7 @@ export function RcsGraphic<T extends GraphicTpl>({
   return (
     <div style={wrap}>
       {art}
-      {o.qr && <QrTile link={o.qr} caption={o.qrCaption} corner={o.qrCorner} size={o.qrSize} u={u} />}
+      {o.qr && <QrTile link={o.qr} caption={o.qrCaption} corner={o.qrCorner} size={o.qrSize} brand={o.qrBrand} frame={c.blockBg} frameText={c.blockFg} u={u} />}
       {o.grain && (
         <div style={{ position: "absolute", inset: 0, backgroundImage: `url('${R}/grain.png')`, backgroundSize: "cover", mixBlendMode: "multiply", opacity: 0.16, pointerEvents: "none" }} />
       )}

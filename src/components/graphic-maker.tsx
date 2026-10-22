@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Download, ExternalLink, Share2 } from "lucide-react";
-import QRCode from "qrcode";
 import { toJpeg, toPng } from "html-to-image";
 import {
   COLOURWAYS,
@@ -19,7 +18,7 @@ import {
   type GraphicOptions,
   type GraphicTpl,
 } from "./rcs-graphic";
-import { QR_KINDS, normaliseLink, type QrCorner } from "./qr-tile";
+import { QR_KINDS, normaliseLink, qrStandaloneSvg, svgToPng, type QrCorner } from "./qr-tile";
 import { useToast } from "./v2/toast";
 
 type FieldDef = [key: string, label: string, multiline?: boolean, half?: boolean];
@@ -161,14 +160,15 @@ export function GraphicMaker({
 
   const qrLink = normaliseLink(o.qr);
 
-  /** The QR on its own (transparent PNG and SVG), for dropping into Canva or any editor and placing by hand. */
+  /** The QR on its own (PNG and SVG), for dropping into Canva or any editor and placing by hand. */
   async function saveQr() {
     if (!qrLink) return;
     try {
-      download(await QRCode.toDataURL(qrLink, { width: 1024, margin: 2, errorCorrectionLevel: "M", color: { dark: "#000000", light: "#ffffff00" } }), `${slug(label)}-qr.png`);
-      const svg = await QRCode.toString(qrLink, { type: "svg", margin: 2, errorCorrectionLevel: "M" });
+      const svg = await qrStandaloneSvg(qrLink, o.qrBrand);
+      if (!svg) throw new Error("bad link");
+      download(await svgToPng(svg), `${slug(label)}-qr.png`);
       download(URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" })), `${slug(label)}-qr.svg`);
-      toast("QR saved as PNG (transparent) and SVG");
+      toast("QR saved as PNG and SVG");
     } catch {
       toast("Couldn't make a QR from that link");
     }
@@ -380,6 +380,17 @@ export function GraphicMaker({
               {o.qr && (
                 <>
                   <div className="opt">
+                    <span>Style</span>
+                    <div className="mini">
+                      <button type="button" className={o.qrBrand ? "on" : ""} onClick={() => opt("qrBrand", true)}>
+                        Hammer &amp; sickle
+                      </button>
+                      <button type="button" className={!o.qrBrand ? "on" : ""} onClick={() => opt("qrBrand", false)}>
+                        Plain
+                      </button>
+                    </div>
+                  </div>
+                  <div className="opt">
                     <span>Corner</span>
                     <div className="mini">
                       {CORNERS.map(([id, l]) => (
@@ -391,7 +402,7 @@ export function GraphicMaker({
                   </div>
                   <label className="opt">
                     <span>QR size</span>
-                    <input type="range" min="14" max="40" step="1" value={o.qrSize} onChange={(e) => opt("qrSize", +e.target.value)} />
+                    <input type="range" min="16" max="40" step="1" value={o.qrSize} onChange={(e) => opt("qrSize", +e.target.value)} />
                   </label>
                 </>
               )}
