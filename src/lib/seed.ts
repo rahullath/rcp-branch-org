@@ -347,6 +347,7 @@ const seedEvents: Event[] = [
     created_at: "2026-08-20T10:15:00.000Z",
   },
   ...seedEventsBase(),
+  ...upcomingEvents(),
 ];
 
 /** Pre-stall/social checklists. */
@@ -409,6 +410,61 @@ function seedEventsBase(): Event[] {
     { id: "e-papersale-aug29", title: "Saturday Paper Sale", event_type: "paper_sale", start_time: "2026-08-29T10:00:00.000Z", location: "Victoria Square", description: "Weekly stall — bring extra flyers.", is_mobilization: false, meetup_time: "2026-08-29T09:45:00.000Z", posted_by: "u-ana", created_at: "2026-08-21T09:00:00.000Z" },
   ];
 }
+
+/** The weeks after the story's "now" (STORY_NOW): the diary a branch would have ahead of it. */
+function upcomingEvents(): Event[] {
+  const e = (id: string, title: string, event_type: Event["event_type"], start: string, location: string, description: string | null = null, is_mobilization = false): Event => ({
+    id, title, event_type, start_time: `${start}:00.000Z`, location, description, is_mobilization, posted_by: "u-gen-sec", created_at: "2026-10-05T10:00:00.000Z",
+  });
+  return [
+    e("e-up-1", "Branch meeting: Reform or revolution", "branch", "2026-10-14T18:30", "Harding Room", "Introduction, discussion and what we do this week."),
+    e("e-up-2", "Saturday paper sale", "paper_sale", "2026-10-17T10:30", "Victoria Square", "Weekly stall. Meet 10:15, bring a few flyers."),
+    e("e-up-3", "Campus stall", "uni_stall", "2026-10-19T11:00", "Campus"),
+    e("e-up-4", "Branch committee", "committee", "2026-10-20T19:00", "The Guild", "Officers only. Agenda in the agenda tab."),
+    e("e-up-5", "Branch meeting: Lenin and the party", "branch", "2026-10-21T18:30", "Harding Room"),
+    e("e-up-6", "Pub after the meeting", "social", "2026-10-21T20:30", "Joe's pub", "Come for one, meet new people."),
+    e("e-up-7", "Postering: student halls", "postering", "2026-10-22T18:00", "The Vale", "Bring a bucket if you have one."),
+    e("e-up-8", "Saturday paper sale", "paper_sale", "2026-10-24T10:30", "Victoria Square"),
+    e("e-up-9", "Branch meeting: the housing crisis", "branch", "2026-10-28T18:30", "Harding Room"),
+    e("e-up-10", "Demo: cost of living", "mobilization", "2026-10-31T12:00", "Birmingham city centre", "Meet at the branch banner.", true),
+    e("e-up-11", "Branch meeting: Marxism and the state", "branch", "2026-11-04T18:30", "Harding Room"),
+    e("e-up-12", "Saturday paper sale", "paper_sale", "2026-11-07T10:30", "Victoria Square"),
+  ];
+}
+
+/**
+ * The seed tells one week of a branch's life, anchored on STORY_NOW. The demo is meant to look
+ * lived in whenever it is opened, so every date moves forward by whole weeks (weekdays stay put)
+ * until that week is the current one. The national festival keeps its real dates.
+ */
+const STORY_NOW = Date.UTC(2026, 9, 12);
+const WEEK_MS = 7 * 86_400_000;
+
+function rollForward(db: DevDb, now = new Date()): DevDb {
+  const weeks = Math.max(0, Math.round((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - STORY_NOW) / WEEK_MS));
+  if (weeks === 0) return db;
+  const shift = (v: unknown): unknown => {
+    if (typeof v === "string") {
+      const m = /^(\d{4})-(\d{2})-(\d{2})([\s\S]*)$/.exec(v);
+      if (!m) return v;
+      const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3] + weeks * 7));
+      return `${d.toISOString().slice(0, 10)}${m[4]}`;
+    }
+    if (Array.isArray(v)) return v.map(shift);
+    if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shift(x)]));
+    return v;
+  };
+  const rolled = Object.fromEntries(Object.entries(db).map(([k, rows]) => [k, k === "festivals" ? rows : shift(rows)])) as unknown as DevDb;
+  rolled.events = rolled.events.map((ev, i) => (db.events[i].id === "e-revfest" ? db.events[i] : ev));
+  return rolled;
+}
+
+/** The agenda for the next branch meeting, so the agenda tab opens on something to run. */
+const nextMeetingAgenda: AgendaItem[] = [
+  { id: "a-next-pol", event_id: "e-up-1", meeting_date: "2026-10-14", section: "political", title: "Reform or revolution", duration: "40", leadoff_name: "Comrade Ruth", reading: "Reform or Revolution, chapter 1", icon: "forum", prep_links: [], created_by: "u-ruth", sort_order: 2, created_at: "2026-10-10T10:00:00.000Z" },
+  { id: "a-next-org-1", event_id: "e-up-1", meeting_date: "2026-10-14", section: "organizational", title: "Paper sales and the weekend stall rota", duration: "10", icon: "event_note", created_by: "u-gen-sec", sort_order: 10, created_at: "2026-10-10T10:00:00.000Z" },
+  { id: "a-next-org-2", event_id: "e-up-1", meeting_date: "2026-10-14", section: "organizational", title: "Festival places and transport", duration: "10", icon: "event_note", created_by: "u-gen-sec", sort_order: 11, created_at: "2026-10-10T10:00:00.000Z" },
+];
 
 function stockMaterial(book: { name: string; author?: string; copies: number; wellred?: string }, i: number, icon: string): Material {
   return {
@@ -868,7 +924,7 @@ export function createSeedDb(): DevDb {
   const materials = [...clone(v2Materials), ...clone(seedMaterials)].map((m) =>
     m.id === "m-gazebo" ? { ...m, status: "in_use" as const, holder_id: "u-maria", holder_label: "Maria's garage" } : m,
   );
-  return {
+  return rollForward({
     // Demo mode is one branch; the scoping itself is enforced by Postgres RLS.
     branches: [{ id: DEMO_BRANCH_ID, name: "Demo Branch", district: "Birmingham", join_code: "DEMO02", created_at: "2026-08-01T10:00:00.000Z" }],
     profiles: clone(seedProfiles).map((p) => ({ ...p, branch_id: DEMO_BRANCH_ID })),
@@ -932,9 +988,15 @@ export function createSeedDb(): DevDb {
     import_requests: [],
     event_invites: [],
     shared_reads: [],
-    branch_links: [],
-    graphic_templates: [],
-    announcements: [{ id: "an-1", branch_id: DEMO_BRANCH_ID, title: "Open meeting this Wednesday: bring a friend", body: "Doors 6pm for a 6:30 start. We'll finish at the pub.", link: "https://example.org/open-meeting", link_label: "Details", deadline: null, ends_on: null, tag: null, urgent: false, signed_by: "The secretary", archived: false, created_by: "u-gen-sec", created_at: "2026-10-20T10:00:00.000Z" }],
+    branch_links: [{ id: DEMO_BRANCH_ID, branch_id: DEMO_BRANCH_ID, whatsapp: "https://chat.whatsapp.com/example-demo-branch", instagram: "https://instagram.com/demo_branch", updated_at: "2026-10-01T10:00:00.000Z" }],
+    graphic_templates: [
+      { id: "gt-1", name: "Paper sale, red", tpl: "paper", options: {}, fields: { cta: "Come and get the paper" }, event_type: "paper_sale", created_by: "u-ana", created_at: "2026-10-02T10:00:00.000Z" },
+      { id: "gt-2", name: "Branch meeting", tpl: "event", options: {}, fields: { cta: "All welcome" }, event_type: "branch", created_by: "u-gen-sec", created_at: "2026-10-03T10:00:00.000Z" },
+    ],
+    announcements: [{ id: "an-1", branch_id: DEMO_BRANCH_ID, title: "Open meeting this Wednesday: bring a friend", body: "Doors 6pm for a 6:30 start. We'll finish at the pub.", link: "https://example.org/open-meeting", link_label: "Details", deadline: null, ends_on: null, tag: null, urgent: false, signed_by: "The secretary", archived: false, created_by: "u-gen-sec", created_at: "2026-10-20T10:00:00.000Z" },
+      { id: "an-2", branch_id: DEMO_BRANCH_ID, title: "Festival places: tell us if you are going", body: "Say going, maybe or no on the festival page so we can book transport together.", link: null, link_label: null, deadline: "2026-11-01", ends_on: null, tag: "festival", urgent: true, signed_by: "The organizer", archived: false, created_by: "u-gen-sec", created_at: "2026-10-18T10:00:00.000Z" },
+      { id: "an-3", branch_id: DEMO_BRANCH_ID, title: "New members: join the branch group chat", body: "Everything for the week goes in there first.", link: "https://chat.whatsapp.com/example-demo-branch", link_label: "Join", deadline: null, ends_on: null, tag: null, urgent: false, signed_by: "The secretary", archived: false, created_by: "u-gen-sec", created_at: "2026-10-12T10:00:00.000Z" },
+    ],
     announcement_dismissals: [],
     festivals: [{ id: "fest-1", name: "Revolution Festival", start_date: "2026-11-13", end_date: "2026-11-15", location: "London", url: "https://revolutionfestival.co.uk/", active: true }],
     feedback: [],
@@ -951,7 +1013,7 @@ export function createSeedDb(): DevDb {
     reading_group_contacts: [{ id: "rgc-1", group_id: "rg-socialism", contact_id: "c-priya", added_by: "u-gen-sec", created_at: "2026-10-02T10:00:00.000Z" }],
     event_checklists: [...clone(v2Checklists), ...clone(seedEventChecklists)],
     availability: [...clone(seedAvailability), ...clone(v2Availability)],
-    agenda: [...clone(seedAgenda), ...clone(v2Agenda)],
+    agenda: [...clone(seedAgenda), ...clone(v2Agenda), ...clone(nextMeetingAgenda)],
     agenda_contributions: clone(seedAgendaContributions),
     transactions: clone(seedTransactions),
     pledges: clone(seedPledges),
@@ -971,5 +1033,5 @@ export function createSeedDb(): DevDb {
     inbox_dismissals: [],
     push_subscriptions: [],
     push_log: [],
-  };
+  });
 }
