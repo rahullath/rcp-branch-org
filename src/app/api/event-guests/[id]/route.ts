@@ -1,5 +1,5 @@
 import { json, notFound, serverError, withActor } from "@/lib/api";
-import { getEventGuest, removeEventGuest } from "@/lib/data-v2";
+import { getEventGuest, removeEventGuest } from "@/lib/data-extras";
 import { removeShareRsvp } from "@/lib/shares";
 
 export const dynamic = "force-dynamic";

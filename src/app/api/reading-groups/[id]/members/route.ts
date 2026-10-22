@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getReadingGroup, joinReadingGroup, leaveReadingGroup, listReadingGroupMembers, setReadingGroupLead, updateReadingGroup } from "@/lib/data";
-import { listReadingGroupContacts, listReadingGroupGuests } from "@/lib/data-v2";
+import { listReadingGroupContacts, listReadingGroupGuests } from "@/lib/data-extras";
 import { canRunGroup, groupStats } from "@/lib/reading-groups";
 
 export const dynamic = "force-dynamic";

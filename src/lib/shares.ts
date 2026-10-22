@@ -25,7 +25,7 @@ export interface PublicShare {
   going: number;
 }
 
-export interface ShareBrief {
+interface ShareBrief {
   topic: string | null;
   about: string | null;
   /** Prep links, the event's main reading first. */
@@ -94,15 +94,6 @@ export async function revokeShare(id: string) {
     return;
   }
   updateRow<EventShare>("event_shares", id, { revoked_at: now() });
-}
-
-export async function listShareRsvps(): Promise<ShareRsvp[]> {
-  if (isSupabaseConfigured) {
-    const supabase = await createClient();
-    const { data } = await supabase.from("share_rsvps").select("*").order("created_at");
-    return (data ?? []) as ShareRsvp[];
-  }
-  return listRows<ShareRsvp>("share_rsvps");
 }
 
 export async function removeShareRsvp(id: string) {

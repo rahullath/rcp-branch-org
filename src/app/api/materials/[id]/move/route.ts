@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getMaterial, getProfile } from "@/lib/data";
-import { getComrade, moveMaterial, type MaterialMoveKind } from "@/lib/data-v2";
+import { getComrade, moveMaterial, type MaterialMoveKind } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getEvent, getMaterial } from "@/lib/data";
-import { addBringItem } from "@/lib/data-v2";
+import { addBringItem } from "@/lib/data-extras";
 import { canRunEvent } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";

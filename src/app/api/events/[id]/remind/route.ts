@@ -3,7 +3,7 @@ import { getEvent, listProfiles, listRsvps } from "@/lib/data";
 import { canRunEvent } from "@/lib/permissions";
 import { claimOnce, sendPush } from "@/lib/push";
 import { rsvpPayload } from "@/lib/notify";
-import { shortTitle } from "@/lib/data-v2";
+import { shortTitle } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

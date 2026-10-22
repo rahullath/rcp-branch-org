@@ -5,8 +5,6 @@ import { post } from "@/lib/client";
 import { revalidate, useData } from "@/lib/hooks";
 import { useActor } from "@/lib/actor-context";
 import type { Rsvp } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { Icon } from "@/components/ui";
 
 /**
  * One RSVP source of truth for every page. Tapping a button updates the UI
@@ -50,46 +48,4 @@ export function useRsvps() {
   );
 
   return { rsvps, mine, respond, goingCount };
-}
-
-const OPTIONS: { value: Rsvp["status"]; label: string; icon: string }[] = [
-  { value: "going", label: "Going", icon: "check" },
-  { value: "maybe", label: "Maybe", icon: "remove" },
-  { value: "no", label: "Can't", icon: "close" },
-];
-
-export function RsvpButtons({
-  mine,
-  onChange,
-  compact,
-}: {
-  mine?: Rsvp | undefined;
-  onChange: (s: Rsvp["status"]) => void;
-  compact?: boolean;
-}) {
-  return (
-    <div className="flex gap-1.5" role="group" aria-label="RSVP">
-      {OPTIONS.map((o) => {
-        const active = mine?.status === o.value;
-        return (
-          <button
-            key={o.value}
-            onClick={() => onChange(o.value)}
-            aria-pressed={active}
-            aria-label={o.label}
-            className={cn(
-              "flex items-center justify-center gap-1 rounded-none border text-xs font-bold uppercase tracking-wider transition active-press",
-              compact ? "h-10 w-10" : "h-10 min-w-[4.5rem] px-3",
-              active
-                ? "border-primary bg-primary text-on-primary"
-                : "border-paper-shadow bg-surface-container-lowest text-on-surface-variant hover:border-primary",
-            )}
-          >
-            <Icon name={o.icon} className="text-sm" />
-            {!compact && o.label}
-          </button>
-        );
-      })}
-    </div>
-  );
 }

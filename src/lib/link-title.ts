@@ -11,7 +11,7 @@ import { linkKind } from "./preread";
 const GENERIC = /^(article|video|youtube|spotify|podcast|audio|link|read|listen|watch|reading)$/i;
 
 /** Labels that say nothing about what the link is ("Article", or just the site's name). */
-export const isGenericTitle = (s: string | null | undefined, url?: string) => {
+const isGenericTitle = (s: string | null | undefined, url?: string) => {
   const t = (s ?? "").trim();
   if (!t || GENERIC.test(t)) return true;
   if (!url) return false;
@@ -23,7 +23,7 @@ export const isGenericTitle = (s: string | null | undefined, url?: string) => {
 };
 
 /** Last resort: the most specific part of the address, tidied. */
-export function titleFromUrl(url: string): string {
+function titleFromUrl(url: string): string {
   try {
     const u = new URL(url);
     const parts = u.pathname.split("/").filter(Boolean).map((p) => decodeURIComponent(p).replace(/\.(html?|php|aspx?)$/i, ""));
@@ -56,7 +56,7 @@ const decode = (s: string) =>
 const trimSite = (t: string) => t.replace(/\s+[|–—-]\s+(YouTube|In Defence of Marxism|marxist\.com|Communist\.red|The Communist|Spotify|Wellred Books?)$/i, "").trim();
 
 /** The page's own title, or null if it can't be reached quickly. */
-export async function fetchTitle(url: string): Promise<string | null> {
+async function fetchTitle(url: string): Promise<string | null> {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), 4000);
   try {

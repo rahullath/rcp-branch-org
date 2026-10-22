@@ -3,7 +3,7 @@ import type { Actor } from "./auth";
 import type { Event } from "./types";
 import { eventLead } from "./types";
 import { getEvent, listRsvps, updateEvent } from "./data";
-import { listEventGuests } from "./data-v2";
+import { listEventGuests } from "./data-extras";
 import { goingCount, isTentative, reachedTarget } from "./follow-through";
 import { notifyEventMoved, notifyEventOff, notifyEventOn } from "./notify";
 

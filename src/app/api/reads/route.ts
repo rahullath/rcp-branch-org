@@ -1,7 +1,7 @@
 import { resolveTitle } from "@/lib/link-title";
 import { after } from "next/server";
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
-import { createSharedRead, listSharedReads } from "@/lib/data-v2";
+import { createSharedRead, listSharedReads } from "@/lib/data-extras";
 import { getEvent } from "@/lib/data";
 import { linkKind, mirrorToPrep, readersFor } from "@/lib/preread-sync";
 import { allMemberIds, sendPush } from "@/lib/push";

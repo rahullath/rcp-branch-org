@@ -6,7 +6,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { claimOnce, isPushConfigured, sendPush } from "@/lib/push";
 import { bringPayload, notifyDecide, rsvpPayload } from "@/lib/notify";
 import { goingCount, londonDay, needsDecision } from "@/lib/follow-through";
-import { shortTitle } from "@/lib/data-v2";
+import { shortTitle } from "@/lib/data-extras";
 import type { AgendaAction, BringItem, Contact, Event, EventGuest, EventInvite, Material, Profile, Rsvp, SharedRead } from "@/lib/types";
 import { didRead, expectsReading, mainRead, PREREAD_TYPES } from "@/lib/preread";
 import { contactOwner, contactTier, eventLead, INVITE_EVENT_TYPES } from "@/lib/types";

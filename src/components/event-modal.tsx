@@ -114,7 +114,7 @@ export function EventModal({
 
   return (
     <Modal open onClose={onClose} title={event ? "Edit event" : "New event"}>
-      <form onSubmit={submit} className="v2 stack8">
+      <form onSubmit={submit} className="screen stack8">
         <div className="fld">
           <span>What kind</span>
           <div role="radiogroup" aria-label="Event type" className="stack6">

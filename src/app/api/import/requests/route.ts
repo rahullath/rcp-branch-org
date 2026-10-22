@@ -1,5 +1,5 @@
 import { json, serverError, withActor } from "@/lib/api";
-import { listImportRequests } from "@/lib/data-v2";
+import { listImportRequests } from "@/lib/data-extras";
 import { isSupabaseConfigured } from "@/lib/config";
 
 export const dynamic = "force-dynamic";

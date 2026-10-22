@@ -11,8 +11,8 @@ import { useActor } from "@/lib/actor-context";
 import { hasAnyRole } from "@/lib/permissions";
 import type { Event, EventChecklist, SocialPost, SocialPostStatus } from "@/lib/types";
 import { Spinner } from "@/components/ui";
-import { firstPart, SectionHead, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { firstPart, SectionHead, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const PLATFORMS = ["IG", "IG Story", "TikTok", "X", "FB"];
@@ -195,7 +195,7 @@ function Social() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Social</h1>

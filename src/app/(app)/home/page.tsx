@@ -12,11 +12,11 @@ import { QUIET_DAYS } from "@/lib/follow-through";
 import { byStartAsc, dayDiff, isUpcoming } from "@/lib/dates";
 import { groupStats } from "@/lib/reading-groups";
 import { useActor } from "@/lib/actor-context";
-import { useRsvps } from "@/components/rsvp-buttons";
+import { useRsvps } from "@/lib/use-rsvps";
 import { Spinner } from "@/components/ui";
-import { AskCard } from "@/components/v2/ask-card";
-import { useInbox } from "@/components/v2/use-inbox";
-import { Chev, firstPart, fmtLongDay, fmtTime, fmtWeekday, SectionHead, StateTag, usePeople } from "@/components/v2/primitives";
+import { AskCard } from "@/components/features/ask-card";
+import { useInbox } from "@/components/features/use-inbox";
+import { Chev, firstPart, fmtLongDay, fmtTime, fmtWeekday, SectionHead, StateTag, usePeople } from "@/components/features/primitives";
 
 /**
  * This Week: the top ask, answerable right here; today's events; then two
@@ -84,7 +84,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>This Week</h1>

@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useRef, useState } from "react"
 
 const ToastContext = createContext<(message: string) => void>(() => {});
 
-/** One toast line at the bottom, shared by every v2 screen and sheet. */
+/** One toast line at the bottom, shared by every screen and sheet. */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [message, setMessage] = useState("");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -17,7 +17,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={toast}>
       {children}
       {message && (
-        <div className="v2-layer toast" role="status">
+        <div className="screen-layer toast" role="status">
           {message}
         </div>
       )}

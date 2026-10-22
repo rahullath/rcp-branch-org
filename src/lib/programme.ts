@@ -21,7 +21,7 @@ export interface ProgrammeEntry {
 
 const AUDIO: PrepLink["kind"][] = ["youtube", "spotify", "podcast"];
 
-export function isDiscussion(i: AgendaItem) {
+function isDiscussion(i: AgendaItem) {
   return i.section === "political" && !/^burning questions/i.test(i.title);
 }
 

@@ -66,7 +66,7 @@ import {
   v2Roles,
   v2Rsvps,
   v2Updates,
-} from "./seed-v2";
+} from "./seed-extras";
 
 export const DEMO_USER_ID = "u-gen-sec";
 export const DEMO_BRANCH_ID = "br-2";
@@ -149,7 +149,7 @@ export const seedProfiles: Profile[] = [
   },
 ];
 
-export const seedContacts: Contact[] = [
+const seedContacts: Contact[] = [
   {
     id: "c-liam",
     name: "Liam O'Connor",
@@ -263,7 +263,7 @@ function sessionsForSeries(seriesId: string, items: CurriculumChapter[], base?: 
   }));
 }
 
-export const seedSessions: Session[] = [
+const seedSessions: Session[] = [
   // The branch reading group — scheduled forthnightly from freshers.
   ...sessionsForSeries("classics", CLASSICS, { date: "2026-09-18" }),
   // The official curriculum, unscheduled — tracked as an individual checklist.
@@ -317,7 +317,7 @@ const freshersPlanEvents: Event[] = [
   { id: "e-fp-19", title: "Open meeting: Racism", event_type: "branch", start_time: "2026-10-28T18:30:00.000+01:00", location: "TBC", description: null, is_mobilization: false, posted_by: "u-gen-sec", created_at: "2026-09-01T10:00:00.000Z" },
 ];
 
-export const seedEvents: Event[] = [
+const seedEvents: Event[] = [
   ...freshersPlanEvents,
   ...GROUP_PROGRAMME.map((g, i) => {
     const day = String(7 + i * 7).padStart(2, "0");
@@ -349,7 +349,7 @@ export const seedEvents: Event[] = [
 ];
 
 /** Pre-stall/social checklists. */
-export const seedEventChecklists: EventChecklist[] = [
+const seedEventChecklists: EventChecklist[] = [
   {
     id: "ec-potluck",
     event_id: "e-potluck",
@@ -391,7 +391,7 @@ export const seedEventChecklists: EventChecklist[] = [
 ];
 
 /** Standing paper-sale availability. */
-export const seedAvailability: Availability[] = [
+const seedAvailability: Availability[] = [
   { id: "av-gen-sec", user_id: "u-gen-sec", activity: "paper_sale", days: ["sat"], note: null, updated_at: "2026-08-01T10:00:00.000Z" },
   { id: "av-sarah", user_id: "u-sarah", activity: "paper_sale", days: ["sat", "wed"], note: null, updated_at: "2026-08-01T10:00:00.000Z" },
   { id: "av-leo", user_id: "u-leo", activity: "paper_sale", days: ["sun"], note: "Mornings only", updated_at: "2026-08-01T10:00:00.000Z" },
@@ -425,7 +425,7 @@ function stockMaterial(book: { name: string; author?: string; copies: number; we
   };
 }
 
-export const seedMaterials: Material[] = [
+const seedMaterials: Material[] = [
   {
     id: "m-gazebo",
     name: "Folding Gazebo",
@@ -483,7 +483,7 @@ export const seedMaterials: Material[] = [
   })),
 ];
 
-export const seedLocations: Location[] = [
+const seedLocations: Location[] = [
   {
     id: "l-victoria",
     name: "Victoria Square",
@@ -546,7 +546,7 @@ export const seedLocations: Location[] = [
 
 /** Small, self-organized reading groups — distinct from the branch-wide
  * `sessions` leadoff series. */
-export const seedReadingGroups: ReadingGroup[] = [
+const seedReadingGroups: ReadingGroup[] = [
   {
     id: "rg-manifesto",
     title: "The Communist Manifesto",
@@ -569,7 +569,7 @@ export const seedReadingGroups: ReadingGroup[] = [
   },
 ];
 
-export const seedReadingGroupMembers: ReadingGroupMember[] = [
+const seedReadingGroupMembers: ReadingGroupMember[] = [
   { id: "rgm-1", group_id: "rg-manifesto", user_id: "u-ana", joined_at: "2026-07-10T10:00:00.000Z" },
   { id: "rgm-2", group_id: "rg-manifesto", user_id: "u-leo", joined_at: "2026-07-10T10:00:00.000Z" },
   { id: "rgm-3", group_id: "rg-socialism", user_id: "u-sarah", joined_at: "2026-07-15T10:00:00.000Z" },
@@ -577,7 +577,7 @@ export const seedReadingGroupMembers: ReadingGroupMember[] = [
   { id: "rgm-5", group_id: "rg-socialism", user_id: "u-maria", joined_at: "2026-07-16T10:00:00.000Z" },
 ];
 
-export const seedAgenda: AgendaItem[] = [
+const seedAgenda: AgendaItem[] = [
   {
     id: "a-paper",
     meeting_date: "2026-08-31",
@@ -669,7 +669,7 @@ export const seedAgenda: AgendaItem[] = [
   },
 ];
 
-export const seedTransactions: Transaction[] = [
+const seedTransactions: Transaction[] = [
   {
     id: "t-1",
     amount: 120,
@@ -689,7 +689,7 @@ export const seedTransactions: Transaction[] = [
   },
 ];
 
-export const seedPledges: Pledge[] = [
+const seedPledges: Pledge[] = [
   {
     id: "p-1",
     user_id: "u-john",
@@ -725,7 +725,7 @@ export const seedPledges: Pledge[] = [
 ];
 
 /** Week of 5 Oct in the social planner (Draft → Review → Ready). */
-export const seedSocialPosts: SocialPost[] = [
+const seedSocialPosts: SocialPost[] = [
   { id: "sp-1", day: "Mon", day_num: 5, title: "Freshers week recap — stall photos", platforms: "IG · TikTok", status: "ready", created_at: "2026-10-01T10:00:00.000Z" },
   { id: "sp-2", day: "Tue", day_num: 6, title: "Reading group tonight: Wage Labour and Capital", platforms: "IG", status: "draft", created_at: "2026-10-01T10:00:00.000Z" },
   { id: "sp-4", day: "Thu", day_num: 8, title: "Pub social tonight", platforms: "IG Story", status: "needs_review", created_at: "2026-10-01T10:00:00.000Z" },
@@ -914,9 +914,9 @@ export function createSeedDb(): DevDb {
     ],
     // Priya (a priority contact) is reading with the Socialism group.
     event_guests: [
-      { id: "eg-1", event_id: "e-v2-banner", comrade_id: "cm-dan", status: "going", added_by: "u-gen-sec", created_at: "2026-10-07T18:00:00.000Z" },
-      { id: "eg-2", event_id: "e-v2-stall-tue", comrade_id: "cm-ivy", status: "going", added_by: "u-ana", created_at: "2026-10-05T20:00:00.000Z" },
-      { id: "eg-3", event_id: "e-v2-stall-tue", comrade_id: "cm-hana", status: "maybe", added_by: "u-ana", created_at: "2026-10-05T20:00:00.000Z" },
+      { id: "eg-1", event_id: "e-banner", comrade_id: "cm-dan", status: "going", added_by: "u-gen-sec", created_at: "2026-10-07T18:00:00.000Z" },
+      { id: "eg-2", event_id: "e-stall-tue", comrade_id: "cm-ivy", status: "going", added_by: "u-ana", created_at: "2026-10-05T20:00:00.000Z" },
+      { id: "eg-3", event_id: "e-stall-tue", comrade_id: "cm-hana", status: "maybe", added_by: "u-ana", created_at: "2026-10-05T20:00:00.000Z" },
     ],
     follow_ups: [
       { id: "fu-1", person_id: "cm-ivy", follower_id: "u-gen-sec", last_touched_at: "2026-09-28T18:00:00.000Z", active: true, created_by: "u-gen-sec", created_at: "2026-09-20T10:00:00.000Z" },
@@ -943,7 +943,7 @@ export function createSeedDb(): DevDb {
       { id: "rgi-1", group_id: "rg-socialism", user_id: "u-gen-sec", kind: "invite", note: null, status: "open", created_by: "u-ruth", created_at: "2026-10-08T10:00:00.000Z" },
       { id: "rgi-2", group_id: "rg-wage", user_id: "u-maria", kind: "request", note: "Read the Manifesto and Socialism: Utopian and Scientific already", status: "open", created_by: "u-maria", created_at: "2026-10-07T21:53:00.000Z" },
     ],
-    reading_group_contacts: [{ id: "rgc-1", group_id: "rg-socialism", contact_id: "c-v2-priya", added_by: "u-gen-sec", created_at: "2026-10-02T10:00:00.000Z" }],
+    reading_group_contacts: [{ id: "rgc-1", group_id: "rg-socialism", contact_id: "c-priya", added_by: "u-gen-sec", created_at: "2026-10-02T10:00:00.000Z" }],
     event_checklists: [...clone(v2Checklists), ...clone(seedEventChecklists)],
     availability: [...clone(seedAvailability), ...clone(v2Availability)],
     agenda: [...clone(seedAgenda), ...clone(v2Agenda)],

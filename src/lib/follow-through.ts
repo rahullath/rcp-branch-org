@@ -86,7 +86,7 @@ function nextWeekday(today: string, weekday: number) {
 }
 
 /** "by Thursday" / "before Friday" / "tomorrow" / "by 12/10" → a date, plus the line without it. */
-export function extractDue(text: string, today: string): { text: string; due: string | null } {
+function extractDue(text: string, today: string): { text: string; due: string | null } {
   const dayRe = new RegExp(`\\b(?:by|before|on|this|next)\\s+(${[...DAYS, ...SHORT_DAYS].join("|")})\\b`, "i");
   let m = text.match(dayRe);
   if (m) {

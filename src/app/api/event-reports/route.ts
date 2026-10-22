@@ -1,5 +1,5 @@
 import { json, serverError, withActor } from "@/lib/api";
-import { listEventReports } from "@/lib/data-v2";
+import { listEventReports } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

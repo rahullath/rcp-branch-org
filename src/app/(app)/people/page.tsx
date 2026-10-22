@@ -6,8 +6,8 @@ import { revalidate, useData } from "@/lib/hooks";
 import { useActor } from "@/lib/actor-context";
 import { hasAnyRole } from "@/lib/permissions";
 import type { AgendaAction, Comrade, Profile } from "@/lib/types";
-import { usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 type Saved = Comrade & { moved?: number };
 
@@ -58,14 +58,14 @@ export default function PeoplePage() {
 
   if (!isOfficer) {
     return (
-      <div className="v2 pg">
+      <div className="screen pg">
         <p className="nothing">People are kept by officers.</p>
       </div>
     );
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div className="grow min0">
           <h1>People</h1>

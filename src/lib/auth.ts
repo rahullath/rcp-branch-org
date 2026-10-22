@@ -86,10 +86,6 @@ export const getActor = cache(async (): Promise<Actor | null> => {
   }
 });
 
-export function isOfficer(actor: Actor | null, role: Role) {
-  return actor?.role.includes(role) ?? false;
-}
-
 /** Mirrors the `has_role_beyond_member()` RLS helper for dev-store parity,
  * since demo mode has zero RLS enforcement of its own. */
 export function canSeeCommittee(actor: Actor | null) {

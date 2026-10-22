@@ -1,0 +1,21 @@
+Branch Organizer
+Copyright (C) 2026 the Branch Organizer contributors
+
+The source code is licensed under the GNU Affero General Public License,
+version 3 or later (see LICENSE).
+
+Not covered by that licence
+---------------------------
+The party's names, logos, emblems, posters and fonts under public/brand/ belong
+to their owners. They are included so the app looks right for the party's own
+branches. Do not reuse them elsewhere without the owners' permission.
+
+Data and credits
+----------------
+- Campus locations in src/data/spots/birmingham.ts are taken from the University
+  of Birmingham Edgbaston campus map.
+- Book titles and links under src/data/ point to publications of Well Red Books
+  and to communist.red and marxist.com. The links are references, not copies.
+
+Third-party software keeps its own licences; see package.json and the packages
+in node_modules.

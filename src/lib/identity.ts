@@ -2,7 +2,7 @@
 export const PORTAL_URL = "https://portal.communist.red";
 
 /** "pat.smith2517" — a name nobody chose (it came from the sign-up email). */
-export function looksLikeEmail(name: string) {
+function looksLikeEmail(name: string) {
   return !/\s/.test(name.trim()) && /[\d._@]/.test(name);
 }
 

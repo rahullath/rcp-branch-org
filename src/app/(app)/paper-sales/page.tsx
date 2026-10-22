@@ -9,12 +9,12 @@ import { useActor } from "@/lib/actor-context";
 import { useProfiles } from "@/lib/profiles-context";
 import { EVENT_TYPE_META, type Availability, type Comrade, type Event, type EventGuest, type EventReport, type Location, type Material } from "@/lib/types";
 import { byStartAsc, byStartDesc, dayDiff, isUpcoming } from "@/lib/dates";
-import { useRsvps } from "@/components/rsvp-buttons";
+import { useRsvps } from "@/lib/use-rsvps";
 import { EventModal } from "@/components/event-modal";
 import { bestTimes, SLOT_WORD, slotStart, type BestTime } from "@/lib/best-times";
-import { SectionHead, StateTag, firstPart, fmtDay, fmtDayNum, fmtMonth, fmtTime, fmtWeekday } from "@/components/v2/primitives";
-import { LocationGroups } from "@/components/v2/locations";
-import { useToast } from "@/components/v2/toast";
+import { SectionHead, StateTag, firstPart, fmtDay, fmtDayNum, fmtMonth, fmtTime, fmtWeekday } from "@/components/features/primitives";
+import { LocationGroups } from "@/components/features/locations";
+import { useToast } from "@/components/features/toast";
 import type { DistrictSale } from "@/lib/district";
 
 const SALE_TYPES: Event["event_type"][] = ["paper_sale", "uni_stall"];
@@ -112,7 +112,7 @@ export default function PaperSalesPage() {
   };
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div className="grow min0">
           <h1>Paper sales</h1>

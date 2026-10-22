@@ -27,7 +27,7 @@ export default async function WelcomePage({ searchParams }: { searchParams: Prom
   // Came from an invite: join straight away, no extra screen. Only an error brings you back here.
   if (code && !failed && (await branchForCode(code))) redirect(`/welcome/join?code=${encodeURIComponent(code)}`);
   return (
-    <main className="v2 pg" style={{ maxWidth: 520, margin: "0 auto", padding: 16 }}>
+    <main className="screen pg" style={{ maxWidth: 520, margin: "0 auto", padding: 16 }}>
       <div>
         <h1>Welcome, {actor.name.split(/\s+/)[0]}</h1>
         <p className="sub">Which branch are you in? Each branch&apos;s events, contacts and plans stay its own. District demos and national events show for everyone.</p>

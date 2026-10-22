@@ -10,9 +10,9 @@ import { useProfiles } from "@/lib/profiles-context";
 import { MODULE_LABEL, type ImportModule, type JsonImportLine } from "@/lib/import-prompt";
 import type { ImportRequest } from "@/lib/types";
 import { relativeDaysAgo } from "@/lib/utils";
-import { SectionHead } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
-import { ImportLines, lineKey, pickedRows } from "@/components/v2/import-lines";
+import { SectionHead } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
+import { ImportLines, lineKey, pickedRows } from "@/components/features/import-lines";
 
 type Summary = Omit<ImportRequest, "data"> & { rows: number; modules: string[] };
 type Detail = { request: ImportRequest; lines: JsonImportLine[]; warnings: string[] };
@@ -41,7 +41,7 @@ function Reviews() {
 
   if (actor && !actor.isAdmin) {
     return (
-      <div className="v2 pg">
+      <div className="screen pg">
         <p className="nothing">
           Only the admin reviews imports. Yours are on the{" "}
           <Link className="link" href="/import">
@@ -57,7 +57,7 @@ function Reviews() {
   const done = (data ?? []).filter((r) => r.status !== "pending").slice(0, 10);
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Import reviews</h1>

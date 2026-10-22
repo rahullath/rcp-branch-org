@@ -3,7 +3,7 @@ import type { AgendaItem, Event, PrepLink } from "./types";
 import { isSupabaseConfigured } from "./config";
 import { createAdminClient } from "./supabase/server";
 import { getEvent, listAgenda, listEvents, listRsvps, updateAgendaItem } from "./data";
-import { createSharedRead, deleteSharedRead, listSharedReads, updateSharedRead } from "./data-v2";
+import { createSharedRead, deleteSharedRead, listSharedReads, updateSharedRead } from "./data-extras";
 import { allMemberIds, sendPush } from "./push";
 import { expectsReading, PREREAD_TYPES } from "./preread";
 export { linkKind } from "./preread";

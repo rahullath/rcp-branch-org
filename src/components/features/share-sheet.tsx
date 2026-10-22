@@ -54,7 +54,7 @@ export function ShareSheet({ event, summary, onClose }: { event: Event; summary:
 
   return (
     <Modal open onClose={onClose} title="Share this event">
-      <div className="v2 stack8">
+      <div className="screen stack8">
         {error && <p className="small red">{error}</p>}
         {!share && !error && <p className="small">Making the link…</p>}
         {share && (

@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
-import { createPoll, listPolls } from "@/lib/data-v2";
+import { createPoll, listPolls } from "@/lib/data-extras";
 import { notifyPoll } from "@/lib/notify";
 
 export const dynamic = "force-dynamic";

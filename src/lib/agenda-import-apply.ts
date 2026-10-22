@@ -3,7 +3,7 @@ import type { Actor } from "./auth";
 import type { AgendaItem, Comrade, Event, PrepLink, Profile } from "./types";
 import { leadLabel, sameTopic, type ParsedAgenda } from "./agenda-import";
 import { createAgendaItem, createEvent, listAgenda, listEvents, listProfiles, logActivity, updateAgendaItem, updateEvent } from "./data";
-import { cleanAliases, createComrade, listComrades, listFollowUps, setFollowUp, updateComrade } from "./data-v2";
+import { cleanAliases, createComrade, listComrades, listFollowUps, setFollowUp, updateComrade } from "./data-extras";
 import { initials } from "./utils";
 
 /*
@@ -14,7 +14,7 @@ import { initials } from "./utils";
  * Everything is matched first, so importing the same doc again updates.
  */
 
-export type Change = "create" | "update" | "same" | "skip";
+type Change = "create" | "update" | "same" | "skip";
 
 export interface PlanLine {
   change: Change;
@@ -26,7 +26,7 @@ export interface PlanLine {
 }
 
 /** How each name in the doc was understood — shown as "Who's who" in the preview. */
-export interface ImportPerson {
+interface ImportPerson {
   raw: string;
   /** member: has an account · known: in People, no account yet · new: never seen before. */
   status: "member" | "known" | "new";
@@ -61,7 +61,7 @@ interface Person {
 const TZ = "Europe/London";
 
 /** YYYY-MM-DD + HH:MM in UK time → ISO instant (handles BST/GMT). */
-export function londonISO(date: string, hhmm: string): string {
+function londonISO(date: string, hhmm: string): string {
   const [y, m, d] = date.split("-").map(Number);
   const [h, mi] = hhmm.split(":").map(Number);
   const guess = Date.UTC(y, m - 1, d, h, mi);

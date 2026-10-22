@@ -55,7 +55,7 @@ function iso(d: string | null) {
 }
 
 /** RSS 2.0 or Atom → items. */
-export function parseFeed(xml: string, source: string, kind: FeedItem["kind"]): FeedItem[] {
+function parseFeed(xml: string, source: string, kind: FeedItem["kind"]): FeedItem[] {
   const out: FeedItem[] = [];
   for (const m of xml.matchAll(/<item\b[\s\S]*?<\/item>/gi)) {
     const b = m[0];
@@ -73,7 +73,7 @@ export function parseFeed(xml: string, source: string, kind: FeedItem["kind"]): 
 }
 
 /** A news sitemap has urls and dates but no titles — the slug is readable enough. */
-export function parseSitemap(xml: string, source: string): FeedItem[] {
+function parseSitemap(xml: string, source: string): FeedItem[] {
   const out: FeedItem[] = [];
   for (const m of xml.matchAll(/<url>([\s\S]*?)<\/url>/gi)) {
     const loc = decode(tag(m[1], "loc") ?? "");
@@ -85,7 +85,7 @@ export function parseSitemap(xml: string, source: string): FeedItem[] {
   return out;
 }
 
-export function slugTitle(url: string) {
+function slugTitle(url: string) {
   const slug = url.replace(/[?#].*$/, "").replace(/\/$/, "").split("/").pop() ?? "";
   const words = slug.replace(/\.html?$/, "").replace(/[-_]+/g, " ").trim();
   return words.length > 5 && !/^\d+$/.test(words) ? words[0].toUpperCase() + words.slice(1) : "";

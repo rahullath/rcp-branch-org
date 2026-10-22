@@ -7,7 +7,7 @@ import { titleKey } from "./wellred";
  * Search matches "IDOM 48" to "In Defence of Marxism #48" and the like.
  */
 
-export const GEAR = [
+const GEAR = [
   "Flags",
   "Collection tin",
   "Megaphone",
@@ -40,7 +40,7 @@ function humanise(slug: string): string {
 }
 
 /** Wellred titles, minus pre-orders and internal listings. */
-export const WELLRED_TITLES: string[] = (SLUGS as string[])
+const WELLRED_TITLES: string[] = (SLUGS as string[])
   .filter((s) => !s.startsWith("pre-order") && !/internal|test|gift-card/.test(s))
   .map(humanise);
 

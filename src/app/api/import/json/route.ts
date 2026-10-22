@@ -1,6 +1,6 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
 import { IMPORT_MODULES, runJsonImport, type ImportModule } from "@/lib/json-import";
-import { createImportRequest } from "@/lib/data-v2";
+import { createImportRequest } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

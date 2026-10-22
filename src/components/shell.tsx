@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getActor } from "@/lib/auth";
 import { listEventChecklists, listEventVisitors, listProfiles } from "@/lib/data";
-import { listImportRequests } from "@/lib/data-v2";
+import { listImportRequests } from "@/lib/data-extras";
 import { sanitizeProfilesFor } from "@/lib/profile-visibility";
 import { APP_PRODUCT } from "@/lib/config";
 import { initials } from "@/lib/utils";
@@ -10,12 +10,12 @@ import { ProfilesProvider } from "@/lib/profiles-context";
 import { LogoutButton } from "./logout-button";
 import { SideNav, BottomNav } from "./nav";
 import { InstallBanner } from "./install-banner";
-import { ToastProvider } from "./v2/toast";
-import { SheetProvider } from "./v2/sheets";
-import { NavBadgesProvider } from "./v2/nav-badges";
+import { ToastProvider } from "./features/toast";
+import { SheetProvider } from "./features/sheets";
+import { NavBadgesProvider } from "./features/nav-badges";
 import { HammerSickle } from "./emblem";
-import { FeedbackButton } from "./v2/feedback-button";
-import { NotifyPrompt } from "./v2/notify-prompt";
+import { FeedbackButton } from "./features/feedback-button";
+import { NotifyPrompt } from "./features/notify-prompt";
 
 export default async function Shell({ children }: { children: React.ReactNode }) {
   const [actor, rawProfiles, visitors] = await Promise.all([getActor(), listProfiles(), listEventVisitors()]);

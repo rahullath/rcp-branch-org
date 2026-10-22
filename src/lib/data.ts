@@ -200,8 +200,8 @@ export async function createContact(actor: Actor, data: Partial<Contact>): Promi
         created_by: actor.id,
         created_at: now,
     };
-    const v2 = definedOnly({ tier: data.tier, met_event_id: data.met_event_id, last_contact_at: data.last_contact_at, stage: data.stage, stage_at: data.stage && data.stage !== "met" ? now : undefined });
-    let { data: row, error } = await insertTolerant("contacts", { ...payload, owner_id: actor.id }, v2);
+    const withNewColumns = definedOnly({ tier: data.tier, met_event_id: data.met_event_id, last_contact_at: data.last_contact_at, stage: data.stage, stage_at: data.stage && data.stage !== "met" ? now : undefined });
+    let { data: row, error } = await insertTolerant("contacts", { ...payload, owner_id: actor.id }, withNewColumns);
     // Tolerate the window before the owner_id migration is applied.
     if (isMissingOwnerColumn(error)) {
       ({ data: row, error } = await supabase.from("contacts").insert(payload).select().single());

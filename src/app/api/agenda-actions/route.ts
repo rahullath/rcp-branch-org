@@ -1,6 +1,6 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
 import { getEvent, getProfile } from "@/lib/data";
-import { createAgendaAction, getComrade, listAgendaActions } from "@/lib/data-v2";
+import { createAgendaAction, getComrade, listAgendaActions } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

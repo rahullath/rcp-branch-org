@@ -3,6 +3,13 @@ export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 
 export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
+/**
+ * Without a database the app runs as an open demo with made-up people. That is fine on a
+ * developer's machine and on a deliberate demo site (ALLOW_DEMO=1), but in production a
+ * missing variable must not quietly become a demo where a real branch was meant to be.
+ */
+export const isDemoAllowed = process.env.ALLOW_DEMO === "1" || process.env.NODE_ENV !== "production";
+
 export const APP_NAME = "Revolutionary Communist International | Branch Organizer";
 /** The two halves, for places that stack them (header, splash). */
 export const APP_ORG = "Revolutionary Communist International";

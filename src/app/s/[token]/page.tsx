@@ -70,7 +70,7 @@ export default async function SharePage({ params, searchParams }: PageProps) {
 
   if (!share) {
     return (
-      <main className="v2 pg" style={{ maxWidth: 520, margin: "0 auto", padding: 16 }}>
+      <main className="screen pg" style={{ maxWidth: 520, margin: "0 auto", padding: 16 }}>
         <h1>Link expired</h1>
         <p className="sub">Ask whoever sent it for a new one.</p>
       </main>
@@ -121,7 +121,7 @@ export default async function SharePage({ params, searchParams }: PageProps) {
   ].filter(Boolean);
 
   return (
-    <main className="v2 pg" style={{ maxWidth: 520, margin: "0 auto", padding: "16px 16px 48px" }}>
+    <main className="screen pg" style={{ maxWidth: 520, margin: "0 auto", padding: "16px 16px 48px" }}>
       {member && (
         <p className="small" style={{ margin: 0, padding: "8px 12px", background: "var(--soft, #f4f4f4)" }}>
           Signed in as {member.name.replace(/^Comrade\s+/i, "").split(" ")[0]}. This is the page contacts see.{" "}

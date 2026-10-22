@@ -1,7 +1,7 @@
 import { after } from "next/server";
 import { json, notFound, withActor, badRequest } from "@/lib/api";
 import { getMaterial, getProfile } from "@/lib/data";
-import { listMaterialMoves, MISSING_ACTION } from "@/lib/data-v2";
+import { listMaterialMoves, MISSING_ACTION } from "@/lib/data-extras";
 import { notifyMaterialAsk } from "@/lib/notify";
 
 export const dynamic = "force-dynamic";

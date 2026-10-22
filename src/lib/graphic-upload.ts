@@ -6,7 +6,7 @@
  * enough to store, so it behaves like one made here.
  */
 
-export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 const MIN_SIDE = 300;
 /** The server refuses data URLs over 1.5 MB; stay well under. */
 const MAX_OUTPUT_CHARS = 1_300_000;

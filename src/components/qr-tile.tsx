@@ -18,7 +18,7 @@ export const QR_KINDS = [
 
 export type QrCorner = "br" | "bl" | "tr" | "tl";
 
-export const QR_EMBLEM = "/brand/rcs/marks/hammer-sickle-red.png";
+const QR_EMBLEM = "/brand/rcs/marks/hammer-sickle-red.png";
 const INK = "#0a0a08";
 const EYE = "#c8102e";
 /** Hammer and sickle are 259×382: height ÷ width. */

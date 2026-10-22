@@ -1,6 +1,6 @@
 import { json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getEvent } from "@/lib/data";
-import { deleteSharedRead, getSharedRead, setMainRead, updateSharedRead } from "@/lib/data-v2";
+import { deleteSharedRead, getSharedRead, setMainRead, updateSharedRead } from "@/lib/data-extras";
 import { eventLead } from "@/lib/types";
 import { mirrorToPrep } from "@/lib/preread-sync";
 

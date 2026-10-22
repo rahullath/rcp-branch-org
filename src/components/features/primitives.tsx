@@ -7,7 +7,7 @@ import { useProfiles } from "@/lib/profiles-context";
 import type { Rsvp as RsvpRow } from "@/lib/types";
 import { initials } from "@/lib/utils";
 
-export const RSVP_LABEL: Record<RsvpRow["status"], string> = { going: "Going", maybe: "Maybe", no: "Can't" };
+const RSVP_LABEL: Record<RsvpRow["status"], string> = { going: "Going", maybe: "Maybe", no: "Can't" };
 
 /** Going / Maybe / Can't as one segmented control. Tapping the active one clears it. */
 export function Rsvp({ value, onChange }: { value?: RsvpRow["status"] | null; onChange: (v: RsvpRow["status"]) => void }) {
@@ -134,14 +134,4 @@ export function fmtLongDay(iso: string) {
   const p: Record<string, string> = {};
   for (const x of longFmt.formatToParts(new Date(iso))) p[x.type] = x.value;
   return `${p.weekday} ${p.day} ${p.month}`;
-}
-
-/** "https://www.marxists.org/…" → "marxists.org". */
-export function hostOf(url?: string | null) {
-  if (!url) return null;
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return null;
-  }
 }

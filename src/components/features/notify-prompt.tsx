@@ -66,7 +66,7 @@ export function NotifyPrompt() {
   }
 
   return (
-    <div className="v2-layer notify-prompt" role="dialog" aria-label="Turn on notifications">
+    <div className="screen-layer notify-prompt" role="dialog" aria-label="Turn on notifications">
       <div className="row gap8" style={{ alignItems: "flex-start" }}>
         <span className="notify-bell">
           <Bell size={20} />

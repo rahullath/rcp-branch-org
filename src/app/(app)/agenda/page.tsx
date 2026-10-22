@@ -15,8 +15,8 @@ import { formatMeetingAgenda } from "@/lib/summaries";
 import { PersonPicker } from "@/components/person-picker";
 import { PoliticalItemCard } from "@/components/agenda-political";
 import { Spinner } from "@/components/ui";
-import { Chev, firstPart, fmtDay, fmtTime, SectionHead, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { Chev, firstPart, fmtDay, fmtTime, SectionHead, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 /** Mirrors SECTION_ROLE in src/app/api/agenda/[id]/route.ts. */
 const SECTION_ROLE: Record<AgendaSection, Role> = {
@@ -127,7 +127,7 @@ export default function AgendaPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Agenda</h1>

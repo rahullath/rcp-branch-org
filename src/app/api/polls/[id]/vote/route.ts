@@ -1,5 +1,5 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
-import { castVote, getPoll } from "@/lib/data-v2";
+import { castVote, getPoll } from "@/lib/data-extras";
 import { pollIsOpen } from "@/lib/inbox";
 
 export const dynamic = "force-dynamic";

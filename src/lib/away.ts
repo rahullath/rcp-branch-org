@@ -4,7 +4,7 @@ import { eventLead } from "./types";
 import { isSupabaseConfigured } from "./config";
 import { createAdminClient } from "./supabase/server";
 import { listEvents, listProfiles, listRsvps, setRsvp, updateEvent } from "./data";
-import { claimBringItem, listEventExtras, setEventRole, shortTitle } from "./data-v2";
+import { claimBringItem, listEventExtras, setEventRole, shortTitle } from "./data-extras";
 import { sendPush } from "./push";
 
 /*
@@ -18,7 +18,7 @@ const londonDay = (iso: string) => new Date(iso).toLocaleDateString("en-CA", { t
 const londonTime = (iso: string) => new Date(iso).toLocaleTimeString("en-GB", { timeZone: "Europe/London", hour: "2-digit", minute: "2-digit", hour12: false });
 
 /** Does this away range cover the event? Part-day ranges count if the event starts inside them (or within 2h before the end of the window). */
-export function awayCovers(r: AwayRange, e: Pick<Event, "start_time">) {
+function awayCovers(r: AwayRange, e: Pick<Event, "start_time">) {
   const day = londonDay(e.start_time);
   if (day < r.from || day > r.to) return false;
   if (!r.start || !r.end) return true;

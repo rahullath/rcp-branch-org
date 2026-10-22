@@ -14,9 +14,9 @@ import { initials as initialsOf } from "@/lib/utils";
 import { APP_NAME, APP_VERSION, isSupabaseConfigured } from "@/lib/config";
 import { PORTAL_URL } from "@/lib/identity";
 import { formatPhone, normalizePhone } from "@/lib/phone";
-import { SectionHead } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
-import { CalendarLinks } from "@/components/v2/calendar-links";
+import { SectionHead } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
+import { CalendarLinks } from "@/components/features/calendar-links";
 
 /**
  * Your profile: who you are as the branch writes you (name, initials, the
@@ -75,7 +75,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Profile</h1>

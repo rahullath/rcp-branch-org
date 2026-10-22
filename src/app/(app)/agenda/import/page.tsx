@@ -1,6 +1,6 @@
 "use client";
 
-import { ImportHint } from "@/components/v2/import-hint";
+import { ImportHint } from "@/components/features/import-hint";
 
 import Link from "next/link";
 import { useRef, useState } from "react";
@@ -11,8 +11,8 @@ import { revalidate } from "@/lib/hooks";
 import { useActor } from "@/lib/actor-context";
 import { hasAnyRole } from "@/lib/permissions";
 import type { ImportResult, PlanLine } from "@/lib/agenda-import-apply";
-import { fmtDay, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { fmtDay, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 const CHANGE_LABEL: Record<PlanLine["change"], string> = { create: "New", update: "Update", same: "Same", skip: "Skipped" };
 const KIND_LABEL: Record<PlanLine["kind"], string> = {
@@ -93,7 +93,7 @@ export default function ImportAgendaPage() {
 
   if (!allowed) {
     return (
-      <div className="v2 pg">
+      <div className="screen pg">
         <p className="nothing">Importing agendas is for organisers, the education officer and the secretary.</p>
       </div>
     );
@@ -108,7 +108,7 @@ export default function ImportAgendaPage() {
   const order = [...groups.keys()].sort((a, b) => (a === "follow" ? 1 : b === "follow" ? -1 : a === "undated" ? 1 : b === "undated" ? -1 : a.localeCompare(b)));
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <Link className="btn-ic" href="/agenda" aria-label="Back to agenda">
           <ArrowLeft size={18} strokeWidth={2.25} />

@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { visibleNavItems } from "@/lib/nav-items";
 import type { Role } from "@/lib/types";
-import { useInbox } from "@/components/v2/use-inbox";
+import { useInbox } from "@/components/features/use-inbox";
 
 /** The weekly loop gets the tab bar; everything else lives on the More page. */
 const PRIMARY: { href: string; label: string; icon: string }[] = [

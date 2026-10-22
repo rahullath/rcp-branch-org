@@ -1,5 +1,5 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
-import { dismissAsk } from "@/lib/data-v2";
+import { dismissAsk } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

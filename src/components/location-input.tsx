@@ -6,7 +6,7 @@ import { revalidate, useData } from "@/lib/hooks";
 import type { Location } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { inputClasses } from "@/components/ui";
-import { LOCATION_KIND } from "@/components/v2/locations";
+import { LOCATION_KIND } from "@/components/features/locations";
 import { useActor } from "@/lib/actor-context";
 import { areasFor } from "@/data/spots";
 

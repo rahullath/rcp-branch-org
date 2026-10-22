@@ -8,7 +8,7 @@
  * LISTENING_LIBRARY holds audio (Spotify, podcasts).
  */
 
-export type ResourceKind = "article" | "youtube" | "spotify" | "podcast";
+type ResourceKind = "article" | "youtube" | "spotify" | "podcast";
 
 export interface AgendaResource {
   title: string;
@@ -236,7 +236,7 @@ export const TOPIC_LIBRARY: SuggestedTopic[] = [
 ];
 
 /** Recent party coverage — current events for topical sessions. (Dated, Aug 2026.) */
-export const NEWS_LIBRARY: AgendaResource[] = [
+const NEWS_LIBRARY: AgendaResource[] = [
   { title: "Ukraine: drones, delusions and defeat", url: `${MARXIST}/ukraine-drones-delusions-and-defeat.htm`, kind: "article", source: "27 Aug 26" },
   { title: "Burnham commits to prolonging the slaughter", url: `${MARXIST}/buying-time-with-ukrainian-blood-burnham-commits-to-prolonging-the-slaughter.htm`, kind: "article", source: "27 Aug 26" },
   { title: "The existential crisis of European capitalism", url: `${MARXIST}/the-existential-crisis-of-european-capitalism.htm`, kind: "article", source: "24 Aug 26" },
@@ -250,7 +250,7 @@ export const NEWS_LIBRARY: AgendaResource[] = [
 ];
 
 /** Audio + video prep for sessions. Add the branch's Spotify dump here. */
-export const LISTENING_LIBRARY: AgendaResource[] = [
+const LISTENING_LIBRARY: AgendaResource[] = [
   // Spotify links coming — paste the dump in here as { title, url, kind: "spotify" }.
   { title: "Against the Stream (weekly podcast)", url: `${MARXIST}/against-the-stream.htm`, kind: "podcast", source: "Marxist.com" },
   { title: "The Education Caucus — leadoff on 1905", url: "https://open.spotify.com/episode/4xny3qnkNwuiYzwn4t9Es0", kind: "spotify", source: "Spotify" },

@@ -28,7 +28,7 @@ export function awayOn(avail: Availability[], userId: string, day: string): Away
 }
 
 /** Away now, or starting within a fortnight. */
-export function awaySoon(avail: Availability[], userId: string, today: string): AwayRange | null {
+function awaySoon(avail: Availability[], userId: string, today: string): AwayRange | null {
   const horizon = addDays(today, 14);
   let best: AwayRange | null = null;
   for (const a of avail)
@@ -92,7 +92,7 @@ const initialsOf = (s: string) =>
     .join("");
 
 /** A lead-off is stored as written ("JB", "Sarah"); match it to an account. */
-export function profileForName(raw: string, profiles: Pick<Profile, "id" | "name" | "initials">[]): string | null {
+function profileForName(raw: string, profiles: Pick<Profile, "id" | "name" | "initials">[]): string | null {
   const q = bare(raw);
   if (!q) return null;
   const hit =

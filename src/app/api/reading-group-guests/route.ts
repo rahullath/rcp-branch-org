@@ -1,5 +1,5 @@
 import { json, serverError, withActor } from "@/lib/api";
-import { listReadingGroupGuests } from "@/lib/data-v2";
+import { listReadingGroupGuests } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

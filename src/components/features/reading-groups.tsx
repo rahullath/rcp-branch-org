@@ -25,7 +25,7 @@ import { bookOf, canRunGroup, DEFAULT_CAPACITY, groupStats, LEAD_RATIO, sameBook
 import { CURRICULUM } from "@/data/curriculum";
 import { IDOM_ISSUES } from "@/data/idom";
 import { LocationInput } from "@/components/location-input";
-import { useRsvps } from "@/components/rsvp-buttons";
+import { useRsvps } from "@/lib/use-rsvps";
 import { fmtDay, fmtTime, SectionHead, usePeople } from "./primitives";
 import { useToast } from "./toast";
 

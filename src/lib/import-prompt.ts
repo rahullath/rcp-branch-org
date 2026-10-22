@@ -1,14 +1,12 @@
 /* Client-safe half of the JSON import: the modules and the prompt for a chat assistant. */
 
-import FIELDS from "./import-fields.json";
-
-/**
- * Every field the assistant is asked for, per section, with the example shown in the
- * prompt. The single source of truth: the prompt is written from it, the
- * importer's rows are typed from it (reading anything else won't compile),
+/*
+ * Every field the importer is asked for, per section, lives in import-fields.json. The prompt is
+ * written from it, the importer's rows are typed from it (reading anything else won't compile),
  * and `npm run build` checks the importer reads every one of them.
  */
-export const IMPORT_FIELDS = FIELDS;
+import FIELDS from "./import-fields.json";
+
 export type ImportRow<M extends ImportModule> = { [K in keyof (typeof FIELDS)[M]]?: unknown };
 
 export const IMPORT_MODULES = ["contacts", "events", "actions", "follow_ups", "materials", "pledges", "reading_groups", "topic_ideas", "locations", "people"] as const;

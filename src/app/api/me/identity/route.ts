@@ -1,7 +1,7 @@
 import { normalizePhone } from "@/lib/phone";
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
 import { getProfile, updateProfile } from "@/lib/data";
-import { cleanAliases, createComrade, linkComrade, listComrades, updateComrade } from "@/lib/data-v2";
+import { cleanAliases, createComrade, linkComrade, listComrades, updateComrade } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

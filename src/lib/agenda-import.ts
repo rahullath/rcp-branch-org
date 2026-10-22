@@ -11,7 +11,7 @@ import type { AgendaSection, PrepLink, PrepLinkKind } from "./types";
  * exports as several cells per line); both shapes are handled.
  */
 
-export interface ParsedItem {
+interface ParsedItem {
   section: AgendaSection;
   title: string;
   duration: number | null;
@@ -20,7 +20,7 @@ export interface ParsedItem {
   prep: PrepLink[];
 }
 
-export interface ParsedProgrammeRow {
+interface ParsedProgrammeRow {
   topic: string;
   comrade: string | null;
   /** Written with a "?" — asked but not confirmed. */
@@ -29,7 +29,7 @@ export interface ParsedProgrammeRow {
   date: string | null;
 }
 
-export interface ParsedFollowUp {
+interface ParsedFollowUp {
   names: string[];
   by: string;
 }
@@ -64,7 +64,7 @@ function inferYear(month: number, day: number, now: Date): string {
 }
 
 /** "12th October", "Mon 12 Oct 2026", "12/10", "12/10/26". */
-export function parseDate(text: string, now: Date): string | null {
+function parseDate(text: string, now: Date): string | null {
   const named = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(?:of\s+)?([A-Za-z]{3,9})\.?(?:\s+(\d{4}))?/);
   if (named) {
     const m = MONTHS.indexOf(named[2].slice(0, 3).toLowerCase());
@@ -95,7 +95,7 @@ const time = (s: string) => {
 const DATE_TOKEN = /^\d{1,2}\/\d{1,2}(?:\/\d{2,4})?$/;
 
 /** "KT", "Morgan?", "Tom", "Comrade Ana", "Jo Bloggs" — a name, not a topic. */
-export function looksLikePerson(token: string): boolean {
+function looksLikePerson(token: string): boolean {
   const t = token.replace(/\?$/, "").trim();
   if (!t) return false;
   if (/^[A-Z]{2,4}$/.test(t)) return true;

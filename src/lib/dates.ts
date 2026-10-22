@@ -16,11 +16,6 @@ export function isUpcoming(e: Pick<Event, "start_time">, now: number) {
   return startMs(e) + EVENT_GRACE_MS >= now;
 }
 
-/** True while the event has started but is inside its grace window. */
-export function isHappeningNow(e: Pick<Event, "start_time">, now: number) {
-  return startMs(e) <= now && isUpcoming(e, now);
-}
-
 /** Soonest first. */
 export function byStartAsc(a: Pick<Event, "start_time">, b: Pick<Event, "start_time">) {
   return startMs(a) - startMs(b);
@@ -49,31 +44,4 @@ export function dayLabel(iso: string, now: number) {
   if (diff === 1) return "Tomorrow";
   if (diff === -1) return "Yesterday";
   return new Date(iso).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-}
-
-/** Compact relative label that works for past and future: "today", "tomorrow", "in 3 days", "2 days ago". */
-export function relativeDay(iso: string, now: number) {
-  const diff = dayDiff(iso, now);
-  if (diff === 0) return "today";
-  if (diff === 1) return "tomorrow";
-  if (diff === -1) return "yesterday";
-  return diff > 0 ? `in ${diff} days` : `${-diff} days ago`;
-}
-
-export interface DayGroup<T> {
-  key: string;
-  label: string;
-  items: T[];
-}
-
-/** Groups already-sorted events under one header per local calendar day. */
-export function groupByDay<T extends Pick<Event, "start_time">>(events: T[], now: number): DayGroup<T>[] {
-  const groups: DayGroup<T>[] = [];
-  for (const e of events) {
-    const key = new Date(startOfDay(startMs(e))).toISOString();
-    const last = groups[groups.length - 1];
-    if (last && last.key === key) last.items.push(e);
-    else groups.push({ key, label: dayLabel(e.start_time, now), items: [e] });
-  }
-  return groups;
 }

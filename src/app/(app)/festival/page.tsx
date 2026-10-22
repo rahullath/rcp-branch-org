@@ -3,13 +3,13 @@
 import { ExternalLink } from "lucide-react";
 import { festivalDates } from "@/lib/festival";
 import { useFestival } from "@/lib/festival-config";
-import { FestivalDetails } from "@/components/v2/festival-details";
+import { FestivalDetails } from "@/components/features/festival-details";
 
 /** The festival's details, as an admin has set them. Add a timetable or notices as a copy needs them. */
 export default function FestivalPage() {
   const { festival, loading } = useFestival();
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>{festival?.name ?? "Festival"}</h1>

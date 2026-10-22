@@ -4,9 +4,9 @@ import Link from "next/link";
 import type { Ask } from "@/lib/types";
 import { relativeDaysAgo } from "@/lib/utils";
 import { Spinner } from "@/components/ui";
-import { AskCard } from "@/components/v2/ask-card";
-import { useInbox } from "@/components/v2/use-inbox";
-import { firstPart, usePeople } from "@/components/v2/primitives";
+import { AskCard } from "@/components/features/ask-card";
+import { useInbox } from "@/components/features/use-inbox";
+import { firstPart, usePeople } from "@/components/features/primitives";
 
 const GROUPS: [string, Ask["kind"][]][] = [
   ["Decide", ["decide", "candidate-review", "role-request", "import-request"]],
@@ -42,7 +42,7 @@ export default function InboxPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Inbox</h1>

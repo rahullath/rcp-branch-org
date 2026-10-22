@@ -16,7 +16,10 @@ export function sanitizeProfilesFor(profiles: Profile[], actor: Actor | null): P
   return profiles.map((p) => {
     if (p.id === actor?.id) return p;
     if (actor?.viewOnly) {
-      const { phone: _phone, monthly_subs: _subs, subs_last_paid: _paid, ...rest } = p;
+      const rest: Profile = { ...p };
+      delete rest.phone;
+      delete rest.monthly_subs;
+      delete rest.subs_last_paid;
       return rest;
     }
     if (canSeeAll) return p;

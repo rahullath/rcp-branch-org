@@ -1,6 +1,6 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
 import { listProfiles } from "@/lib/data";
-import { createAgendaAction, createComrade, getComrade, listComrades } from "@/lib/data-v2";
+import { createAgendaAction, createComrade, getComrade, listComrades } from "@/lib/data-extras";
 import { resolvePerson } from "@/lib/agenda-import-apply";
 import { londonDay, parseActionLines } from "@/lib/follow-through";
 import type { AgendaAction } from "@/lib/types";

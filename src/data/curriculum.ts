@@ -127,24 +127,3 @@ export const CURRICULUM: CurriculumTrack[] = [
     ],
   },
 ];
-
-/** The series the app actually schedules against (education/programme pages). */
-export const PROGRAMME_SERIES: { id: string; name: string; description: string }[] = [
-  {
-    id: "classics",
-    name: "The Six Classics",
-    description: "The core texts every comrade reads through — the branch's reading-group spine.",
-  },
-  { id: "intro", name: "Introductory Programme", description: "Months 1–12 — the foundation every new member works through." },
-  { id: "intermediate", name: "Intermediate Programme", description: "To be read in the first 1–3 years." },
-  { id: "advanced", name: "Advanced Programme", description: "The longer works, for comrades who have been through the basics." },
-  { id: "big-ones", name: "The Big Ones", description: "The mountains. Companion volumes exist for each." },
-];
-
-export function seriesName(seriesId: string): string {
-  return PROGRAMME_SERIES.find((s) => s.id === seriesId)?.name ?? `Series ${seriesId}`;
-}
-
-export function seriesDescription(seriesId: string): string {
-  return PROGRAMME_SERIES.find((s) => s.id === seriesId)?.description ?? "";
-}

@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getEvent } from "@/lib/data";
-import { getComrade, setEventGuest } from "@/lib/data-v2";
+import { getComrade, setEventGuest } from "@/lib/data-extras";
 import { comradeForName } from "@/lib/comrade-match";
 import { confirmIfReached } from "@/lib/event-status";
 import type { EventGuest } from "@/lib/types";

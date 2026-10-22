@@ -11,9 +11,9 @@ import type { AgendaItem, Event } from "@/lib/types";
 import { programme } from "@/lib/programme";
 import { CURRICULUM } from "@/data/curriculum";
 import { Spinner } from "@/components/ui";
-import { ProgrammeRow } from "@/components/v2/programme-row";
-import { ReadingGroupsSection } from "@/components/v2/reading-groups";
-import { useToast } from "@/components/v2/toast";
+import { ProgrammeRow } from "@/components/features/programme-row";
+import { ReadingGroupsSection } from "@/components/features/reading-groups";
+import { useToast } from "@/components/features/toast";
 
 /**
  * Education is two different things, kept apart:
@@ -64,7 +64,7 @@ export default function EducationPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Education</h1>

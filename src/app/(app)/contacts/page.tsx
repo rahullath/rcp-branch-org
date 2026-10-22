@@ -14,9 +14,9 @@ import { canManage } from "@/lib/permissions";
 import { relativeDaysAgo, waLink } from "@/lib/utils";
 import { ContactDetail } from "@/components/contact-detail";
 import { Spinner } from "@/components/ui";
-import { firstPart, fmtTime, fmtWeekday } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
-import { CONTACT_SOURCES, useSheets } from "@/components/v2/sheets";
+import { firstPart, fmtTime, fmtWeekday } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
+import { CONTACT_SOURCES, useSheets } from "@/components/features/sheets";
 
 /** Quiet this long and a contact shows in red — no daily pestering. */
 const STALE_DAYS = 7;
@@ -138,7 +138,7 @@ function ContactsInner() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Contacts</h1>

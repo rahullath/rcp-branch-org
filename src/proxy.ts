@@ -1,4 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { isDemoAllowed, isSupabaseConfigured } from "@/lib/config";
+import { LIMITS, retryAfter } from "@/lib/rate-limit";
 
 /** Cookie holding an invite's branch code until the person has joined. */
 const PENDING_JOIN = "pending_join";
@@ -36,6 +38,18 @@ const PUBLIC_PATHS = [
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (!isSupabaseConfigured && !isDemoAllowed) {
+    return new NextResponse("This copy isn't set up yet: its database settings are missing. See /docs/run-your-own.md in the repository.", { status: 503, headers: { "content-type": "text/plain; charset=utf-8" } });
+  }
+
+  const rule = LIMITS.find((l) => l.path.test(pathname));
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip");
+  const wait = rule && ip ? retryAfter(`${rule.path.source}|${ip}`, rule.limit, rule.windowMs) : null;
+  if (wait !== null) {
+    const headers = { "retry-after": String(wait), "content-type": pathname.startsWith("/api/") ? "application/json" : "text/plain; charset=utf-8" };
+    return new NextResponse(pathname.startsWith("/api/") ? JSON.stringify({ error: "Too many attempts. Try again in a minute." }) : "Too many attempts. Try again in a minute.", { status: 429, headers });
+  }
 
   // One address for everyone: other production aliases (team and git URLs) send pages
   // to it, so sign-in, invite codes and installed apps all live on one domain.

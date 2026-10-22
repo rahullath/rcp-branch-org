@@ -8,8 +8,8 @@ import { useActor } from "@/lib/actor-context";
 import type { Location } from "@/lib/types";
 import { canManage } from "@/lib/permissions";
 import { packFor } from "@/data/spots";
-import { LocationForm, LocationGroups, type LocationInput } from "@/components/v2/locations";
-import { useToast } from "@/components/v2/toast";
+import { LocationForm, LocationGroups, type LocationInput } from "@/components/features/locations";
+import { useToast } from "@/components/features/toast";
 
 /** Where the branch works — stalls, sales, meetings, socials — by area, with what each place is like. */
 export default function LocationsPage() {
@@ -57,7 +57,7 @@ export default function LocationsPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div className="grow min0">
           <h1>Locations</h1>

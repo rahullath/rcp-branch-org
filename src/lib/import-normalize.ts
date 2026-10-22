@@ -44,7 +44,7 @@ export function classifyPayload(
 }
 
 /** Normalized UK/E.164-ish phone for matching: digits only, `0` → `44`. */
-export function normalizePhone(raw?: unknown): string {
+function normalizePhone(raw?: unknown): string {
   if (typeof raw !== "string") return "";
   const digits = raw.replace(/\D/g, "");
   if (digits.length < 7) return "";
@@ -52,7 +52,7 @@ export function normalizePhone(raw?: unknown): string {
 }
 
 /** Name for matching: lowercased, titles stripped, whitespace collapsed. */
-export function normalizeName(raw?: unknown): string {
+function normalizeName(raw?: unknown): string {
   if (typeof raw !== "string") return "";
   return raw
     .replace(/^(comrade|mr|mrs|ms|miss|dr|sister|brother|com)\b[.\s]+/i, "")

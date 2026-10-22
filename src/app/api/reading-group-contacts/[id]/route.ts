@@ -1,5 +1,5 @@
 import { json, notFound, withActor } from "@/lib/api";
-import { getReadingGroupContact, removeReadingGroupContact } from "@/lib/data-v2";
+import { getReadingGroupContact, removeReadingGroupContact } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

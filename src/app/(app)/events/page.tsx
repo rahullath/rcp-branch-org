@@ -7,13 +7,13 @@ import { useData } from "@/lib/hooks";
 import { post } from "@/lib/client";
 import type { Event, EventExtras, EventGuest, EventType } from "@/lib/types";
 import { byStartAsc, byStartDesc, dayDiff, isUpcoming } from "@/lib/dates";
-import { useRsvps } from "@/components/rsvp-buttons";
+import { useRsvps } from "@/lib/use-rsvps";
 import { EventModal } from "@/components/event-modal";
 import { Spinner } from "@/components/ui";
 import { EVENT_TYPE_META } from "@/lib/types";
-import { firstPart, fmtDayNum, fmtMonth, fmtTime, fmtWeekday, StateTag } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
-import { CalendarLinks } from "@/components/v2/calendar-links";
+import { firstPart, fmtDayNum, fmtMonth, fmtTime, fmtWeekday, StateTag } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
+import { CalendarLinks } from "@/components/features/calendar-links";
 
 const FILTERS: [string, EventType[] | null][] = [
   ["All", null],
@@ -99,7 +99,7 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Events</h1>

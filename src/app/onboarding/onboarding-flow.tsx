@@ -5,7 +5,7 @@ import { Bell, CalendarDays, Check, Download, Inbox, MessageCircle, Users } from
 import { api, patch, post } from "@/lib/client";
 import { ROLE_LABEL, type Comrade, type Role } from "@/lib/types";
 import { initials as initialsOf } from "@/lib/utils";
-import { CalendarLinks } from "@/components/v2/calendar-links";
+import { CalendarLinks } from "@/components/features/calendar-links";
 import { formatPhone, normalizePhone } from "@/lib/phone";
 
 interface InstallPrompt extends Event {

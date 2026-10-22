@@ -1,6 +1,6 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
 import { createMaterial, getMaterial, getProfile } from "@/lib/data";
-import { addMaterialMove, getComrade, moveMaterial } from "@/lib/data-v2";
+import { addMaterialMove, getComrade, moveMaterial } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

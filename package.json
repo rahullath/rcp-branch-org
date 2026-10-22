@@ -1,6 +1,6 @@
 {
   "name": "branch-organizer",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -33,5 +33,6 @@
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "license": "AGPL-3.0-or-later"
 }

@@ -28,6 +28,10 @@ Open http://localhost:3000. With no database configured the app runs in demo mod
 
 Next.js (App Router) and React on Vercel, Supabase (Postgres, sign-in, row-level security), web push. No other services.
 
+## Licence
+
+AGPL-3.0-or-later. See [LICENSE](LICENSE) and [NOTICE](NOTICE): the party's logos, emblems and fonts are not covered by it. To report a security problem see [SECURITY.md](SECURITY.md).
+
 ## Principle
 
 The app should take logistics off people, not add logging. If a field exists only to monitor comrades rather than help them, it goes.

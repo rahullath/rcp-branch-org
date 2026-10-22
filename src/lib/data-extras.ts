@@ -219,7 +219,7 @@ export async function updateEventReport(event: Event, report: EventReport, input
   return updated;
 }
 
-export async function nextBranchMeeting(): Promise<Event | null> {
+async function nextBranchMeeting(): Promise<Event | null> {
   const t = Date.now();
   const events = await listEvents({}, false);
   return events.filter((e) => e.event_type === "branch" && isUpcoming(e, t)).sort(byStartAsc)[0] ?? null;

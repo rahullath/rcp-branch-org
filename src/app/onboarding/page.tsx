@@ -15,7 +15,7 @@ export default async function OnboardingPage() {
   if (!actor) redirect("/login?next=/onboarding");
   if (!actor.branch) redirect("/welcome");
   return (
-    <main className="v2 pg" style={{ maxWidth: 520, margin: "0 auto", padding: 16 }}>
+    <main className="screen pg" style={{ maxWidth: 520, margin: "0 auto", padding: 16 }}>
       <OnboardingFlow
         branch={actor.branch.name}
         startName={actor.namePending ? "" : actor.name}

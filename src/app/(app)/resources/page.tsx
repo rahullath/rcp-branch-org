@@ -7,10 +7,10 @@ import { useActor } from "@/lib/actor-context";
 import { TOPIC_LIBRARY } from "@/data/resources";
 import { MORE_LINKS, PREP_LINKS, type ResourceSource } from "@/data/resource-sources";
 import type { FeedItem } from "@/lib/feeds";
-import { fmtDay, SectionHead } from "@/components/v2/primitives";
-import { SendSheet } from "@/components/v2/send-sheet";
+import { fmtDay, SectionHead } from "@/components/features/primitives";
+import { SendSheet } from "@/components/features/send-sheet";
 import { patch } from "@/lib/client";
-import { useToast } from "@/components/v2/toast";
+import { useToast } from "@/components/features/toast";
 
 const ICON = { "communist-red": Newspaper, "marxist-com": Newspaper, youtube: PlayCircle, podcasts: Podcast } as const;
 
@@ -47,7 +47,7 @@ export default function ResourcesPage() {
   const items = (latest?.items ?? []).filter((i) => filter === "all" || i.kind === filter);
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Resources</h1>

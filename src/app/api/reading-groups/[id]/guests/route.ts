@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getReadingGroup, listReadingGroupMembers } from "@/lib/data";
-import { addReadingGroupGuest, getComrade, listReadingGroupContacts, listReadingGroupGuests } from "@/lib/data-v2";
+import { addReadingGroupGuest, getComrade, listReadingGroupContacts, listReadingGroupGuests } from "@/lib/data-extras";
 import { comradeForName } from "@/lib/comrade-match";
 import { canRunGroup, groupStats } from "@/lib/reading-groups";
 

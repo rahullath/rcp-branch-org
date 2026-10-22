@@ -11,9 +11,9 @@ import { useActor } from "@/lib/actor-context";
 import { londonDay } from "@/lib/follow-through";
 import { importPrompt, MODULE_LABEL, type ImportModule, type JsonImportLine } from "@/lib/import-prompt";
 import type { Branch, ImportRequest } from "@/lib/types";
-import { SectionHead } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
-import { ImportLines, pickedRows, startOff } from "@/components/v2/import-lines";
+import { SectionHead } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
+import { ImportLines, pickedRows, startOff } from "@/components/features/import-lines";
 
 type Preview = { lines: JsonImportLine[]; warnings: string[] };
 type Sent = Omit<ImportRequest, "data"> & { rows: number; modules: string[] };
@@ -90,7 +90,7 @@ export default function ImportPage() {
   const forReview = reviewed && Object.entries(picked).some(([m, a]) => m !== "contacts" && a?.length);
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Import</h1>

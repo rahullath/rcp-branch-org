@@ -1,6 +1,6 @@
 import { json, serverError, withActor, readJson, badRequest } from "@/lib/api";
 import { createReadingGroup, joinReadingGroup, listAllReadingGroupMembers, listReadingGroups } from "@/lib/data";
-import { listReadingGroupContacts } from "@/lib/data-v2";
+import { listReadingGroupContacts } from "@/lib/data-extras";
 import { DEFAULT_CAPACITY, groupDetails, openGroupForBook } from "@/lib/reading-groups";
 
 export const dynamic = "force-dynamic";

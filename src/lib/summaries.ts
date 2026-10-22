@@ -1,4 +1,4 @@
-import type { AgendaItem, Event, Profile, Rsvp, Session } from "./types";
+import type { AgendaItem, Event, Profile, Rsvp } from "./types";
 import { formatDate, formatTime } from "./utils";
 
 const EVENT_TYPE_LABELS: Record<string, string> = {
@@ -86,16 +86,5 @@ export function formatMeetingAgenda(event: Event, items: AgendaItem[], profiles:
     }
   }
 
-  return lines.join("\n");
-}
-
-/** Plain-text leadoff schedule for the "Copy programme" button — a numbered
- * list rather than a tab table, since tabs don't survive a WhatsApp paste. */
-export function formatProgrammeSchedule(sessions: Session[]): string {
-  const lines = [bold("Branch Programme")];
-  for (const s of [...sessions].sort((a, b) => a.position - b.position)) {
-    const date = formatDate(s.session_date);
-    lines.push(`${s.position}. ${s.topic} — ${s.leadoff_name ?? "TBC"}${date ? ` (${date})` : ""}`);
-  }
   return lines.join("\n");
 }

@@ -10,9 +10,9 @@ import { hasAnyRole } from "@/lib/permissions";
 import type { AgendaItem, Event, TopicIdea } from "@/lib/types";
 import { programme } from "@/lib/programme";
 import { Spinner } from "@/components/ui";
-import { ProgrammeRow } from "@/components/v2/programme-row";
-import { fmtDay } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { ProgrammeRow } from "@/components/features/programme-row";
+import { fmtDay } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 /**
  * The whole branch programme: every branch meeting's discussion topic,
@@ -69,7 +69,7 @@ export default function ProgrammePage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <Link className="btn-ic" href="/education" aria-label="Back to education">
           <ArrowLeft size={18} strokeWidth={2.25} />

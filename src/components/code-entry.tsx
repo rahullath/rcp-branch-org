@@ -20,7 +20,7 @@ export function CodeEntry({ liveUrl }: { liveUrl: string }) {
       onSubmit={(e) => {
         e.preventDefault();
         if (!valid) return;
-        if (liveUrl) window.location.assign(`${liveUrl}/join/${clean}`);
+        if (liveUrl) window.location.assign(new URL(`/join/${clean}`, liveUrl).toString());
         else router.push(`/join/${clean}`);
       }}
     >

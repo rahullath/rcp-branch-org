@@ -1,7 +1,7 @@
 import type { Role } from "./types";
 
 /** Shared navigation manifest, imported by both the server shell and client nav. */
-export const navItems = [
+const navItems = [
   { href: "/home", label: "This Week", icon: "home" },
   { href: "/events", label: "Events", icon: "event" },
   { href: "/inbox", label: "Inbox", icon: "inbox" },

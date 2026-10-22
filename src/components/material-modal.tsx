@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Material, MaterialCategory } from "@/lib/types";
 import { Button, Field, Icon, Input, Modal, Select, Spinner, Textarea } from "@/components/ui";
-import { HolderPicker, holderFields, holderValue } from "@/components/v2/holder-picker";
+import { HolderPicker, holderFields, holderValue } from "@/components/features/holder-picker";
 
 export const PURPOSES = ["Branch programme", "Paper stall", "Good to have"] as const;
 

@@ -43,7 +43,7 @@ import {
   listEventInvites,
   listSharedReads,
   MISSING_ACTION,
-} from "./data-v2";
+} from "./data-extras";
 import type { AgendaAction, Availability } from "./types";
 import { awayOn, isOpenTask, OPEN_STALE_DAYS } from "./tasks";
 import { didRead, expectsReading, mainRead } from "./preread";
@@ -55,7 +55,7 @@ import { goingCount, needsDecision, QUIET_DAYS } from "./follow-through";
 import { groupLeadIds } from "./reading-groups";
 
 /** RSVP asks only cover the next fortnight — further out shows up later. */
-export const RSVP_WINDOW_MS = 14 * 86400_000;
+const RSVP_WINDOW_MS = 14 * 86400_000;
 /** A lead owes a sale report for three weeks, then it quietly drops. */
 /** A report not written within a week isn't going to be: stop asking. */
 const REPORT_WINDOW_MS = 7 * 86400_000;
@@ -65,7 +65,7 @@ const STALE_HOLD_MS = 21 * 86400_000;
 export { REPORT_EVENT_TYPES } from "./types";
 import { REPORT_EVENT_TYPES } from "./types";
 
-export interface InboxSources {
+interface InboxSources {
   events: Event[];
   rsvps: Pick<Rsvp, "event_id" | "user_id" | "status">[];
   extras: EventExtras;
@@ -107,7 +107,7 @@ export function pollIsOpen(p: Poll, now: number) {
  * disappears the moment it's answered (or they say "not me").
  * Pure, so the reminder cron can run it for every member.
  */
-export function deriveAsks(userId: string, src: InboxSources, now: number, dismissed: Set<string> = new Set()): Ask[] {
+function deriveAsks(userId: string, src: InboxSources, now: number, dismissed: Set<string> = new Set()): Ask[] {
   const asks: Ask[] = [];
   const mine = new Map(src.rsvps.filter((r) => r.user_id === userId).map((r) => [r.event_id, r.status]));
   const upcoming = src.events.filter((e) => !e.archived && isUpcoming(e, now)).sort((a, b) => startMs(a) - startMs(b));
@@ -335,7 +335,7 @@ export function deriveAsks(userId: string, src: InboxSources, now: number, dismi
   return asks.filter((a) => !dismissed.has(a.k)).sort((a, b) => Number(b.kind === "decide") - Number(a.kind === "decide"));
 }
 
-export async function loadInboxSources(actor: Actor | null): Promise<InboxSources> {
+async function loadInboxSources(actor: Actor | null): Promise<InboxSources> {
   const [events, rsvps, extras, { polls, votes }, reports, actions, materials, moves, contacts, guests, groups, groupMembers, invites, followUps, comrades] = await Promise.all([
     listEvents({}, canSeeCommittee(actor), actor?.id),
     listRsvps(),

@@ -1,7 +1,7 @@
 import { after } from "next/server";
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getProfile, getReadingGroup, listReadingGroupMembers } from "@/lib/data";
-import { createReadingGroupInvite, listReadingGroupContacts, listReadingGroupGuests, listReadingGroupInvites } from "@/lib/data-v2";
+import { createReadingGroupInvite, listReadingGroupContacts, listReadingGroupGuests, listReadingGroupInvites } from "@/lib/data-extras";
 import { canRunGroup, groupLeadIds, groupStats } from "@/lib/reading-groups";
 import { notifyReadingInvite, notifyReadingRequest } from "@/lib/notify";
 

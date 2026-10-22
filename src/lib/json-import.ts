@@ -1,7 +1,7 @@
 import type { Actor } from "./auth";
 import type { Comrade, ContactStage, ContactTier, EventType, Location, Material, Profile, ReadingGroupAudience } from "./types";
 import { createContact, createEvent, createLocation, createMaterial, createPledge, createReadingGroup, listContacts, listEvents, listLocations, listMaterials, listPledges, listProfiles, listReadingGroups } from "./data";
-import { createAgendaAction, createComrade, createSharedRead, createTopicIdea, listAgendaActions, listComrades, listTopicIdeas, setFollowUp, setMainRead, listFollowUps, updateFollowUp } from "./data-v2";
+import { createAgendaAction, createComrade, createSharedRead, createTopicIdea, listAgendaActions, listComrades, listTopicIdeas, setFollowUp, setMainRead, listFollowUps, updateFollowUp } from "./data-extras";
 import { resolveTitle } from "./link-title";
 import { londonDay } from "./follow-through";
 

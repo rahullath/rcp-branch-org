@@ -9,8 +9,8 @@ import { useActor } from "@/lib/actor-context";
 import { DAY_SLOTS, WEEKDAYS, WEEKDAY_LABELS, type AgendaAction, type Availability, type AwayRange } from "@/lib/types";
 import { dayAfter } from "@/lib/tasks";
 import { Spinner } from "@/components/ui";
-import { fmtDay } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { fmtDay } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 const ACTIVITY = "general";
 
@@ -88,7 +88,7 @@ export default function AvailabilityPage() {
   };
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Availability</h1>

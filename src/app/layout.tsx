@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, Be_Vietnam_Pro, Oswald } from "next/font/google";
 import { RegisterServiceWorker } from "@/components/register-sw";
 import "./globals.css";
-import "./v2.css";
+import "./screens.css";
 
 const beVietnam = Be_Vietnam_Pro({
   variable: "--font-be-vietnam",

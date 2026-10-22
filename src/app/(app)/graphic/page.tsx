@@ -13,8 +13,8 @@ import { Spinner } from "@/components/ui";
 import { GraphicMaker, type GraphicSeed } from "@/components/graphic-maker";
 import { festivalDates } from "@/lib/festival";
 import { useFestival } from "@/lib/festival-config";
-import { firstPart, fmtDay, fmtTime } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { firstPart, fmtDay, fmtTime } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 export default function GraphicPage() {
   return (
@@ -104,7 +104,7 @@ function GraphicInner() {
       : undefined;
 
   return (
-    <div className="v2 pg pg-g">
+    <div className="screen pg pg-g">
       <div className="ph">
         <button type="button" className="btn-ic" onClick={() => router.back()} aria-label="Back">
           <ArrowLeft size={18} strokeWidth={2.25} />

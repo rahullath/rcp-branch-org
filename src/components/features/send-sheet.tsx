@@ -75,7 +75,7 @@ export function SendSheet({ item, onClose }: { item: { title: string; url: strin
 
   return (
     <Modal open onClose={onClose} title="Send it">
-      <div className="v2 stack8">
+      <div className="screen stack8">
         <ShareWithBranch item={item} />
         <textarea className="inp" style={{ height: 90, padding: 10 }} value={msg} onChange={(e) => setMsg(e.target.value)} aria-label="Message" />
 

@@ -74,7 +74,3 @@ export async function readJson(request: Request): Promise<Record<string, unknown
     return null;
   }
 }
-
-export function isDemoActor(actor: Actor) {
-  return actor.isDemo;
-}

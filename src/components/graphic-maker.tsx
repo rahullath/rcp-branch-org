@@ -25,7 +25,7 @@ import {
   type GraphicTpl,
 } from "./rcs-graphic";
 import { QR_KINDS, normaliseLink, qrStandaloneSvg, svgToPng, type QrCorner } from "./qr-tile";
-import { useToast } from "./v2/toast";
+import { useToast } from "./features/toast";
 
 type FieldDef = [key: string, label: string, multiline?: boolean, half?: boolean];
 

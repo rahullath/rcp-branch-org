@@ -1,6 +1,6 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
 import { getProfile } from "@/lib/data";
-import { createComrade, listComrades } from "@/lib/data-v2";
+import { createComrade, listComrades } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

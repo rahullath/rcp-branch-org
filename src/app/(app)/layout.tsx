@@ -16,7 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 /** A new branch on a shared copy, before an admin has let it in. */
 function Waiting({ name }: { name: string }) {
   return (
-    <div className="v2 pg" style={{ maxWidth: 480, margin: "0 auto", paddingTop: 64 }}>
+    <div className="screen pg" style={{ maxWidth: 480, margin: "0 auto", paddingTop: 64 }}>
       <h1>{name}</h1>
       <p className="sub">Waiting for approval.</p>
       <p>

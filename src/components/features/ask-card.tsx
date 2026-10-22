@@ -5,7 +5,7 @@ import { useState } from "react";
 import { patch, post } from "@/lib/client";
 import { revalidate } from "@/lib/hooks";
 import { ROLE_LABEL, type Ask } from "@/lib/types";
-import { useRsvps } from "@/components/rsvp-buttons";
+import { useRsvps } from "@/lib/use-rsvps";
 import { fmtDay, fmtTime, firstPart, Rsvp, usePeople } from "./primitives";
 import { dueState, londonDay } from "@/lib/follow-through";
 import { useToast } from "./toast";

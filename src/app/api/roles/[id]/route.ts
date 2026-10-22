@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getEvent } from "@/lib/data";
-import { deleteEventRole, getEventRole, setEventRole } from "@/lib/data-v2";
+import { deleteEventRole, getEventRole, setEventRole } from "@/lib/data-extras";
 import { canRunEvent } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";

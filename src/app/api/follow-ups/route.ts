@@ -1,5 +1,5 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
-import { getComrade, getFollowUp, listFollowUps, setFollowUp } from "@/lib/data-v2";
+import { getComrade, getFollowUp, listFollowUps, setFollowUp } from "@/lib/data-extras";
 import { comradeForName } from "@/lib/comrade-match";
 import { getProfile } from "@/lib/data";
 

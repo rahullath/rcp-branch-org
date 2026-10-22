@@ -7,7 +7,7 @@ import { api, patch, post } from "@/lib/client";
 import { revalidate, useData } from "@/lib/hooks";
 import type { NotificationPrefs } from "@/lib/types";
 import { Spinner } from "@/components/ui";
-import { useToast } from "@/components/v2/toast";
+import { useToast } from "@/components/features/toast";
 
 type Toggle = Exclude<keyof NotificationPrefs, "quiet_start" | "quiet_end">;
 
@@ -94,7 +94,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <Link className="btn-ic" href="/more" aria-label="Back">
           <ArrowLeft size={18} strokeWidth={2.25} />

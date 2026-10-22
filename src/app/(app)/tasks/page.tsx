@@ -11,11 +11,11 @@ import { dueState } from "@/lib/follow-through";
 import { awayOn, doneSince, isOpenTask, lastBranchMeeting, nextMeetingGaps, OPEN_STALE_DAYS, ROTA_LABEL, rota, type RotaRole } from "@/lib/tasks";
 import type { AgendaAction, AgendaItem, Comrade, Event, EventExtras, Material } from "@/lib/types";
 import { waLink } from "@/lib/utils";
-import { SectionHead, fmtDay, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
-import { HolderPicker } from "@/components/v2/holder-picker";
-import { useWorkload } from "@/components/v2/workload";
-import { usePhones } from "@/components/v2/phones";
+import { SectionHead, fmtDay, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
+import { HolderPicker } from "@/components/features/holder-picker";
+import { useWorkload } from "@/components/features/workload";
+import { usePhones } from "@/components/features/phones";
 
 const dayIso = (d: string) => `${d}T12:00:00Z`;
 
@@ -111,7 +111,7 @@ function Tasks() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div className="grow min0">
           <h1>Tasks</h1>

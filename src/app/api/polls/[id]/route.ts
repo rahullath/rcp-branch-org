@@ -1,5 +1,5 @@
 import { json, notFound, requireOwnerOrRole } from "@/lib/api";
-import { archivePoll, getPoll } from "@/lib/data-v2";
+import { archivePoll, getPoll } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

@@ -1,6 +1,6 @@
 import type { Actor } from "./auth";
-import type { Comrade, Profile } from "./types";
-import { createComrade, listComrades } from "./data-v2";
+import type { Comrade } from "./types";
+import { createComrade, listComrades } from "./data-extras";
 import { listProfiles } from "./data";
 import { resolvePerson } from "./agenda-import-apply";
 
@@ -18,10 +18,4 @@ export async function comradeForName(actor: Actor, raw: string): Promise<Comrade
     return createComrade(actor, { name: p.name, aliases: raw.trim() !== p.name ? [raw.trim()] : [], profile_id: p.id });
   }
   return createComrade(actor, { name: raw.trim(), aliases: [] });
-}
-
-/** Who a written name is: an account, a People entry without one, or new. */
-export async function whoIs(raw: string, profiles?: Profile[], comrades?: Comrade[]) {
-  const [p, c] = await Promise.all([profiles ?? listProfiles(), comrades ?? listComrades()]);
-  return resolvePerson(raw, p, c);
 }

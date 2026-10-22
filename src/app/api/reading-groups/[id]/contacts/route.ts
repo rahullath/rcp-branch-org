@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getContact, getReadingGroup, listReadingGroupMembers } from "@/lib/data";
-import { addReadingGroupContact, listReadingGroupContacts } from "@/lib/data-v2";
+import { addReadingGroupContact, listReadingGroupContacts } from "@/lib/data-extras";
 import { groupStats } from "@/lib/reading-groups";
 import { contactOwner, contactTier } from "@/lib/types";
 

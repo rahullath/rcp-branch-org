@@ -1,6 +1,6 @@
 import { json, requireOwnerOrRole, readJson, badRequest, notFound } from "@/lib/api";
 import { comradeForName } from "@/lib/comrade-match";
-import { setFollowUp, updateComrade } from "@/lib/data-v2";
+import { setFollowUp, updateComrade } from "@/lib/data-extras";
 import { normalizePhone } from "@/lib/phone";
 import { addContactNote, archiveContact, getContact, getProfile, updateContact } from "@/lib/data";
 import { contactOwner, type ContactStatus, type ContactTier } from "@/lib/types";

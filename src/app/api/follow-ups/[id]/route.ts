@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getProfile } from "@/lib/data";
-import { endFollowUp, getComrade, getFollowUp, handOverFollowUp, touchFollowUp, updateFollowUp } from "@/lib/data-v2";
+import { endFollowUp, getComrade, getFollowUp, handOverFollowUp, touchFollowUp, updateFollowUp } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

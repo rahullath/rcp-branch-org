@@ -37,17 +37,17 @@ import { canRunEvent } from "@/lib/permissions";
 import { sessionEvent } from "@/lib/education";
 import { dueState, isOff, isTentative, londonDay, tentativeLine } from "@/lib/follow-through";
 import { ActionMenu } from "@/components/action-menu";
-import { useRsvps } from "@/components/rsvp-buttons";
+import { useRsvps } from "@/lib/use-rsvps";
 import { EventModal } from "@/components/event-modal";
 import { PhotoForSocial } from "@/components/checklist-modal";
 import { PoliticalAgendaCard } from "@/components/political-agenda-card";
-import { Av, fmtDay, fmtTime, Rsvp, SectionHead, usePeople } from "@/components/v2/primitives";
-import { useWorkload } from "@/components/v2/workload";
-import { useToast } from "@/components/v2/toast";
-import { useSheets } from "@/components/v2/sheets";
-import { ShareSheet } from "@/components/v2/share-sheet";
-import { InviteYourPeople } from "@/components/v2/invite-people";
-import { EventReadings } from "@/components/v2/event-readings";
+import { Av, fmtDay, fmtTime, Rsvp, SectionHead, usePeople } from "@/components/features/primitives";
+import { useWorkload } from "@/components/features/workload";
+import { useToast } from "@/components/features/toast";
+import { useSheets } from "@/components/features/sheets";
+import { ShareSheet } from "@/components/features/share-sheet";
+import { InviteYourPeople } from "@/components/features/invite-people";
+import { EventReadings } from "@/components/features/event-readings";
 import { expectsReading } from "@/lib/preread";
 import { BRING_TEMPLATES } from "@/lib/bring-templates";
 
@@ -172,7 +172,7 @@ export function EventDetailClient({
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <Link className="btn-ic" href="/events" aria-label="Back to events">
           <ArrowLeft size={18} strokeWidth={2.25} />

@@ -120,7 +120,7 @@ export type LocationCategory = "paper_sale" | "meeting" | "uni_stall" | "social"
 export type AgendaSection = "paper" | "political" | "organizational";
 export type SocialPostStatus = "ready" | "draft" | "needs_review";
 
-export interface ContactNote {
+interface ContactNote {
   text: string;
   created_by?: string;
   created_at?: string;
@@ -271,7 +271,7 @@ export interface Event {
   created_at: string;
 }
 
-export type EventStatus = "tentative" | "on" | "off";
+type EventStatus = "tentative" | "on" | "off";
 
 /** Who an event is for. District and national events show to every branch. */
 export type EventScope = "branch" | "district" | "national";
@@ -484,14 +484,6 @@ export interface EventChecklist {
   created_at: string;
 }
 
-export interface Series {
-  id: string;
-  name: string;
-  description: string;
-  total_sessions: number;
-  completed_sessions: number;
-}
-
 export interface Session {
   id: string;
   series_id: string;
@@ -532,7 +524,7 @@ export interface ReadingGroup {
   created_at: string;
 }
 
-export type ReadingGroupStatus = "proposed" | "running" | "finished";
+type ReadingGroupStatus = "proposed" | "running" | "finished";
 export type ReadingGroupAudience = "members" | "new" | "contacts" | "mixed";
 export type ReadingGroupLevel = "intro" | "core" | "advanced";
 
@@ -691,7 +683,7 @@ export interface FollowUp {
   created_at: string;
 }
 
-export interface FollowUpNote {
+interface FollowUpNote {
   text: string;
   by: string;
   at: string;
@@ -992,14 +984,6 @@ export interface PaperSale {
   created_at: string;
 }
 
-export interface BookItem {
-  id: string;
-  title: string;
-  author: string;
-  copies: number;
-  badge: "high" | "reorder" | "low";
-}
-
 /* ============================= imports ============================= */
 
 export type ImportKind =
@@ -1011,7 +995,7 @@ export type ImportKind =
   | "social"
   | "members";
 
-export type ImportRowStatus = "pending" | "verified" | "rejected" | "merged";
+type ImportRowStatus = "pending" | "verified" | "rejected" | "merged";
 
 /** Which roles verify which import kind. general_secretary always passes
  * (server enforces) and is implicit here. Routing by role (not uid) keeps

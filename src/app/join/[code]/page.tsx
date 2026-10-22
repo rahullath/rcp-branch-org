@@ -17,7 +17,7 @@ export default async function JoinPage({ params }: Params) {
   const next = `/welcome?code=${encodeURIComponent(upper)}`;
 
   return (
-    <main className="v2 pg" style={{ maxWidth: 480, margin: "0 auto", padding: 16 }}>
+    <main className="screen pg" style={{ maxWidth: 480, margin: "0 auto", padding: 16 }}>
       {name ? (
         <>
           <div>

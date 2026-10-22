@@ -1,6 +1,6 @@
 "use client";
 
-import { ImportHint } from "@/components/v2/import-hint";
+import { ImportHint } from "@/components/features/import-hint";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -10,8 +10,8 @@ import { post } from "@/lib/client";
 import { revalidate } from "@/lib/hooks";
 import { CONTACT_TIERS, type ContactTier } from "@/lib/types";
 import { formatPhone, looksLikePhone, normalizePhone, parseContactLines } from "@/lib/phone";
-import { CONTACT_SOURCES } from "@/components/v2/sheets";
-import { useToast } from "@/components/v2/toast";
+import { CONTACT_SOURCES } from "@/components/features/sheets";
+import { useToast } from "@/components/features/toast";
 import { clearImportDraft, useImportDraft } from "@/lib/import-draft";
 
 type Row = { key: number; on: boolean; name: string; phone: string; notes: string };
@@ -39,7 +39,7 @@ export default function ImportContactsPage() {
   const ready = (rows ?? []).filter((r) => r.on && r.name.trim());
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <Link className="btn-ic" href="/contacts" aria-label="Back to contacts">
           <ArrowLeft size={18} strokeWidth={2.25} />

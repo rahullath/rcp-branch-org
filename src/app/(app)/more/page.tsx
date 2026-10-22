@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActor } from "@/lib/actor-context";
 import { visibleNavItems } from "@/lib/nav-items";
 import { Icon } from "@/components/ui";
-import { useNavBadges } from "@/components/v2/nav-badges";
+import { useNavBadges } from "@/components/features/nav-badges";
 
 /**
  * Eight places, the same for everyone. Smaller areas live inside one of
@@ -26,7 +26,7 @@ export default function MorePage() {
   const tools = officer ? OFFICER.filter((h) => items.has(h)) : [];
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>More</h1>

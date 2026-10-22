@@ -30,7 +30,7 @@ function ensureVapid() {
 }
 
 /** What the service worker does with each button. */
-export type PushAction =
+type PushAction =
   | { action: "rsvp-going" | "rsvp-no"; title: string }
   | { action: "bring-claim" | "bring-skip"; title: string }
   | { action: `vote-${number}`; title: string }
@@ -60,7 +60,7 @@ function minutes(hhmm: string) {
 }
 
 /** Quiet hours are in UK time. */
-export function inQuietHours(prefs: NotificationPrefs, at = new Date()) {
+function inQuietHours(prefs: NotificationPrefs, at = new Date()) {
   const local = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", hour: "2-digit", minute: "2-digit", hour12: false }).format(at);
   const t = minutes(local);
   const start = minutes(prefs.quiet_start);

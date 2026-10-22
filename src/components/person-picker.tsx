@@ -5,7 +5,7 @@ import { useProfiles } from "@/lib/profiles-context";
 import type { Profile } from "@/lib/types";
 import { cn, initials } from "@/lib/utils";
 import { inputClasses } from "@/components/ui";
-import { useWorkload } from "@/components/v2/workload";
+import { useWorkload } from "@/components/features/workload";
 
 interface BaseProps {
   placeholder?: string;

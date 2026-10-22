@@ -1,5 +1,5 @@
 import { badRequest, json, readJson, serverError, withActor } from "@/lib/api";
-import { createTopicIdea, listTopicIdeas } from "@/lib/data-v2";
+import { createTopicIdea, listTopicIdeas } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

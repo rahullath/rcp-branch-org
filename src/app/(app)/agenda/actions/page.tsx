@@ -1,6 +1,6 @@
 "use client";
 
-import { ImportHint } from "@/components/v2/import-hint";
+import { ImportHint } from "@/components/features/import-hint";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -11,10 +11,10 @@ import { revalidate, useData } from "@/lib/hooks";
 import { useActor } from "@/lib/actor-context";
 import { isUpcoming, byStartAsc } from "@/lib/dates";
 import type { Comrade, Event } from "@/lib/types";
-import { fmtDay, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { fmtDay, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 import { clearImportDraft, useImportDraft } from "@/lib/import-draft";
-import { useWorkload } from "@/components/v2/workload";
+import { useWorkload } from "@/components/features/workload";
 
 type Who = { raw: string; name: string; status: "member" | "known" | "new" | "all"; profile_id: string | null; comrade_id: string | null };
 type Row = { key: number; text: string; due: string | null; line: string; who: Who[]; on: boolean };
@@ -86,14 +86,14 @@ export default function CaptureActionsPage() {
 
   if (!isOfficer) {
     return (
-      <div className="v2 pg">
+      <div className="screen pg">
         <p className="nothing">Recording actions in bulk is for officers. Ask the minutes taker.</p>
       </div>
     );
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <Link className="btn-ic" href="/agenda" aria-label="Back to agenda">
           <ArrowLeft size={18} strokeWidth={2.25} />

@@ -13,8 +13,8 @@ import { EVENT_TYPE_META, type BranchLinks, type Event, type EventType } from "@
 import { COLOURWAYS, type ColourwayId } from "@/components/rcs-graphic";
 import { QR_KINDS } from "@/components/qr-tile";
 import { DEFAULT_TERM_OPTIONS, rowCapacity, TERM_SIZES, TermCard, type TermOptions, type TermRow, type TermSizeId } from "@/components/termcard";
-import { fmtDayNum, fmtMonth, fmtTime, fmtWeekday, firstPart } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { fmtDayNum, fmtMonth, fmtTime, fmtWeekday, firstPart } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 import { Spinner } from "@/components/ui";
 
 /** Types a society hands out by default: the ones contacts can come to. Branch and committee meetings are the member-only ones. */
@@ -174,7 +174,7 @@ export default function TermCardPage() {
   }
 
   return (
-    <div className="v2 pg pg-g">
+    <div className="screen pg pg-g">
       <div className="ph">
         <Link className="btn-ic" href="/social-media" aria-label="Back to Social">
           <ArrowLeft size={18} strokeWidth={2.25} />

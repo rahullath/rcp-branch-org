@@ -1,6 +1,6 @@
 import { badRequest, json, notFound, readJson, serverError, withActor } from "@/lib/api";
 import { getEvent } from "@/lib/data";
-import { listEventExtras, listEventReports, saveEventReport, updateEventReport } from "@/lib/data-v2";
+import { listEventExtras, listEventReports, saveEventReport, updateEventReport } from "@/lib/data-extras";
 import type { Actor } from "@/lib/auth";
 import type { Event } from "@/lib/types";
 import { eventLead, reportWriter } from "@/lib/types";

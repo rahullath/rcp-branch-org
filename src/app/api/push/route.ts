@@ -1,5 +1,5 @@
 import { json, withActor } from "@/lib/api";
-import { listMyPushSubscriptions } from "@/lib/data-v2";
+import { listMyPushSubscriptions } from "@/lib/data-extras";
 import { isPushConfigured, VAPID_PUBLIC_KEY } from "@/lib/push";
 
 export const dynamic = "force-dynamic";

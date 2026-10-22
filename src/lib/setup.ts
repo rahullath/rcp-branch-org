@@ -10,7 +10,7 @@ import { mainDiscussion } from "./types";
  */
 
 /** How long before the start the lead is asked. */
-export const SETUP_WINDOW_H: Partial<Record<Event["event_type"], number>> = {
+const SETUP_WINDOW_H: Partial<Record<Event["event_type"], number>> = {
   paper_sale: 48,
   uni_stall: 48,
   branch: 96,

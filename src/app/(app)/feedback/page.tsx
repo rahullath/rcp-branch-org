@@ -7,8 +7,8 @@ import { useData } from "@/lib/hooks";
 import { del, patch, post } from "@/lib/client";
 import { useActor } from "@/lib/actor-context";
 import type { Feedback } from "@/lib/types";
-import { fmtDay, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { fmtDay, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 
 const KINDS: { value: Feedback["kind"]; label: string; hint: string }[] = [
   { value: "bug", label: "Broken", hint: "What did you tap, what happened, what did you expect?" },
@@ -68,7 +68,7 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Feedback</h1>

@@ -106,12 +106,3 @@ export function useData<T>(url: string | null) {
 
   return { data, loading, error, refresh, setData };
 }
-
-export function usePage() {
-  const [refreshing, setRefreshing] = useState(false);
-  const refreshPage = useCallback(() => {
-    setRefreshing(true);
-    window.location.reload();
-  }, []);
-  return { refreshing, refreshPage };
-}

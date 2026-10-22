@@ -1,5 +1,5 @@
 import { json, serverError, withActor } from "@/lib/api";
-import { listEventGuests } from "@/lib/data-v2";
+import { listEventGuests } from "@/lib/data-extras";
 
 export const dynamic = "force-dynamic";
 

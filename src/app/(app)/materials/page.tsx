@@ -8,11 +8,11 @@ import { useActor } from "@/lib/actor-context";
 import type { Material, MaterialMove } from "@/lib/types";
 import { canManage } from "@/lib/permissions";
 import { AddMaterialModal, PURPOSES } from "@/components/material-modal";
-import { HolderPicker, useHolderName } from "@/components/v2/holder-picker";
+import { HolderPicker, useHolderName } from "@/components/features/holder-picker";
 import { Spinner } from "@/components/ui";
-import { Scrim } from "@/components/v2/sheets";
-import { fmtDay, usePeople } from "@/components/v2/primitives";
-import { useToast } from "@/components/v2/toast";
+import { Scrim } from "@/components/features/sheets";
+import { fmtDay, usePeople } from "@/components/features/primitives";
+import { useToast } from "@/components/features/toast";
 import { titleKey, wellredUrl } from "@/lib/wellred";
 import { catalogueHits, matches } from "@/lib/catalog";
 import type { DistrictMaterial } from "@/lib/district";
@@ -318,7 +318,7 @@ export default function MaterialsPage() {
   }
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Materials</h1>

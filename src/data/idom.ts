@@ -14,9 +14,9 @@ const TITLES: Record<number, string> = {
   54: "The Rojava Revolution",
 };
 
-export const LATEST_IDOM = 55;
+const LATEST_IDOM = 55;
 
-export const idomTitle = (n: number) => `In Defence of Marxism #${n}${TITLES[n] ? `: ${TITLES[n]}` : ""}`;
+const idomTitle = (n: number) => `In Defence of Marxism #${n}${TITLES[n] ? `: ${TITLES[n]}` : ""}`;
 
 /** Newest first: the ones people are most likely to read. */
 export const IDOM_ISSUES = Array.from({ length: LATEST_IDOM }, (_, i) => idomTitle(LATEST_IDOM - i));

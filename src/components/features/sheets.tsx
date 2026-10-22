@@ -52,7 +52,7 @@ export function SheetProvider({ children }: { children: React.ReactNode }) {
 
 export function Scrim({ onClose, title, children }: { onClose: () => void; title: string; children: React.ReactNode }) {
   return (
-    <div className="v2-layer scrim" onClick={onClose}>
+    <div className="screen-layer scrim" onClick={onClose}>
       <div className="sheet2" role="dialog" aria-label={title} onClick={(e) => e.stopPropagation()}>
         <div className="grab" />
         <div className="row between">

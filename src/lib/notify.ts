@@ -1,7 +1,7 @@
 import type { Actor } from "./auth";
 import type { BringItem, Event, EventUpdate, Material, Poll } from "./types";
 import { allMemberIds, committeeIds, sendPush, type PushPayload } from "./push";
-import { shortTitle } from "./data-v2";
+import { shortTitle } from "./data-extras";
 import { listRsvps } from "./data";
 
 /*

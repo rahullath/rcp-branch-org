@@ -11,7 +11,7 @@ import { awayOn } from "./tasks";
  */
 
 /** The start time a slot turns into when you plan it. */
-export const SLOT_START: Record<DaySlot, string> = { am: "11:00", aft: "14:00", eve: "18:00" };
+const SLOT_START: Record<DaySlot, string> = { am: "11:00", aft: "14:00", eve: "18:00" };
 export const SLOT_WORD: Record<DaySlot, string> = { am: "morning", aft: "afternoon", eve: "evening" };
 const SLOTS: DaySlot[] = ["am", "aft", "eve"];
 

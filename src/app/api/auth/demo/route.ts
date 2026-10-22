@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { DEMO_COOKIE } from "@/lib/auth";
-import { isSupabaseConfigured } from "@/lib/config";
+import { isDemoAllowed, isSupabaseConfigured } from "@/lib/config";
 import { findRow } from "@/lib/dev-store";
 import { DEMO_USER_ID, seedProfiles } from "@/lib/seed";
 import { json, badRequest } from "@/lib/api";
@@ -10,6 +10,7 @@ export async function POST(request: Request) {
   if (isSupabaseConfigured) {
     return json({ demo: false, message: "Use Supabase auth" });
   }
+  if (!isDemoAllowed) return json({ error: "Demo mode is off on this copy" }, { status: 403 });
 
   let body: { userId?: string } = {};
   try {

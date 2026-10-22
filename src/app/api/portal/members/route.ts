@@ -1,6 +1,6 @@
 import { json, withActor } from "@/lib/api";
 import { listProfiles } from "@/lib/data";
-import { listComrades } from "@/lib/data-v2";
+import { listComrades } from "@/lib/data-extras";
 import { fetchBranchMembers, portalBranchFor } from "@/lib/portal";
 import { matchPortal } from "@/lib/portal-match";
 

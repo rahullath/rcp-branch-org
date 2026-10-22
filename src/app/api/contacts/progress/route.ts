@@ -1,6 +1,6 @@
 import { json, serverError, withActor } from "@/lib/api";
 import { listContacts } from "@/lib/data";
-import { listEventInvites } from "@/lib/data-v2";
+import { listEventInvites } from "@/lib/data-extras";
 import { contactOwner } from "@/lib/types";
 
 export const dynamic = "force-dynamic";

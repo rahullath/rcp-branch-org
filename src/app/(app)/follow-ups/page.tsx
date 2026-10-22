@@ -6,15 +6,15 @@ import { revalidate, useData } from "@/lib/hooks";
 import { useActor } from "@/lib/actor-context";
 import type { Comrade, FollowUp } from "@/lib/types";
 import { QUIET_DAYS } from "@/lib/follow-through";
-import { fmtDay, usePeople } from "@/components/v2/primitives";
-import { useWorkload } from "@/components/v2/workload";
-import { HolderPicker } from "@/components/v2/holder-picker";
-import { useToast } from "@/components/v2/toast";
-import { usePhones } from "@/components/v2/phones";
+import { fmtDay, usePeople } from "@/components/features/primitives";
+import { useWorkload } from "@/components/features/workload";
+import { HolderPicker } from "@/components/features/holder-picker";
+import { useToast } from "@/components/features/toast";
+import { usePhones } from "@/components/features/phones";
 import { normalizePhone } from "@/lib/phone";
 import { waLink } from "@/lib/utils";
 import { MessageCircle, Phone } from "lucide-react";
-import { Candidates } from "@/components/v2/candidates";
+import { Candidates } from "@/components/features/candidates";
 
 /**
  * Who follows up whom. Not tasks with dates — a standing list: everyone the
@@ -79,7 +79,7 @@ export default function FollowUpsPage() {
   };
 
   return (
-    <div className="v2 pg">
+    <div className="screen pg">
       <div className="ph">
         <div>
           <h1>Follow-ups</h1>
